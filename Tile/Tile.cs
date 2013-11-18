@@ -5,7 +5,7 @@ using System.Collections;
 
 namespace PA.TileList
 {
-    public class Tile<T> : List<T>, ICoordinate where T : ICoordinate
+    public class Tile<T> : List<T>, ITile<T> where T : ICoordinate
     {
         public int X { get; set; }
         public int Y { get; set; }
@@ -13,7 +13,16 @@ namespace PA.TileList
         public T Reference { get; private set; }
         public IArea Area { get; private set; }
 
-        public Tile(IArea area, IEnumerable<T> t)
+        protected Tile(ITile<T> t)
+            : base(t)
+        {
+            this.X = t.X;
+            this.Y = t.Y;
+            this.Reference = t.Reference;
+            this.Area = t.Area;
+        }
+
+        public Tile(IEnumerable<T> t, int referenceIndex = 0)
             : base(t)
         {
             if (base.Count == 0)
@@ -23,7 +32,21 @@ namespace PA.TileList
 
             this.X = 0;
             this.Y = 0;
-            this.Reference = base[0];
+            this.Reference = base[referenceIndex];
+            this.Area = t.GetArea();
+        }
+
+        public Tile(IArea area, IEnumerable<T> t, int referenceIndex = 0)
+            : base(t)
+        {
+            if (base.Count == 0)
+            {
+                throw new ArgumentNullException();
+            }
+
+            this.X = 0;
+            this.Y = 0;
+            this.Reference = base[referenceIndex];
             this.Area = area;
         }
 
@@ -36,7 +59,7 @@ namespace PA.TileList
             this.Area = area;
         }
 
-        public Tile(int x, int y, IArea area, IEnumerable<T> t)
+        public Tile(int x, int y, IArea area, IEnumerable<T> t, int referenceIndex = 0)
             : base(t)
         {
             if (base.Count == 0)
@@ -46,7 +69,7 @@ namespace PA.TileList
 
             this.X = x;
             this.Y = y;
-            this.Reference = base[0];
+            this.Reference = base[referenceIndex];
             this.Area = area;
         }
 
@@ -59,9 +82,15 @@ namespace PA.TileList
             this.Area = area;
         }
 
+
         public T Find(int x, int y)
         {
             return this.Find(e => e.X == x && e.Y == y);
+        }
+
+        public T Find(ICoordinate c)
+        {
+            return this.Find(e => e.X == c.X && e.Y == c.Y);
         }
 
         public List<T> FindAll(IArea a)
@@ -132,19 +161,6 @@ namespace PA.TileList
             this.Reference = this.Find(this.Reference.X, this.Reference.Y);
             this.TrimExcess();
             this.UpdateArea();
-        }
-
-        public U Contextualize<U>(U item, ushort sizeX, ushort sizeY) where U : T, ICloneable
-        {
-            U clone = (U)item.Clone();
-            clone.X += this.X * sizeX;
-            clone.Y += this.Y * sizeY;
-            return clone;
-        }
-
-        public U Contextualize<U>(U item, IArea a = null) where U : T, ICloneable
-        {
-            return (a == null) ? this.Contextualize(item, this.Area.SizeX, this.Area.SizeY) : this.Contextualize(item, a.SizeX, a.SizeY);
         }
 
         public void SetReference(T reference)

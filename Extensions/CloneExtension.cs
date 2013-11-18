@@ -8,9 +8,9 @@ using System.Runtime.Serialization;
 using System.Reflection;
 using System.Diagnostics;
 
-namespace PA.TileList
+namespace PA.TileList.Extensions
 {
-    public static class CloneExtension
+    public static class CloneExtensions
     {
         public static U DeepClone<U>(this U source) where U : class, ISerializable
         {
