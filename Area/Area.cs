@@ -37,14 +37,34 @@ namespace PA.TileList
             this.Max.Offset(shiftX, shiftY);
         }
 
-        public static bool operator ==(Area a1, IArea a2)
+        public ICoordinate Center()
         {
-            return (a1.Min == a2.Min) && (a1.Max == a2.Max);
+            return new Coordinate((int)(this.SizeX / 2f + this.Min.X), (int)(this.SizeY / 2f + this.Min.Y));
         }
 
-        public static bool operator !=(Area a1, IArea a2)
+        public bool Contains(ICoordinate c)
         {
-            return (a1.Min != a2.Min) || (a1.Max != a2.Max);
+            return this.Contains(c.X, c.Y);
+        }
+
+        public bool Contains(int x, int y)
+        {
+            return this.Min.X <= x && x <= this.Max.X && this.Min.Y <= y && y <= this.Max.Y;
+        }
+
+        public bool Contains(IArea b)
+        {
+            return this.Min.X <= b.Min.X && b.Max.X <= this.Max.X && this.Min.Y <= b.Min.Y && b.Max.Y <= this.Max.Y;
+        }
+
+        public static bool operator ==(Area a, IArea b)
+        {
+            return (a.Min == b.Min) && (a.Max == b.Max);
+        }
+
+        public static bool operator !=(Area a, IArea b)
+        {
+            return (a.Min != b.Min) || (a.Max != b.Max);
         }
 
         public override bool Equals(object obj)

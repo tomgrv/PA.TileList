@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Collections;
@@ -21,20 +22,16 @@ namespace PA.TileList
             this.Reference = t.Reference;
             this.Area = t.Area;
         }
-
+        
         public Tile(IEnumerable<T> t, int referenceIndex = 0)
             : base(t)
         {
-            if (base.Count == 0)
-            {
-                throw new ArgumentNullException();
-            }
-
             this.X = 0;
             this.Y = 0;
-            this.Reference = base[referenceIndex];
+            this.Reference = t.ElementAt(referenceIndex);
             this.Area = t.GetArea();
         }
+ 
 
         public Tile(IArea area, IEnumerable<T> t, int referenceIndex = 0)
             : base(t)
@@ -95,7 +92,7 @@ namespace PA.TileList
 
         public List<T> FindAll(IArea a)
         {
-            return this.FindAll(e => a.Contains(e.X, e.Y));
+            return this.FindAll(e => a.Contains(e));
         }
 
         public void Remove(int x, int y)
@@ -105,7 +102,7 @@ namespace PA.TileList
 
         public void RemoveAll(IArea a)
         {
-            this.RemoveAll(e => a.Contains(e.X, e.Y));
+            this.RemoveAll(e => a.Contains(e));
         }
 
         public void UpdateArea()

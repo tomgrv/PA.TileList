@@ -87,14 +87,11 @@
     <Compile Include="Area\IArea.cs" />
     <Compile Include="Extensions\CloneExtension.cs" />
     <Compile Include="Coordinate\Coordinate.cs" />
-    <Compile Include="Coordinate\CoordinateExtention.cs" />
     <Compile Include="Coordinate\ICoordinate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Quadrant\IQuadrant.cs" />
-    <Compile Include="Quadrant\Quadrant.cs" />
-    <Compile Include="Quadrant\QuadrantExtension.cs" />
     <Compile Include="Tile\ITile.cs" />
     <Compile Include="Tile\Tile.cs" />
+    <Compile Include="Tile\TileExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PA.TileList.nuspec" />

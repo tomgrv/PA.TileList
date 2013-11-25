@@ -11,5 +11,11 @@ namespace PA.TileList
         Coordinate Max { get; }
         ushort SizeX { get; }
         ushort SizeY { get; }
+
+        bool Contains(ICoordinate c);
+        bool Contains(IArea b);
+        void Offset(ICoordinate c);
+        ICoordinate Center();
+
     }
 }
