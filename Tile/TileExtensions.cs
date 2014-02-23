@@ -10,7 +10,7 @@ namespace PA.TileList.Extensions
         public static ITile<T> ToTile<T>(this IEnumerable<T> c, int referenceIndex = 0)
           where T : ICoordinate
         {
-            return new Tile<T>(c.GetArea(), c,referenceIndex);
+            return new Tile<T>(c.GetArea(), c, referenceIndex);
         }
     }
 }
