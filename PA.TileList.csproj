@@ -91,10 +91,13 @@
     <Compile Include="Extensions\CloneExtension.cs" />
     <Compile Include="Coordinate\Coordinate.cs" />
     <Compile Include="Coordinate\ICoordinate.cs" />
+    <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Quantified\IQuantifiedTile.cs" />
+    <Compile Include="Quantified\QuantifiedTile.cs" />
     <Compile Include="Tile\ITile.cs" />
     <Compile Include="Tile\Tile.cs" />
-    <Compile Include="Tile\TileExtensions.cs" />
+    <Compile Include="Extensions\TileExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PA.TileList.nuspec" />
