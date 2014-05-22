@@ -43,7 +43,7 @@ namespace PA.TileList
             return this.X + "," + this.Y;
         }
 
-        public object Clone()
+        public virtual object Clone()
         {
             return this.MemberwiseClone();
         }

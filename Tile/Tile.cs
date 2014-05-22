@@ -22,7 +22,7 @@ namespace PA.TileList
             this.Reference = t.Reference;
             this.Area = t.Area;
         }
-        
+
         public Tile(IEnumerable<T> t, int referenceIndex = 0)
             : base(t)
         {
@@ -31,7 +31,7 @@ namespace PA.TileList
             this.Reference = t.ElementAt(referenceIndex);
             this.Area = t.GetArea();
         }
- 
+
 
         public Tile(IArea area, IEnumerable<T> t, int referenceIndex = 0)
             : base(t)
@@ -140,6 +140,28 @@ namespace PA.TileList
             this.UpdateArea();
         }
 
+        public void Fill<U>(Func<ICoordinate, U> filler) where U : T, ICoordinate
+        {
+            this.Clear();
+
+            for (int i = this.Area.Min.X; i <= this.Area.Max.X; i++)
+            {
+                for (int j = this.Area.Min.Y; j <= this.Area.Max.Y; j++)
+                {
+                    U e = filler(new Coordinate(i,j));
+                    // reassign  to ensure coherence...
+                    e.X = i;
+                    e.Y = j;
+                    this.Add(e);
+                }
+            }
+
+            this.Reference = this.Find(this.Reference.X, this.Reference.Y);
+            this.TrimExcess();
+            this.UpdateArea();
+        }
+
+        [Obsolete]
         public void Fill<U>(U motif) where U : T, ICloneable
         {
             this.Clear();
