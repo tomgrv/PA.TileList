@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PA.TileList
 {
-    public class Coordinate : ICoordinate, ICloneable
+    public class Coordinate : ICoordinate
     {
         public static Coordinate Zero = new Coordinate(0, 0);
 
@@ -43,9 +43,9 @@ namespace PA.TileList
             return this.X + "," + this.Y;
         }
 
-        public virtual object Clone()
+        public virtual ICoordinate Clone()
         {
-            return this.MemberwiseClone();
+            return this.MemberwiseClone() as ICoordinate;
         }
 
         public static double GetLength(ICoordinate a, ICoordinate b)

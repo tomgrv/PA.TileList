@@ -92,7 +92,7 @@ namespace PA.TileList
 
         public List<T> FindAll(IArea a)
         {
-            return this.FindAll(e => a.Contains(e));
+            return base.FindAll(e => a.Contains(e));
         }
 
         public void Remove(int x, int y)
@@ -110,43 +110,25 @@ namespace PA.TileList
             this.Area = this.GetArea();
         }
 
-        public void Fill<U>(ushort SizeX, ushort SizeY, U motif, decimal ShiftX = 0, decimal ShiftY = 0) where U : T, ICloneable
+        public void Fill<U>(ushort SizeX, ushort SizeY, Func<ICoordinate, U> filler, decimal ShiftX = 0, decimal ShiftY = 0) where U : T
         {
             int StartX = Math.Min(this.Area.Max.X, Math.Max(this.Area.Min.X, Convert.ToInt32(ShiftX - SizeX / 2m)));
             int StartY = Math.Min(this.Area.Max.Y, Math.Max(this.Area.Min.Y, Convert.ToInt32(ShiftY - SizeY / 2m)));
 
             Area a = new Area(StartX, StartY, StartX + SizeX - 1, StartY + SizeY - 1);
 
-            this.Fill(a, motif);
+            this.Fill(filler, a);
         }
 
-        public void Fill<U>(IArea a, U motif) where U : T, ICloneable
-        {
-            this.RemoveAll(a);
-
-            for (int i = a.Min.X; i <= a.Max.X; i++)
-            {
-                for (int j = a.Min.Y; j <= a.Max.Y; j++)
-                {
-                    T clone = (T)motif.Clone();
-                    clone.X = i;
-                    clone.Y = j;
-                    this.Add(clone);
-                }
-            }
-
-            this.Reference = this.Find(this.Reference.X, this.Reference.Y);
-            this.TrimExcess();
-            this.UpdateArea();
-        }
-
-        public void Fill<U>(Func<ICoordinate, U> filler) where U : T, ICoordinate
+        public void Fill<U>(Func<ICoordinate, U> filler, IArea a = null) where U : T, ICoordinate
         {
             this.Clear();
 
-            for (int i = this.Area.Min.X; i <= this.Area.Max.X; i++)
+            IArea area = a ?? this.Area;
+
+            for (int i = area.Min.X; i <= area.Max.X; i++)
             {
-                for (int j = this.Area.Min.Y; j <= this.Area.Max.Y; j++)
+                for (int j = area.Min.Y; j <= area.Max.Y; j++)
                 {
                     U e = filler(new Coordinate(i,j));
                     // reassign  to ensure coherence...
@@ -161,26 +143,7 @@ namespace PA.TileList
             this.UpdateArea();
         }
 
-        [Obsolete]
-        public void Fill<U>(U motif) where U : T, ICloneable
-        {
-            this.Clear();
-
-            for (int i = this.Area.Min.X; i <= this.Area.Max.X; i++)
-            {
-                for (int j = this.Area.Min.Y; j <= this.Area.Max.Y; j++)
-                {
-                    T clone = (T)motif.Clone();
-                    clone.X = i;
-                    clone.Y = j;
-                    this.Add(clone);
-                }
-            }
-
-            this.Reference = this.Find(this.Reference.X, this.Reference.Y);
-            this.TrimExcess();
-            this.UpdateArea();
-        }
+       
 
         public void SetReference(T reference)
         {
@@ -201,6 +164,11 @@ namespace PA.TileList
         public override string ToString()
         {
             return this.X + "," + this.Y;
+        }
+
+        public virtual  ICoordinate Clone()
+        {
+            return this.MemberwiseClone() as ICoordinate;
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PA.TileList
 {
-    public class Area : IArea, ICloneable, IEnumerable<Coordinate>
+    public class Area : IArea, IEnumerable<ICoordinate>
     {
         public static Area Unitary = new Area(0, 0, 0, 0);
 
@@ -87,7 +87,7 @@ namespace PA.TileList
             return this.MemberwiseClone();
         }
 
-        public IEnumerator<Coordinate> GetEnumerator()
+        public IEnumerator<ICoordinate> GetEnumerator()
         {
             return this.GetInnerCoordinates().GetEnumerator();
         }
@@ -97,7 +97,7 @@ namespace PA.TileList
             return this.GetInnerCoordinates().GetEnumerator();
         }
 
-        private IEnumerable<Coordinate> GetInnerCoordinates()
+        private IEnumerable<ICoordinate> GetInnerCoordinates()
         {
             for (int x = (this.Min.X); x <= (this.Max.X); x++)
             {
