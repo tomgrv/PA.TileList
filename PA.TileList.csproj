@@ -100,7 +100,6 @@
     <Compile Include="Area\Area.cs" />
     <Compile Include="Area\AreaExtension.cs" />
     <Compile Include="Area\IArea.cs" />
-    <Compile Include="Extensions\CloneExtension.cs" />
     <Compile Include="Coordinate\Coordinate.cs" />
     <Compile Include="Coordinate\ICoordinate.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
