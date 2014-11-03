@@ -110,7 +110,8 @@ namespace PA.TileList
             this.Area = this.GetArea();
         }
 
-        public void Fill<U>(ushort SizeX, ushort SizeY, Func<ICoordinate, U> filler, decimal ShiftX = 0, decimal ShiftY = 0) where U : T
+
+        public void Fill(ushort SizeX, ushort SizeY, Func<ICoordinate, T> filler, decimal ShiftX = 0, decimal ShiftY = 0)
         {
             int StartX = Math.Min(this.Area.Max.X, Math.Max(this.Area.Min.X, Convert.ToInt32(ShiftX - SizeX / 2m)));
             int StartY = Math.Min(this.Area.Max.Y, Math.Max(this.Area.Min.Y, Convert.ToInt32(ShiftY - SizeY / 2m)));
@@ -120,7 +121,8 @@ namespace PA.TileList
             this.Fill(filler, a);
         }
 
-        public void Fill<U>(Func<ICoordinate, U> filler, IArea a = null) where U : T, ICoordinate
+
+        public void Fill(Func<ICoordinate, T> filler, IArea a = null) 
         {
             this.Clear();
 
@@ -130,11 +132,14 @@ namespace PA.TileList
             {
                 for (int j = area.Min.Y; j <= area.Max.Y; j++)
                 {
-                    U e = filler(new Coordinate(i,j));
+                    T e = filler(this.Find(i, j) as ICoordinate ?? new Coordinate(i, j));
+
                     // reassign  to ensure coherence...
                     e.X = i;
                     e.Y = j;
+
                     this.Add(e);
+
                 }
             }
 
@@ -142,8 +147,6 @@ namespace PA.TileList
             this.TrimExcess();
             this.UpdateArea();
         }
-
-       
 
         public void SetReference(T reference)
         {
@@ -166,7 +169,7 @@ namespace PA.TileList
             return this.X + "," + this.Y;
         }
 
-        public virtual  ICoordinate Clone()
+        public virtual ICoordinate Clone()
         {
             return this.MemberwiseClone() as ICoordinate;
         }
