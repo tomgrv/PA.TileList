@@ -7,8 +7,15 @@ namespace PA.TileList
 {
     public static class AreaExtension
     {
-    
-        public static Area GetArea<T>(this IEnumerable<T> list) where T : ICoordinate
+        public static T RefreshArea<T>(this T list)
+           where T : ITile
+        {
+            list.UpdateArea();
+            return list;
+        }
+
+        public static Area GetArea<T>(this IEnumerable<T> list)
+            where T : ICoordinate
         {
             Area a = new Area(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
 
