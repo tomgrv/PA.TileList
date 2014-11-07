@@ -29,7 +29,7 @@ namespace PA.TileList
             this.X = 0;
             this.Y = 0;
             this.Reference = t.ElementAt(referenceIndex);
-            this.Area = t.GetArea();
+            this.UpdateArea();
         }
 
 
@@ -109,7 +109,6 @@ namespace PA.TileList
         {
             this.Area = this.GetArea();
         }
-
 
         public void Fill(ushort SizeX, ushort SizeY, Func<ICoordinate, T> filler, decimal ShiftX = 0, decimal ShiftY = 0)
         {

@@ -9,9 +9,11 @@ namespace PA.TileList
     public interface ITile : IList, ICoordinate
     {
         IArea Area { get; }
+        void UpdateArea();
     }
 
-    public interface ITile<T> : IList<T>, ITile where T : ICoordinate
+    public interface ITile<T> : IList<T>, ITile 
+        where T : ICoordinate
     {
         T Reference { get; }
         void SetReference(T reference);
