@@ -69,7 +69,7 @@ namespace PA.TileList
 
         public override bool Equals(object obj)
         {
-            return (typeof(IArea).IsAssignableFrom(obj.GetType())) ? (this.Min == (obj as IArea).Min) || (this.Max == (obj as IArea).Max) : base.Equals(obj);
+            return obj is IArea ? (this.Min == (obj as IArea).Min) || (this.Max == (obj as IArea).Max) : base.Equals(obj);
         }
 
         public override string ToString()
