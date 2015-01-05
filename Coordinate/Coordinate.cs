@@ -39,24 +39,9 @@ namespace PA.TileList
 
         public Coordinate(int x, int y)
         {
-            this.Coordinates = new int[Dim];
+            this.Coordinates = new int[2];
             this.X = x;
             this.Y = y;
-        }
-
-        public Coordinate(params int[] c)
-        {
-           if (c.Length > Dim)
-           {
-               throw new ArgumentOutOfRangeException("Too many arguments");
-           }
-
-           if (c.Length < Dim)
-           {
-               throw new ArgumentOutOfRangeException("Not enough arguments");
-           }
-
-           c.CopyTo(Coordinates, 0);
         }
 
         public void Offset(ICoordinate c)
