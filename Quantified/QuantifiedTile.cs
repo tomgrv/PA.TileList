@@ -63,7 +63,7 @@ namespace PA.TileList
             this.SetReference(this.ElementAt(reference));
         }
 
-        public ICoordinate Clone()
+        public new ICoordinate Clone()
         {
             return this.MemberwiseClone() as ICoordinate;
         }
