@@ -14,6 +14,12 @@ namespace PA.TileList
         public ushort SizeX { get { return (ushort)(this.Max.X - this.Min.X + 1); } }
         public ushort SizeY { get { return (ushort)(this.Max.Y - this.Min.Y + 1); } }
 
+        public Area(IArea a)
+        {
+            this.Min = a.Min;
+            this.Max = a.Max;
+        }
+
         public Area(Coordinate Min, Coordinate Max)
         {
             this.Min = Min;
@@ -99,13 +105,18 @@ namespace PA.TileList
 
         private IEnumerable<ICoordinate> GetInnerCoordinates()
         {
-            for (int x = (this.Min.X); x <= (this.Max.X); x++)
+            for (int x = this.Min.X; x <= this.Max.X; x++)
             {
-                for (int y = (this.Min.Y); y <= (this.Max.Y); y++)
+                for (int y = this.Min.Y; y <= this.Max.Y; y++)
                 {
                     yield return new Coordinate(x, y);
                 }
             }
+        }
+
+        public static Area From(IArea a)
+        {
+            return new Area(a.Min, a.Max);
         }
     }
 }

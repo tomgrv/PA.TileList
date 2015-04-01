@@ -110,7 +110,15 @@ namespace PA.TileList
             this.Area = this.GetArea();
         }
 
-        public void Fill(ushort SizeX, ushort SizeY, Func<ICoordinate, T> filler, decimal ShiftX = 0, decimal ShiftY = 0)
+        /// <summary>
+        /// Ask for all non assigned elements
+        /// </summary>
+        /// <param name="SizeX"></param>
+        /// <param name="SizeY"></param>
+        /// <param name="filler"></param>
+        /// <param name="ShiftX"></param>
+        /// <param name="ShiftY"></param>
+        public void Fill(ushort SizeX, ushort SizeY, Func<Coordinate, T> filler, decimal ShiftX = 0, decimal ShiftY = 0)
         {
             int StartX = Math.Min(this.Area.Max.X, Math.Max(this.Area.Min.X, Convert.ToInt32(ShiftX - SizeX / 2m)));
             int StartY = Math.Min(this.Area.Max.Y, Math.Max(this.Area.Min.Y, Convert.ToInt32(ShiftY - SizeY / 2m)));
@@ -121,33 +129,37 @@ namespace PA.TileList
         }
 
 
-        public void Fill(Func<Coordinate, T> filler, IArea a = null) 
+        /// <summary>
+        /// Ask for all non assigned elements in specified Area
+        /// </summary>
+        /// <param name="SizeX"></param>
+        /// <param name="SizeY"></param>
+        /// <param name="filler"></param>
+        /// <param name="ShiftX"></param>
+        /// <param name="ShiftY"></param>
+        public void Fill(Func<Coordinate, T> filler, IArea a = null)
         {
-            IArea area = a ?? this.Area;
+            Area area = new Area(a ?? this.Area);
 
-            for (int i = area.Min.X; i <= area.Max.X; i++)
+            foreach (Coordinate c in area)
             {
-                for (int j = area.Min.Y; j <= area.Max.Y; j++)
+                if (!this.Any(t => t.X == c.X && t.Y == c.Y))
                 {
-                    T  item = filler(new Coordinate(i,j));
-                    this.Remove(item.X, item.Y);;
-                    this.Add(item);
+                    this.Add(filler(c));
                 }
             }
 
-            this.Reference = this.Find(this.Reference.X, this.Reference.Y);
             this.TrimExcess();
             this.UpdateArea();
         }
 
-        public IEnumerable<T> Inside(IArea area)
+        public IEnumerable<T> Inside(IArea a)
         {
-            for (int i = area.Min.X; i <= area.Max.X; i++)
+            Area area = new Area(a ?? this.Area);
+
+            foreach (Coordinate c in area)
             {
-                for (int j = area.Min.Y; j <= area.Max.Y; j++)
-                {
-                    yield return this.Find(i, j);
-                }
+                yield return this.Find(c.X, c.Y);
             }
         }
 
@@ -172,9 +184,18 @@ namespace PA.TileList
             return this.X + "," + this.Y;
         }
 
+
         public virtual ICoordinate Clone()
         {
-            return this.MemberwiseClone() as ICoordinate;
+            return this.Clone(X,Y);
+        }
+
+        public virtual ICoordinate Clone(int x, int y)
+        {
+            var c = this.MemberwiseClone() as ICoordinate;
+            c.X = x;
+            c.Y = y;
+            return c;
         }
     }
 }

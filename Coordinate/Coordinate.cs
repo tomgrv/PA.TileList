@@ -13,7 +13,7 @@ namespace PA.TileList
 
         public int[] Coordinates;
 
-        public int X 
+        public int X
         {
             get
             {
@@ -75,6 +75,15 @@ namespace PA.TileList
             return this.MemberwiseClone() as ICoordinate;
         }
 
-       
+
+        public virtual ICoordinate Clone(int x, int y)
+        {
+            var c = this.MemberwiseClone() as ICoordinate;
+            c.X = x;
+            c.Y = y;
+            return c;
+        }
+
+
     }
 }

@@ -9,6 +9,7 @@ namespace PA.TileList
     {
         int X { get; set; }
         int Y { get; set; }
+        ICoordinate Clone(int x, int y);
         ICoordinate Clone();
     }
 }
