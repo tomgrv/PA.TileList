@@ -17,32 +17,32 @@ namespace PA.TileList
         public static Area GetArea<T>(this IEnumerable<T> list)
             where T : ICoordinate
         {
-            Area a = new Area(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
+            var area = new Area(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
 
             foreach (T item in list)
             {
-                if (item.X < a.Min.X)
+                if (item.X < area.Min.X)
                 {
-                    a.Min.X = item.X;
+                    area.Min.X = item.X;
                 }
 
-                if (item.X > a.Max.X)
+                if (item.X > area.Max.X)
                 {
-                    a.Max.X = item.X;
+                    area.Max.X = item.X;
                 }
 
-                if (item.Y < a.Min.Y)
+                if (item.Y < area.Min.Y)
                 {
-                    a.Min.Y = item.Y;
+                    area.Min.Y = item.Y;
                 }
 
-                if (item.Y > a.Max.Y)
+                if (item.Y > area.Max.Y)
                 {
-                    a.Max.Y = item.Y;
+                    area.Max.Y = item.Y;
                 }
             }
 
-            return a;
+            return area;
         }
     }
 }

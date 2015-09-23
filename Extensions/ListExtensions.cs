@@ -8,7 +8,7 @@ namespace PA.TileList.Extensions
     {
         public static IEnumerable<T> WhereOrDefault<T>(this IEnumerable<T> list, Func<T, bool> predicate)
         {
-            return predicate is Func<T, bool> ? list.Where(predicate) : list.AsEnumerable();
+            return predicate != null ? list.Where(predicate) : list.AsEnumerable();
         }
 
         #region Crop
@@ -18,7 +18,7 @@ namespace PA.TileList.Extensions
         public static IEnumerable<T> Crop<T>(this IEnumerable<T> list, IArea a)
          where T : ICoordinate
         {
-            return list.Where(c => a.Contains(c));
+            return list.Where(e => a.Contains(e));
         }
 
         public static IEnumerable<T> Crop<T>(this IEnumerable<T> list, Func<T, bool> predicate)
