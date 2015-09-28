@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Collections;
 
 namespace PA.TileList
 {
-    public interface IArea
+    public interface IArea : IEnumerable<ICoordinate>
     {
         Coordinate Min { get; }
         Coordinate Max { get; }
