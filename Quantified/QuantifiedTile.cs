@@ -7,7 +7,7 @@ using System.Text;
 namespace PA.TileList
 {
     public class QuantifiedTile<T> : Tile<T>, IQuantifiedTile<T>, ITile<T>
-        where T : ICoordinate
+        where T : class, ICoordinate
     {
 
         public double ElementSizeX { get; private set; }
