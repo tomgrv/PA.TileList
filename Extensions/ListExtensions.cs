@@ -15,7 +15,7 @@ namespace PA.TileList.Extensions
 
 		#region IEnumerable
 
-		public static IEnumerable<T> Crop<T>(this IEnumerable<T> list, IArea a)
+		public static IEnumerable<T> Crop<T>(this IEnumerable<T> list, IZone a)
          where T : ICoordinate
 		{
 			return list.Where(e => a.Contains(e));
@@ -31,7 +31,7 @@ namespace PA.TileList.Extensions
 
 		#region ITile
 
-		public static ITile<T> Crop<T>(this ITile<T> list, IArea a)
+		public static ITile<T> Crop<T>(this ITile<T> list, IZone a)
          where T : ICoordinate
 		{
 			foreach (var e in list.Where(e => !a.Contains(e)).ToArray())
@@ -39,7 +39,7 @@ namespace PA.TileList.Extensions
 				list.Remove(e);
 			}
 
-			list.UpdateArea();
+			list.UpdateZone();
 			return list;
 		}
 
@@ -53,14 +53,14 @@ namespace PA.TileList.Extensions
 
 		#region IQuantifiedTile
 
-		public static IQuantifiedTile<T> Crop<T>(this IQuantifiedTile<T> list, IArea a)
+		public static IQuantifiedTile<T> Crop<T>(this IQuantifiedTile<T> list, IZone a)
          where T : ICoordinate
 		{
 			foreach (var e in list.Where(e => !a.Contains(e)).ToArray())
 			{
 				list.Remove(e);
 			}
-			list.UpdateArea();
+			list.UpdateZone();
 			return list;
 		}
 
@@ -72,11 +72,11 @@ namespace PA.TileList.Extensions
 
 		#endregion
 
-		internal static Area GetCropArea<T>(this IEnumerable<T> list, Func<T, bool> predicate)
+		internal static Zone GetCropArea<T>(this IEnumerable<T> list, Func<T, bool> predicate)
          where T : ICoordinate
 		{
 			// Crop area
-			Area crop = list.GetArea();
+			Zone crop = list.GetZone();
 
 			// Reduce on x increasing
 			IEnumerable<T> l1 = list.Where(c => c.X == crop.Min.X);
