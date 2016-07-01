@@ -96,9 +96,9 @@
     <Compile Include="..\common\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Area\Area.cs" />
-    <Compile Include="Area\AreaExtension.cs" />
-    <Compile Include="Area\IArea.cs" />
+    <Compile Include="Zone\Zone.cs" />
+    <Compile Include="Zone\ZoneExtension.cs" />
+    <Compile Include="Zone\IZone.cs" />
     <Compile Include="Coordinate\Coordinate.cs" />
     <Compile Include="Coordinate\CoordinateComparer.cs" />
     <Compile Include="Coordinate\CoordinateExtention.cs" />

@@ -15,7 +15,7 @@ namespace PA.TileList
 
 		public T Reference { get; private set; }
 
-		public IArea Area { get; private set; }
+		public IZone Zone { get; private set; }
 
 		protected Tile(ITile<T> t)
 			: base(t)
@@ -23,7 +23,7 @@ namespace PA.TileList
 			this.X = t.X;
 			this.Y = t.Y;
 			this.Reference = t.Reference;
-			this.Area = t.Area;
+			this.Zone = t.Zone;
 		}
 
 		public Tile(IEnumerable<T> t, int referenceIndex = 0)
@@ -32,11 +32,11 @@ namespace PA.TileList
 			this.X = 0;
 			this.Y = 0;
 			this.Reference = t.ElementAt(referenceIndex);
-			this.UpdateArea();
+			this.UpdateZone();
 		}
 
 
-		public Tile(IArea area, IEnumerable<T> t, int referenceIndex = 0)
+		public Tile(IZone area, IEnumerable<T> t, int referenceIndex = 0)
 			: base(t)
 		{
 			if (base.Count == 0)
@@ -47,19 +47,19 @@ namespace PA.TileList
 			this.X = 0;
 			this.Y = 0;
 			this.Reference = base[referenceIndex];
-			this.Area = area;
+			this.Zone = area;
 		}
 
-		public Tile(IArea area, T reference)
+		public Tile(IZone area, T reference)
 			: base(new T[] { reference })
 		{
 			this.X = 0;
 			this.Y = 0;
 			this.Reference = base[0];
-			this.Area = area;
+			this.Zone = area;
 		}
 
-		public Tile(int x, int y, IArea area, IEnumerable<T> t, int referenceIndex = 0)
+		public Tile(int x, int y, IZone area, IEnumerable<T> t, int referenceIndex = 0)
 			: base(t)
 		{
 			if (base.Count == 0)
@@ -70,16 +70,16 @@ namespace PA.TileList
 			this.X = x;
 			this.Y = y;
 			this.Reference = base[referenceIndex];
-			this.Area = area;
+			this.Zone = area;
 		}
 
-		public Tile(int x, int y, IArea area, T reference)
+		public Tile(int x, int y, IZone area, T reference)
 			: base(new T[] { reference })
 		{
 			this.X = x;
 			this.Y = y;
 			this.Reference = base[0];
-			this.Area = area;
+			this.Zone = area;
 		}
 
 
@@ -93,7 +93,7 @@ namespace PA.TileList
 			return this.Find(e => e.X == c.X && e.Y == c.Y);
 		}
 
-		public List<T> FindAll(IArea a)
+		public List<T> FindAll(IZone a)
 		{
 			return base.FindAll(a.Contains);
 		}
@@ -103,14 +103,14 @@ namespace PA.TileList
 			this.Remove(this.Find(x, y));
 		}
 
-		public void RemoveAll(IArea a)
+		public void RemoveAll(IZone a)
 		{
 			this.RemoveAll(a.Contains);
 		}
 
-		public void UpdateArea()
+		public void UpdateZone()
 		{
-			this.Area = this.GetArea();
+			this.Zone = this.GetZone();
 		}
 
 		/// <summary>
@@ -120,7 +120,7 @@ namespace PA.TileList
 		/// <param name="overwrite">Overwrite existing element</param>
 		public void Fill(Func<Coordinate, T> filler, bool overwrite = false)
 		{
-			this.Fill(this.Area, filler, overwrite);
+			this.Fill(this.Zone, filler, overwrite);
 		}
 
 
@@ -130,7 +130,7 @@ namespace PA.TileList
 		/// <param name="area">Area.</param>
 		/// <param name="filler">Filler.</param>
 		/// <param name="overwrite">Overwrite existing element</param>
-		public void Fill(IArea area, Func<Coordinate, T> filler, bool overwrite = false)
+		public void Fill(IZone area, Func<Coordinate, T> filler, bool overwrite = false)
 		{
 			foreach (Coordinate c in area)
 			{
@@ -148,7 +148,7 @@ namespace PA.TileList
 			}
 
 			this.TrimExcess();
-			this.UpdateArea();
+			this.UpdateZone();
 		}
 
 		/// <summary>
@@ -162,17 +162,17 @@ namespace PA.TileList
 		/// <param name="overwrite">Overwrite existing element</param>
 		public void Fill(ushort SizeX, ushort SizeY, Func<Coordinate, T> filler, decimal ShiftX = 0, decimal ShiftY = 0, bool overwrite = false)
 		{
-			int StartX = Math.Min(this.Area.Max.X, Math.Max(this.Area.Min.X, Convert.ToInt32(ShiftX - SizeX / 2m)));
-			int StartY = Math.Min(this.Area.Max.Y, Math.Max(this.Area.Min.Y, Convert.ToInt32(ShiftY - SizeY / 2m)));
+			int StartX = Math.Min(this.Zone.Max.X, Math.Max(this.Zone.Min.X, Convert.ToInt32(ShiftX - SizeX / 2m)));
+			int StartY = Math.Min(this.Zone.Max.Y, Math.Max(this.Zone.Min.Y, Convert.ToInt32(ShiftY - SizeY / 2m)));
 
-			var area = new Area(StartX, StartY, StartX + SizeX - 1, StartY + SizeY - 1);
+			var area = new Zone(StartX, StartY, StartX + SizeX - 1, StartY + SizeY - 1);
 
 			this.Fill(area, filler, overwrite);
 		}
 
-		public IEnumerable<T> Inside(IArea a)
+		public IEnumerable<T> Inside(IZone a)
 		{
-			Area area = new Area(a ?? this.Area);
+			Zone area = new Zone(a ?? this.Zone);
 
 			foreach (Coordinate c in area)
 			{

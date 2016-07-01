@@ -8,11 +8,11 @@ namespace PA.TileList
 {
     public interface ITile : IList, ICoordinate
     {
-        IArea Area { get; }
-        void UpdateArea();
+        IZone Zone { get; }
+        void UpdateZone();
     }
 
-    public interface ITile<T> : IList<T>, ITile 
+    public interface ITile<T> : IList<T>, ITile
         where T : ICoordinate
     {
         T Reference { get; }
