@@ -5,28 +5,28 @@ using System.Text;
 
 namespace PA.TileList
 {
-    public class Area : IArea, IEnumerable<ICoordinate>
+    public class Zone : IZone, IEnumerable<ICoordinate>
     {
-        public static Area Unitary = new Area(0, 0, 0, 0);
+        public static Zone Unitary = new Zone(0, 0, 0, 0);
 
         public Coordinate Min { get; set; }
         public Coordinate Max { get; set; }
         public ushort SizeX { get { return (ushort)(this.Max.X - this.Min.X + 1); } }
         public ushort SizeY { get { return (ushort)(this.Max.Y - this.Min.Y + 1); } }
 
-        public Area(IArea a)
+        public Zone(IZone a)
         {
             this.Min = a.Min;
             this.Max = a.Max;
         }
 
-        public Area(Coordinate Min, Coordinate Max)
+        public Zone(Coordinate Min, Coordinate Max)
         {
             this.Min = Min;
             this.Max = Max;
         }
 
-        public Area(int MinX, int MinY, int MaxX, int MaxY)
+        public Zone(int MinX, int MinY, int MaxX, int MaxY)
         {
             this.Min = new Coordinate(MinX, MinY);
             this.Max = new Coordinate(MaxX, MaxY);
@@ -58,24 +58,24 @@ namespace PA.TileList
             return this.Min.X <= x && x <= this.Max.X && this.Min.Y <= y && y <= this.Max.Y;
         }
 
-        public bool Contains(IArea b)
+        public bool Contains(IZone b)
         {
             return this.Min.X <= b.Min.X && b.Max.X <= this.Max.X && this.Min.Y <= b.Min.Y && b.Max.Y <= this.Max.Y;
         }
 
-        public static bool operator ==(Area a, IArea b)
+        public static bool operator ==(Zone a, IZone b)
         {
             return (a.Min == b.Min) && (a.Max == b.Max);
         }
 
-        public static bool operator !=(Area a, IArea b)
+        public static bool operator !=(Zone a, IZone b)
         {
             return (a.Min != b.Min) || (a.Max != b.Max);
         }
 
         public override bool Equals(object obj)
         {
-            return obj is IArea ? (this.Min == (obj as IArea).Min) || (this.Max == (obj as IArea).Max) : base.Equals(obj);
+            return obj is IZone ? (this.Min == (obj as IZone).Min) || (this.Max == (obj as IZone).Max) : base.Equals(obj);
         }
 
         public override string ToString()
@@ -114,9 +114,9 @@ namespace PA.TileList
             }
         }
 
-        public static Area From(IArea a)
+        public static Zone From(IZone a)
         {
-            return new Area(a.Min, a.Max);
+            return new Zone(a.Min, a.Max);
         }
     }
 }

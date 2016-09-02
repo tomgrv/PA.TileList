@@ -6,7 +6,7 @@ using System.Collections;
 
 namespace PA.TileList
 {
-    public interface IArea : IEnumerable<ICoordinate>
+    public interface IZone : IEnumerable<ICoordinate>
     {
         Coordinate Min { get; }
         Coordinate Max { get; }
@@ -14,7 +14,7 @@ namespace PA.TileList
         ushort SizeY { get; }
 
         bool Contains(ICoordinate c);
-        bool Contains(IArea b);
+        bool Contains(IZone b);
         void Offset(ICoordinate c);
         ICoordinate Center();
 

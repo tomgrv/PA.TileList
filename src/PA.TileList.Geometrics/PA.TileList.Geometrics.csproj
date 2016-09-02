@@ -64,15 +64,16 @@
       <Project>{5B4FACE3-DDB3-4EAA-985A-9DE4AAC34A91}</Project>
       <Name>PA.TileList</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PA.Utilities\PA.Utilities.csproj">
-      <Project>{F2C9256B-A6C1-4FAF-8DF0-3A15092F50B7}</Project>
-      <Name>PA.Utilities</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="PA.TileList.Geometrics.nuspec" />
     <None Include="PA.Toolbox.snk" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="PA.Utilities">
+      <HintPath>..\packages\PA.Utilities.4.7.2\lib\portable-net45+win+wp80\PA.Utilities.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
@@ -83,6 +84,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Import Project="..\packages\GitVersionTask.3.6.3\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets" Condition="Exists('..\packages\GitVersionTask.3.6.3\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets')" />
   <ProjectExtensions>
     <MonoDevelop>
       <Properties>
@@ -146,5 +148,4 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
-  <Import Project="..\packages\GitVersionTask.2.0.1\Build\GitVersionTask.targets" Condition="Exists('..\packages\GitVersionTask.2.0.1\Build\GitVersionTask.targets')" />
 </Project>
