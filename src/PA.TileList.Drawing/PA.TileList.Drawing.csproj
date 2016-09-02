@@ -53,7 +53,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="PA.Utilities">
-      <HintPath>..\packages\PA.Utilities.4.7.2\lib\portable-net45+win+wp80\PA.Utilities.dll</HintPath>
+      <HintPath>..\packages\PA.Utilities.4.7.4\lib\portable-net45+win+wp80+MonoAndroid10+xamarinios10+MonoTouch10\PA.Utilities.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

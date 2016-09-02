@@ -4,6 +4,10 @@
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="PA.TileList\Zone\ZoneExtension.cs">
+    <Files>
+      <File FileName="PA.TileList\Zone\ZoneExtension.cs" Line="15" Column="10" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <AuthorInfo Name="Thomas GERVAIS" Email="thomas.gervais@gmail.com" Copyright="" Company="" Trademark="" />
 </Properties>
