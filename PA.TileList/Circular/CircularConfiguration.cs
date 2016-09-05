@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using PA.Utilities;
 
-namespace PA.TileList.Geometrics.Circular
+namespace PA.TileList.Circular
 {
     /// <summary>
     /// Parameters for circular operations
