@@ -139,7 +139,7 @@ namespace PA.TileList.Geometrics.Extensions
             {
                 // the lower line joins p[minmin]  with p[maxmin]
                 var o = p[minmin].GetOrientation(p[maxmin], p[i]);
-                if ((o == CoordinateExtensions.Orientation.CounterClockWise || o == CoordinateExtensions.Orientation.Collinear) && i < maxmin)
+                if ((o == Orientation.CounterClockWise || o == Orientation.Collinear) && i < maxmin)
                 {
                     continue;           // ignore p[i] above or on the lower line
                 }
@@ -148,7 +148,7 @@ namespace PA.TileList.Geometrics.Extensions
                 {
                     // test if  p[i] is left of the line at the stack top
                     var ot = h[top - 1].GetOrientation(h[top], p[i]);
-                    if (ot == CoordinateExtensions.Orientation.CounterClockWise)
+                    if (ot == Orientation.CounterClockWise)
                     {
                         break;          // p[i] is a new hull  vertex
                     }
@@ -172,7 +172,7 @@ namespace PA.TileList.Geometrics.Extensions
             {
                 // the upper line joins p[maxmax]  with p[minmax]
                 var o = p[maxmax].GetOrientation(p[minmax], p[i]);
-                if ((o == CoordinateExtensions.Orientation.CounterClockWise || o == CoordinateExtensions.Orientation.Collinear) && i > minmax)
+                if ((o == Orientation.CounterClockWise || o == Orientation.Collinear) && i > minmax)
                 {
                     continue;           // ignore p[i] below or on the upper line
                 }
@@ -181,7 +181,7 @@ namespace PA.TileList.Geometrics.Extensions
                 {
                     // test if  p[i] is left of the line at the stack top
                     var ot = h[top - 1].GetOrientation(h[top], p[i]);
-                    if (ot == CoordinateExtensions.Orientation.CounterClockWise)
+                    if (ot == Orientation.CounterClockWise)
                     {
                         break;          // p[i] is a new hull  vertex
                     }

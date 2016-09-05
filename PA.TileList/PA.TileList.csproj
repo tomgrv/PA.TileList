@@ -129,6 +129,8 @@
     <Compile Include="Linear\CoordinateComparer.cs" />
     <Compile Include="Linear\CoordinateExtensions.cs" />
     <Compile Include="Linear\ICoordinate.cs" />
+    <Compile Include="Linear\OrientationExtensions.cs" />
+    <Compile Include="Linear\Orientation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PA.TileList.nuspec" />
