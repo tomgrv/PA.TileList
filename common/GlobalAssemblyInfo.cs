@@ -8,7 +8,7 @@ using System.Reflection;
 #endif
 
 [assembly: AssemblyCompany("PerspicApps")]
-[assembly: AssemblyProduct("PA.Toolbox")]
-[assembly: AssemblyCopyright("©PA 2015")]
+[assembly: AssemblyProduct("PA.TileList")]
+[assembly: AssemblyCopyright("(c) PA 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
