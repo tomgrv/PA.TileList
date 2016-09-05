@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections;
+using PA.TileList.Linear;
+using PA.TileList.Tile;
 
-namespace PA.TileList
+namespace PA.TileList.Zone
 {
     public interface IZone : IEnumerable<ICoordinate>
     {

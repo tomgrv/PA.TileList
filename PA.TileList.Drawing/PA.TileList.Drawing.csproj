@@ -74,14 +74,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PA.TileList.Extensions\PA.TileList.Extensions.csproj">
-      <Project>{A16E749B-7556-41BD-A9B9-253B3253578C}</Project>
-      <Name>PA.TileList.Extensions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PA.TileList.Geometrics\PA.TileList.Geometrics.csproj">
-      <Project>{B64BCAC4-3BD8-414D-8F5C-F55728FA109E}</Project>
-      <Name>PA.TileList.Geometrics</Name>
-    </ProjectReference>
     <ProjectReference Include="..\PA.TileList\PA.TileList.csproj">
       <Project>{5B4FACE3-DDB3-4EAA-985A-9DE4AAC34A91}</Project>
       <Name>PA.TileList</Name>

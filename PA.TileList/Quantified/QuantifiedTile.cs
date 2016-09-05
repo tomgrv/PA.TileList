@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using PA.TileList.Tile;
+using PA.TileList.Linear;
 
-namespace PA.TileList
+namespace PA.TileList.Quantified
 {
     public class QuantifiedTile<T> : Tile<T>, IQuantifiedTile<T>, ITile<T>
         where T : class, ICoordinate
@@ -49,7 +51,7 @@ namespace PA.TileList
         {
             if (this.Contains(reference))
             {
-                Coordinate n = new Coordinate(reference.X - this.Reference.X, reference.Y - this.Reference.Y);
+                var n = new Coordinate(reference.X - this.Reference.X, reference.Y - this.Reference.Y);
 
                 this.RefOffsetX += n.X * this.ElementStepX;
                 this.RefOffsetY += n.Y * this.ElementStepY;
@@ -67,6 +69,6 @@ namespace PA.TileList
         {
             return this.MemberwiseClone() as ICoordinate;
         }
-         
+
     }
 }

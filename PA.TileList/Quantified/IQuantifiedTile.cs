@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using PA.TileList.Tile;
+using PA.TileList.Linear;
 
-namespace PA.TileList
+namespace PA.TileList.Quantified
 {
     /// <summary>
     /// Tile quantification elements

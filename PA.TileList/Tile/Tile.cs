@@ -3,8 +3,11 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Collections;
+using PA.TileList.Linear;
+using PA.TileList.Tile;
+using PA.TileList.Zone;
 
-namespace PA.TileList
+namespace PA.TileList.Tile
 {
     public class Tile<T> : List<T>, ITile<T>
     where T : class, ICoordinate
@@ -165,16 +168,16 @@ namespace PA.TileList
             int StartX = Math.Min(this.Zone.Max.X, Math.Max(this.Zone.Min.X, Convert.ToInt32(ShiftX - SizeX / 2m)));
             int StartY = Math.Min(this.Zone.Max.Y, Math.Max(this.Zone.Min.Y, Convert.ToInt32(ShiftY - SizeY / 2m)));
 
-            var area = new Zone(StartX, StartY, StartX + SizeX - 1, StartY + SizeY - 1);
+            var area = new Zone.Zone(StartX, StartY, StartX + SizeX - 1, StartY + SizeY - 1);
 
             this.Fill(area, filler, overwrite);
         }
 
         public IEnumerable<T> Inside(IZone a)
         {
-            var zone = new Zone(a ?? this.Zone);
+            var zone = new Zone.Zone(a ?? this.Zone);
 
-            foreach (Coordinate c in zone)
+            foreach (var c in zone)
             {
                 yield return this.Find(c.X, c.Y);
             }
