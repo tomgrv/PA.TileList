@@ -41,7 +41,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Remoting;
 using System.Text.RegularExpressions;
 
-namespace PA.TileList.Drawing.Core
+namespace PA.TileList.Drawing.Graphics2D
 {
     public static class GraphicExtensions
     {
@@ -64,7 +64,7 @@ namespace PA.TileList.Drawing.Core
             var innerZone = new RectangleF(image.Inner.X * scaleX, image.Inner.Y * scaleY, image.Inner.Width * scaleX, image.Inner.Height * scaleY);
 
             // Extract graphic
-            Graphics g = Graphics.FromImage(image.Item);
+            var g = Graphics.FromImage(image.Item);
 
             // Update
             g.TranslateTransform((image.Item.Width - image.Inner.Width * scaleX) / 2f, (image.Item.Height - image.Inner.Height * scaleY) / 2f);

@@ -14,7 +14,7 @@ using PA.TileList.Circular;
 using PA.TileList.Contextual;
 using PA.TileList.Linear;
 using PA.TileList.Quantified;
-using PA.TileList.Drawing.Core;
+using PA.TileList.Drawing.Graphics2D;
 
 
 namespace PA.TileList.Drawing.Quantified

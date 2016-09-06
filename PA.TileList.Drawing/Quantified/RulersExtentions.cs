@@ -6,7 +6,7 @@ using System.Collections;
 using System.Drawing;
 using PA.TileList.Quantified;
 using PA.TileList.Contextual;
-using PA.TileList.Drawing.Core;
+using PA.TileList.Drawing.Graphics2D;
 using PA.TileList.Linear;
 
 namespace PA.TileList.Drawing.Quantified

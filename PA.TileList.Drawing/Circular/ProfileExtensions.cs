@@ -9,7 +9,7 @@ using PA.TileList.Contextual;
 using PA.TileList.Circular;
 using PA.Utilities;
 using System.Drawing.Text;
-using PA.TileList.Drawing.Core;
+using PA.TileList.Drawing.Graphics2D;
 
 namespace PA.TileList.Drawing.Circular
 {
