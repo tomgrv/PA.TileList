@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using PA.TileList.Linear;
-using PA.TileList.Zone;
+using PA.TileList.Cropping;
 using PA.TileList.Tile;
 using PA.TileList.Quantified;
 

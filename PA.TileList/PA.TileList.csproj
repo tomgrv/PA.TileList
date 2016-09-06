@@ -103,9 +103,9 @@
     <Compile Include="Quantified\QuantifiedTile.cs" />
     <Compile Include="Tile\ITile.cs" />
     <Compile Include="Tile\Tile.cs" />
-    <Compile Include="Zone\IZone.cs" />
-    <Compile Include="Zone\Zone.cs" />
-    <Compile Include="Zone\ZoneExtensions.cs" />
+    <Compile Include="Cropping\IZone.cs" />
+    <Compile Include="Cropping\Zone.cs" />
+    <Compile Include="Cropping\ZoneExtensions.cs" />
     <Compile Include="Extensions\PolygonExtensions.cs" />
     <Compile Include="Extensions\TranslateExtensions.cs" />
     <Compile Include="Circular\CircularConfiguration.cs" />
@@ -123,7 +123,7 @@
     <Compile Include="Tile\TileExtensions.cs" />
     <Compile Include="Linear\Segment.cs" />
     <Compile Include="Linear\SegmentExtensions.cs" />
-    <Compile Include="Zone\CropExtensions.cs" />
+    <Compile Include="Cropping\CroppingExtensions.cs" />
     <Compile Include="Quantified\CropExtensions.cs" />
     <Compile Include="Linear\Coordinate.cs" />
     <Compile Include="Linear\CoordinateComparer.cs" />

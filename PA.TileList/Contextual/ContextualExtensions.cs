@@ -8,7 +8,7 @@ using PA.TileList.Quantified;
 using PA.TileList.Extensions;
 using PA.TileList.Linear;
 using PA.TileList.Tile;
-using PA.TileList.Zone;
+using PA.TileList.Cropping;
 
 namespace PA.TileList.Contextual
 {

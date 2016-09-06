@@ -5,7 +5,7 @@ using System.Text;
 using PA.TileList.Tile;
 using PA.TileList.Linear;
 
-namespace PA.TileList.Zone
+namespace PA.TileList.Cropping
 {
     public static class ZoneExtension
     {

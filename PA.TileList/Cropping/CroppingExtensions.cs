@@ -31,12 +31,12 @@ using System.Text;
 using PA.TileList.Tile;
 using PA.TileList.Linear;
 
-namespace PA.TileList.Zone
+namespace PA.TileList.Cropping
 {
-    public static class CropExtensions
+    public static class CroppingExtensions
     {
 
-        internal static IZone GetCropZone<T>(this IEnumerable<T> list, Func<T, bool> predicate)
+        internal static IZone GetCroppingZone<T>(this IEnumerable<T> list, Func<T, bool> predicate)
      where T : ICoordinate
         {
             // Crop area
@@ -77,7 +77,7 @@ namespace PA.TileList.Zone
             return crop;
         }
 
-        public static ITile<T> Crop<T>(this ITile<T> list, IZone a)
+        public static ITile<T> Cropping<T>(this ITile<T> list, IZone a)
       where T : ICoordinate
         {
             foreach (var e in list.Where(e => !a.Contains(e)).ToArray())
@@ -89,10 +89,10 @@ namespace PA.TileList.Zone
             return list;
         }
 
-        public static ITile<T> Crop<T>(this ITile<T> list, Func<T, bool> predicate)
+        public static ITile<T> Cropping<T>(this ITile<T> list, Func<T, bool> predicate)
             where T : ICoordinate
         {
-            return list.Crop(list.GetCropZone(predicate));
+            return list.Cropping(list.GetCroppingZone(predicate));
         }
     }
 }

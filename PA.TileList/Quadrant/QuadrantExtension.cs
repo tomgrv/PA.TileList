@@ -7,7 +7,7 @@ using PA.TileList.Linear;
 using PA.TileList.Extensions;
 using PA.TileList.Quantified;
 using PA.TileList.Tile;
-using PA.TileList.Zone;
+using PA.TileList.Cropping;
 
 namespace PA.TileList.Quadrant
 {
@@ -410,7 +410,7 @@ namespace PA.TileList.Quadrant
         public static T FirstOrDefault<R, T>(this IQuadrant<T> zl, int x, int y, bool flattenQuadrant = false)
             where T : class, ICoordinate
         {
-            IZone a = new Zone.Zone(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
+            IZone a = new Zone(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
 
             if (flattenQuadrant)
             {

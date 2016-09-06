@@ -6,7 +6,7 @@ using System.Collections;
 using PA.TileList.Linear;
 using PA.TileList.Tile;
 
-namespace PA.TileList.Zone
+namespace PA.TileList.Cropping
 {
     public interface IZone : IEnumerable<ICoordinate>
     {

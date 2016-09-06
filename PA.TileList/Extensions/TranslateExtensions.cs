@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using PA.TileList.Zone;
+using PA.TileList.Cropping;
 
 namespace PA.TileList.Geometrics.Extensions
 {

@@ -31,7 +31,7 @@ using System.Text;
 using System.Diagnostics.Contracts;
 using PA.TileList.Tile;
 using PA.TileList.Linear;
-using PA.TileList.Zone;
+using PA.TileList.Cropping;
 
 namespace PA.TileList.Quantified
 {

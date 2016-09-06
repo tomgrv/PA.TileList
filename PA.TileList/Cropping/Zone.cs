@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using PA.TileList.Tile;
-using PA.TileList.Zone;
+using PA.TileList.Cropping;
 using PA.TileList.Linear;
 
-namespace PA.TileList.Zone
+namespace PA.TileList.Cropping
 {
     public class Zone : IZone, IEnumerable<ICoordinate>
     {
