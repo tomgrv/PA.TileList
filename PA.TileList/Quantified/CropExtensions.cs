@@ -51,7 +51,7 @@ namespace PA.TileList.Quantified
         public static IQuantifiedTile<T> Crop<T>(this IQuantifiedTile<T> list, Func<T, bool> predicate)
             where T : ICoordinate
         {
-            return list.Crop(list.GetCropZone(predicate));
+            return list.Crop(list.GetCroppingZone(predicate));
         }
     }
 }

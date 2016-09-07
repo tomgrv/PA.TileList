@@ -15,35 +15,7 @@ namespace PA.TileList.Extensions
             return predicate != null ? list.Where(predicate) : list.AsEnumerable();
         }
 
-        #region Crop
 
-        #region IEnumerable
-
-        public static IEnumerable<T> Crop<T>(this IEnumerable<T> list, IZone a)
-         where T : ICoordinate
-        {
-            return list.Where(e => a.Contains(e));
-        }
-
-        public static IEnumerable<T> Crop<T>(this IEnumerable<T> list, Func<T, bool> predicate)
-            where T : ICoordinate
-        {
-            return list.Crop(list.GetCropZone(predicate));
-        }
-
-        #endregion
-
-        #region ITile
-
-
-
-        #endregion
-
-
-
-
-
-        #endregion
 
         public static string GetChecksum<T>(this IEnumerable<T> list, Func<T, IEnumerable<char>> signature)
          where T : ICoordinate

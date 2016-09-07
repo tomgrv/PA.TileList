@@ -94,5 +94,17 @@ namespace PA.TileList.Cropping
         {
             return list.Cropping(list.GetCroppingZone(predicate));
         }
+
+        public static IEnumerable<T> Cropping<T>(this IEnumerable<T> list, IZone a)
+        where T : ICoordinate
+        {
+            return list.Where(e => a.Contains(e));
+        }
+
+        public static IEnumerable<T> Cropping<T>(this IEnumerable<T> list, Func<T, bool> predicate)
+            where T : ICoordinate
+        {
+            return list.Cropping(list.GetCroppingZone(predicate));
+        }
     }
 }
