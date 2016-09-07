@@ -9,7 +9,6 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 using PA.TileList.Cropping;
-using PA.TileList.Linear;
 using PA.TileList.Tile;
 
 namespace PA.TileList.Tests
