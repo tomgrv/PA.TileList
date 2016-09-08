@@ -69,6 +69,8 @@ namespace PA.TileList.Drawing.Graphics2D
             // Update
             g.TranslateTransform((image.Item.Width - image.Inner.Width * scaleX) / 2f, (image.Item.Height - image.Inner.Height * scaleY) / 2f);
             g.TranslateTransform(-outerZone.Left, -outerZone.Top);
+
+            g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
             g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
 
             // Extra trace
