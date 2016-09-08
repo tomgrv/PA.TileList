@@ -22,7 +22,9 @@ build:
   publish_nuget_symbols: false     	# generate and publish NuGet symbol packages
   include_nuget_references: false	# add -IncludeReferencedProjects option while packaging NuGet artifacts
   verbosity: normal
-  
+
+test: off
+
 artifacts:
 - path: '**/PA.TileList.*.nupkg'
 
