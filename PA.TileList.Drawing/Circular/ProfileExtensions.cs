@@ -15,13 +15,13 @@ namespace PA.TileList.Drawing.Circular
 {
     public static class ProfileExtentions
     {
-        public static RectangleD<Bitmap> GetImage(this CircularProfile p, int width, int height, RectangleF inner, ScaleMode mode = ScaleMode.ALL, Pen radiusPen = null, Pen arcPen = null, Pen extraPen = null)
+        public static RectangleD<Bitmap> GetImage(this CircularProfile p, int width, int height, RectangleF inner, ScaleMode mode = ScaleMode.NONE, Pen radiusPen = null, Pen arcPen = null, Pen extraPen = null)
         {
             return p.GetImage(new RectangleD<Bitmap>(new Bitmap(width, height), new PointF(inner.X - (mode.HasFlag(ScaleMode.CENTER) ? inner.Width / 2f : 0f), inner.Y - (mode.HasFlag(ScaleMode.CENTER) ? inner.Height / 2f : 0f)), inner.Size), mode, radiusPen, arcPen, extraPen);
         }
 
 
-        public static RectangleD<Bitmap> GetImage(this CircularProfile p, int width, int height, ScaleMode mode = ScaleMode.ALL, Pen radiusPen = null, Pen arcPen = null, Pen extraPen = null)
+        public static RectangleD<Bitmap> GetImage(this CircularProfile p, int width, int height, ScaleMode mode = ScaleMode.NONE, Pen radiusPen = null, Pen arcPen = null, Pen extraPen = null)
         {
             return p.GetImage(new RectangleD<Bitmap>(new Bitmap(width, height), mode.HasFlag(ScaleMode.CENTER) ? new PointF(-width / 2f, -height / 2f) : PointF.Empty, new SizeF(width, height)), mode, radiusPen, arcPen, extraPen);
         }
@@ -37,7 +37,6 @@ namespace PA.TileList.Drawing.Circular
                 float maxsize = (float)p.GetMaxRadius() * 2f;
                 float minsize = (float)p.GetMinRadius() * 2f;
                 float midsize = (float)p.Radius * 2f;
-
 
                 if (extraPen != null)
                 {
@@ -64,8 +63,8 @@ namespace PA.TileList.Drawing.Circular
 
                     if (!current.Radius.NearlyEquals(last.Radius))
                     {
-                        double x1 = g.OffsetX + (double)lastRadius * g.ScaleX * Math.Cos(current.Angle);
-                        double y1 = g.OffsetY - (double)lastRadius * g.ScaleY * Math.Sin(current.Angle);
+                        double x1 = g.OffsetX + (double)g.ScaleX * lastRadius * Math.Cos(current.Angle);
+                        double y1 = g.OffsetY - (double)g.ScaleY * lastRadius * Math.Sin(current.Angle);
                         double x2 = g.OffsetX + (double)g.ScaleX * current.Radius * Math.Cos(current.Angle);
                         double y2 = g.OffsetY - (double)g.ScaleY * current.Radius * Math.Sin(current.Angle);
                         g.Graphics.DrawLine(radiusPen ?? Pens.Orange, (float)x1, (float)y1, (float)x2, (float)y2);
