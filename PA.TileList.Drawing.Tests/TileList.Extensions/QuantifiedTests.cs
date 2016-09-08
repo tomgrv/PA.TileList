@@ -1,19 +1,21 @@
 ﻿using System;
-using PA.TileList;
-using PA.TileList.Quantified;
-using PA.TileList.Contextual;
-using PA.TileList.Drawing;
-using PA.TileList.Extensions;
-using PA.File.Extensions;
 using System.Drawing;
-using PA.TileList.Circular;
 using System.IO;
 using NUnit.Framework;
+using PA.TileList.Circular;
+using PA.TileList.Contextual;
+using PA.TileList.Cropping;
+using PA.TileList.Drawing.Circular;
 using PA.TileList.Drawing.Graphics2D;
 using PA.TileList.Drawing.Quantified;
-using PA.TileList.Drawing.Circular;
+using PA.TileList.Linear;
+using PA.TileList.Quantified;
+using PA.TileList.Quadrant;
+using PA.TileList.Tests;
+using PA.TileList.Tests.Utils;
+using PA.TileList.Tile;
 
-namespace PA.TileList.Tests
+namespace PA.TileList.Drawing.Tests
 {
     [TestFixture]
     public class QuantifiedTests
@@ -21,15 +23,15 @@ namespace PA.TileList.Tests
         [Test, Category("Image hash")]
         public void FirstOrDefault()
         {
-            TileTests.MainTile tile = TileTests.GetTile(1);
+            var tile = MainTile.GetTile(1);
 
-            IQuantifiedTile<IContextual<TileTests.Item>> t1 = tile
-               .Flatten<TileTests.SubTile, TileTests.Item>();
+            IQuantifiedTile<IContextual<Item>> t1 = tile
+               .Flatten<SubTile, Item>();
 
-            IContextual<TileTests.Item> item1 = t1.ElementAt(27.4, 38);
+            var item1 = t1.ElementAt(27.4, 38);
             item1.Context.Color = Color.Red;
 
-            IContextual<TileTests.Item> item2 = t1.ElementAt(0, 0);
+            var item2 = t1.ElementAt(0, 0);
             item2.Context.Color = Color.Blue;
 
             var i1 = t1.GetImage(2000, 2000, (z, s) => z.Context.ToBitmap(100, 50, z.X + "\n" + z.Y));
@@ -41,12 +43,12 @@ namespace PA.TileList.Tests
         [Test]
         public void Coordinates()
         {
-            TileTests.MainTile tile = TileTests.GetTile(1);
+            var tile = MainTile.GetTile(1);
 
-            IQuantifiedTile<IContextual<TileTests.Item>> t1 = tile
-               .Flatten<TileTests.SubTile, TileTests.Item>();
+            var t1 = tile
+               .Flatten<SubTile, Item>();
 
-            IContextual<TileTests.Item> item = t1.ElementAt(1000, 500);
+            var item = t1.ElementAt(1000, 500);
             item.Context.Color = Color.Red;
 
             ICoordinate coord = t1.GetCoordinateAt(1000, 500);
@@ -58,10 +60,10 @@ namespace PA.TileList.Tests
         [Test]
         public void CoordinatesIn()
         {
-            Tile<TileTests.Item> t0 = new Tile<TileTests.Item>(new Zone(0, 0, 100, 100), new TileTests.Item(0, 0, Color.Red));
-            t0.Fill(c => c.X > 25 && c.X < 75 && c.Y > 30 && c.Y < 60 ? new TileTests.Item(c.X, c.Y, c.X == c.Y ? Color.Yellow : Color.Green) : new TileTests.Item(c.X, c.Y, Color.Red));
+            var t0 = new Tile<Item>(new Zone(0, 0, 100, 100), new Item(0, 0, Color.Red));
+            t0.Fill(c => c.X > 25 && c.X < 75 && c.Y > 30 && c.Y < 60 ? new Item(c.X, c.Y, c.X == c.Y ? Color.Yellow : Color.Green) : new Item(c.X, c.Y, Color.Red));
 
-            IQuantifiedTile<TileTests.Item> q0 = t0.AsQuantified(10, 10);
+            var q0 = t0.AsQuantified(10, 10);
 
             string signature0 = q0.GetImage(1000, 1000, (z, s) =>
                 z.ToBitmap(100, 50, z.X + "\n" + z.Y)).Item.GetSignature();
@@ -94,21 +96,21 @@ namespace PA.TileList.Tests
         [Test, Category("Image hash")]
         public void Rulers()
         {
-            TileTests.MainTile tile = TileTests.GetTile(1);
+            var tile = MainTile.GetTile(1);
 
-            IQuantifiedTile<IContextual<TileTests.Item>> t1 = tile
-               .Flatten<TileTests.SubTile, TileTests.Item>();
+            var t1 = tile
+               .Flatten<SubTile, Item>();
 
             t1.Reference.Context.Color = Color.Lavender;
 
-            IContextual<TileTests.Item> item = t1.ElementAt(500, 1000);
-            item.Context.Color = Color.Red;
+            var item = t1.ElementAt(500, 1000);
+            //item.Context.Color = Color.Red;
 
             RectangleD<Bitmap> i1 = t1.GetImage(2000, 2000, (z, s) => z.Context.ToBitmap(100, 100, z.X + "\n" + z.Y));
 
             CircularProfile p = new CircularProfile(1000);
 
-            RectangleD<Bitmap> i2 = p.GetImage(i1);
+            RectangleD<Bitmap> i2 = p.GetImage(i1, ScaleMode.ALL, null, null, Pens.DarkOrange);
 
             string signature = t1.GetRulers(i2, new float[] { 100f, 500f }).Item.GetSignature();
             Assert.AreEqual("9272D2C42A039C2122B649DAD516B390A3A2A3C51BA861B6E615F27BA0F1BDA3", signature, "Image hash");

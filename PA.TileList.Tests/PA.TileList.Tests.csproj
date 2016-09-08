@@ -5,8 +5,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{E3124597-2916-4D24-A270-F4CE70EC6924}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>TileTests</RootNamespace>
-    <AssemblyName>TileTests</AssemblyName>
+    <RootNamespace>PA.TileList.Tests</RootNamespace>
+    <AssemblyName>PA.TileList.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <ReleaseVersion></ReleaseVersion>
   </PropertyGroup>
@@ -42,25 +42,29 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TileList\AreaTests.cs" />
-    <Compile Include="TileList\CoordinateTests.cs" />
     <Compile Include="Utils\Extensions.cs" />
-    <Compile Include="Utils\TileTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\PA.TileList\PA.TileList.csproj">
-      <Project>{5B4FACE3-DDB3-4EAA-985A-9DE4AAC34A91}</Project>
-      <Name>PA.TileList</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\PA.TileList.Drawing\PA.TileList.Drawing.csproj">
-      <Project>{2D187F72-216C-40D5-B9DD-FFB52F7B3AAF}</Project>
-      <Name>PA.TileList.Drawing</Name>
-    </ProjectReference>
+    <Compile Include="CoordinateTests.cs" />
+    <Compile Include="ZoneTests.cs" />
+    <Compile Include="Utils\MainTile.cs" />
+    <Compile Include="Utils\SubTile.cs" />
+    <Compile Include="Utils\Item.cs" />
+    <Compile Include="TileTests.cs" />
+    <Compile Include="LinearTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Utils\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PA.TileList\PA.TileList.csproj">
+      <Project>{5B4FACE3-DDB3-4EAA-985A-9DE4AAC34A91}</Project>
+      <Name>PA.TileList</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PA.TileList.Drawing\PA.TileList.Drawing.csproj">
+      <Project>{2D187F72-216C-40D5-B9DD-FFB52F7B3AAF}</Project>
+      <Name>PA.TileList.Drawing</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

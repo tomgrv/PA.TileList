@@ -5,9 +5,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{E3124597-2916-4D24-A270-F4CE70EC6924}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>TileTests</RootNamespace>
-    <AssemblyName>TileTests</AssemblyName>
+    <RootNamespace>PA.TileList.Drawing.Tests</RootNamespace>
+    <AssemblyName>PA.TileList.Drawing.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+	    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
     <ReleaseVersion></ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -43,16 +46,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TileList.Extensions\CircularTests.cs" />
-    <Compile Include="TileList.Extensions\LinearTests.cs" />
     <Compile Include="TileList.Extensions\QuadrantTest.cs" />
     <Compile Include="TileList.Extensions\QuantifiedTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\PA.TileList\PA.TileList.csproj">
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="TileList.Extensions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PA.TileList\PA.TileList.csproj">
       <Project>{5B4FACE3-DDB3-4EAA-985A-9DE4AAC34A91}</Project>
       <Name>PA.TileList</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\PA.TileList.Drawing\PA.TileList.Drawing.csproj">
+    <ProjectReference Include="..\PA.TileList.Drawing\PA.TileList.Drawing.csproj">
       <Project>{2D187F72-216C-40D5-B9DD-FFB52F7B3AAF}</Project>
       <Name>PA.TileList.Drawing</Name>
     </ProjectReference>
@@ -60,11 +68,5 @@
       <Project>{E3124597-2916-4D24-A270-F4CE70EC6924}</Project>
       <Name>PA.TileList.Tests</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="TileList.Extensions\" />
   </ItemGroup>
 </Project>

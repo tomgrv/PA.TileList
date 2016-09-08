@@ -1,15 +1,15 @@
 ﻿using System;
+using NUnit.Framework;
 using PA.TileList;
 using PA.TileList.Cropping;
-using NUnit.Framework;
 using PA.TileList.Linear;
 
 namespace PA.TileList.Tests
 {
-    [TestFixture]
-    public class AreaTests
+    [TestFixture()]
+    public class ZoneTests
     {
-        [Test]
+        [Test()]
         public void CreateArea()
         {
             var a = new Zone(-1, -1, 10, 10);

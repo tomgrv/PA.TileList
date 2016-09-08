@@ -1,18 +1,20 @@
 ﻿
-using PA.TileList;
-using PA.TileList.Contextual;
-
-using PA.TileList.Geometrics.Circular;
 using System;
 using System.Drawing;
 using System.Linq;
 using NUnit.Framework;
-using PA.TileList.Drawing.Graphics2D;
+using PA.TileList;
 using PA.TileList.Circular;
-using PA.TileList.Quantified;
+using PA.TileList.Contextual;
+using PA.TileList.Drawing.Graphics2D;
 using PA.TileList.Drawing.Quantified;
+using PA.TileList.Drawing.Circular;
+using PA.TileList.Quantified;
+using PA.TileList.Quadrant;
+using PA.TileList.Tests;
+using PA.TileList.Tests.Utils;
 
-namespace PA.TileList.Tests
+namespace PA.TileList.Drawing.Tests
 {
     [TestFixture]
     public class CircularTests
@@ -30,7 +32,7 @@ namespace PA.TileList.Tests
                 search.AddProfileStep(a1, 1000);
             }
 
-            string signature = search.GetImage(1000, 1000, new RectangleF(-1000, -1000, 2000, 2000), ScaleMode.ALL).Item.GetSignature();
+            string signature = search.GetImage(1000, 1000, new RectangleF(-1000, -1000, 2000, 2000), ScaleMode.NONE).Item.GetSignature();
             Assert.AreEqual("98AE8580E2596469A774C97BEE234564E96281C519BFFED621FBB8CC2A63F6D8", signature, "Image hash");
         }
 
@@ -45,7 +47,7 @@ namespace PA.TileList.Tests
             search.AddProfileStep(-Math.PI / 4, 1000);
             search.AddProfileStep(-3 * Math.PI / 4, 800);
 
-            string signature = search.GetImage(1000, 1000, new RectangleF(-1000, -1000, 2000, 2000), ScaleMode.ALL).Item.GetSignature();
+            string signature = search.GetImage(1000, 1000, new RectangleF(-1000, -1000, 2000, 2000), ScaleMode.NONE).Item.GetSignature();
             Assert.AreEqual("EED4365394FDB98CE5A4566244C50FA9925A28F54F8561533295FAC5E4B91FE4", signature, "Image hash");
         }
 
@@ -54,7 +56,7 @@ namespace PA.TileList.Tests
         {
             var p = new CircularProfile(1500);
 
-            RectangleD<Bitmap> i = p.GetImage(1000, 1000, new RectangleF(-2000, -2000, 4000, 4000));
+            var i = p.GetImage(1000, 1000, new RectangleF(-2000, -2000, 4000, 4000));
 
             string signature = i.Item.GetSignature();
             Assert.AreEqual("B1FF0A62F65DD493C2781D6D9FB57C4F588F9B0E767EEBAC6219E01EA5A5DF4D", signature, "Image hash");
@@ -65,7 +67,7 @@ namespace PA.TileList.Tests
         {
             CircularProfile p = GetTestProfile(1400);
 
-            RectangleD<Bitmap> i = p.GetImage(1000, 1000, new RectangleF(-2000, -2000, 4000, 4000));
+            var i = p.GetImage(1000, 1000, new RectangleF(-2000, -2000, 4000, 4000));
 
             string signature = i.Item.GetSignature();
             Assert.AreEqual("DAA3296DC2EE2A6682DFFBD8425ED029E34004676D6AB80E67DBB691E85CD2E0", signature, "Image hash");
@@ -76,22 +78,22 @@ namespace PA.TileList.Tests
         {
             const float factor = 1f;
 
-            IQuantifiedTile<IContextual<TileTests.Item>> tile = TileTests.GetTile(factor)
-                .Flatten<TileTests.SubTile, TileTests.Item>();
+            var tile = MainTile.GetTile(factor)
+                 .Flatten<SubTile, Item>();
 
             Assert.AreEqual(3025, tile.Count(), "Initial item count");
 
-            CircularProfile p = GetTestProfile(1400);
+            var p = GetTestProfile(1400);
 
             bool change = true;
 
-            IQuantifiedTile<IContextual<TileTests.Item>> q = tile.Take(p, new CircularConfiguration(1f, CircularConfiguration.SelectionFlag.Inside), ref change);
+            var q = tile.Take(p, new CircularConfiguration(1f, CircularConfiguration.SelectionFlag.Inside), ref change);
 
             Assert.AreEqual(false, change, "Reference Changed");
 
 
-            RectangleD<Bitmap> i = q.GetImage(5000, 5000, (z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y));
-            RectangleD<Bitmap> pi = p.GetImage(i);
+            var i = q.GetImage(5000, 5000, (z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y));
+            var pi = p.GetImage(i);
 
             string signature = pi.Item.GetSignature();
 
@@ -104,27 +106,35 @@ namespace PA.TileList.Tests
         {
             const float factor = 5f;
 
-            IQuantifiedTile<IContextual<TileTests.Item>> tile = TileTests.GetTile(factor)
-                .Flatten<TileTests.SubTile, TileTests.Item>();
+            var tile = MainTile.GetTile(factor)
+                .Flatten<SubTile, Item>();
 
             Assert.AreEqual(65025, tile.Count(), "Initial item count");
 
-            CircularProfile p = GetTestProfile(1000);
+            var p = GetTestProfile(1000);
 
-            foreach (IContextual<TileTests.Item> tt in tile.Except(tile.Take(p, new CircularConfiguration(1f, CircularConfiguration.SelectionFlag.Inside))))
+            bool change = true;
+
+            var q = tile.Take(p, new CircularConfiguration(1f, CircularConfiguration.SelectionFlag.Inside), ref change);
+
+            //var i = q.GetImage(5000, 5000, (z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y));
+            //var pi = p.GetImage(i);
+            //string signature = pi.Item.GetSignature();
+
+            foreach (var tt in tile.Except(q))
             {
-                tt.Context.Color = Color.Beige;
+                tt.Context.Color = Color.Red;
             }
 
-            //Assert.AreEqual(47860, tile.Count(), "Selected item count");
+            //Assert.AreEqual(47860, q.Count(), "Selected item count");
 
-            RectangleD<Bitmap> pi = p.GetImage(5000, 5000, tile.GetBounds());
-            RectangleD<Bitmap> i = tile.GetImage(pi, (z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y));
+            var pi = p.GetImage(5000, 5000, tile.GetBounds());
+            var i = tile.GetImage(pi, (z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y));
             string signature_1 = i.Item.GetSignature();
-            //Assert.AreEqual("E63318A4278EED31907E0374B728F045285D43B6FBE0955A1622BFCFBB7AF5B8", signature_1, "Image hash");
+            Assert.AreEqual("E63318A4278EED31907E0374B728F045285D43B6FBE0955A1622BFCFBB7AF5B8", signature_1, "Image hash");
 
-            RectangleD<Bitmap> j = tile.GetImage(5000, 5000, (z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y));
-            RectangleD<Bitmap> pj = p.GetImage(j);
+            var j = tile.GetImage(5000, 5000, (z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y));
+            var pj = p.GetImage(j);
             string signature_2 = pj.Item.GetSignature();
 
 

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
-
+using PA.TileList.Linear;
 
 namespace PA.TileList.Tests.Utils
 {
