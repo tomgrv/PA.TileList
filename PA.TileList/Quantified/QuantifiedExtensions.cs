@@ -25,6 +25,9 @@ namespace PA.TileList.Quantified
             return new QuantifiedTile<T>(list, list.ElementSizeX * scaleFactor, list.ElementSizeY * scaleFactor, list.ElementStepX * scaleFactor, list.ElementStepY * scaleFactor, list.RefOffsetX * scaleFactor, list.RefOffsetY * scaleFactor);
         }
 
+
+
+
         /// <summary>
         /// Get coordinate at specified location.
         /// </summary>
@@ -40,6 +43,17 @@ namespace PA.TileList.Quantified
                                                         (xc, yc) => Math.Abs(xc - x) < list.ElementStepX && Math.Abs(yc - y) < list.ElementStepY) == 4);
         }
 
+        /// <summary>
+        /// Gets the coordinates within specified points
+        /// </summary>
+        /// <returns>The coordinates in.</returns>
+        /// <param name="list">List.</param>
+        /// <param name="x1">The first x value.</param>
+        /// <param name="y1">The first y value.</param>
+        /// <param name="x2">The second x value.</param>
+        /// <param name="y2">The second y value.</param>
+        /// <param name="strict">If set to <c>true</c> strict.</param>
+        /// <typeparam name="T">The 1st type parameter.</typeparam>
         public static IEnumerable<ICoordinate> GetCoordinatesIn<T>(this IQuantifiedTile<T> list, double x1, double y1, double x2, double y2, bool strict = false)
             where T : ICoordinate
         {
@@ -48,14 +62,24 @@ namespace PA.TileList.Quantified
             double maxX = Math.Max(x1, x2);
             double maxY = Math.Max(y1, y2);
 
-            int pointsInX = Math.Max(1, (int)Math.Ceiling(list.ElementStepX / (maxX - minX)));
-            int pointsInY = Math.Max(1, (int)Math.Ceiling(list.ElementStepY / (maxY - minY)));
+            int pointsInX = Math.Max(1, (int)Math.Ceiling(list.ElementStepX / (maxX - minX))) + 1;
+            int pointsInY = Math.Max(1, (int)Math.Ceiling(list.ElementStepY / (maxY - minY))) + 1;
 
             double stepSizeX = 1d / (pointsInX);
             double stepSizeY = 1d / (pointsInY);
 
-            return list.Zone.Where(c => c.CountPoints(list, pointsInX, pointsInY, stepSizeX, stepSizeY,
-                                                                (xc, yc) => xc >= minX && xc <= maxX && yc >= minY && yc <= maxY) >= (strict ? 4 : 1));
+            return list.Zone.Where(c =>
+{
+    var pp = c.CountPoints(list, pointsInX, pointsInY, stepSizeX, stepSizeY,
+                                                                    (xc, yc) => xc >= minX && xc <= maxX && yc >= minY && yc <= maxY);
+
+    if (pp > 0)
+    {
+        return true;
+    }
+    return pp >= (strict ? 4 : 1);
+}
+);
         }
 
         public static IEnumerable<T> Crop<T>(this IQuantifiedTile<T> list, double x1, double y1, double x2, double y2, bool strict = false)
@@ -70,12 +94,7 @@ namespace PA.TileList.Quantified
                                                         (xc, yc) => xc >= minX && xc <= maxX && yc >= minY && yc <= maxY) >= (strict ? 4 : 1));
         }
 
-        public static T ElementAt<T>(this IQuantifiedTile<T> list, double x, double y)
-             where T : ICoordinate
-        {
-            return list.FirstOrDefault(c => c.CountPoints(list, 2, 2, 1d, 1d,
-                                                        (xc, yc) => Math.Abs(xc - x) < list.ElementStepX && Math.Abs(yc - y) < list.ElementStepY) == 4);
-        }
+
 
         /// <summary>
         /// Groups the elements by comptuting points satisfying predicate

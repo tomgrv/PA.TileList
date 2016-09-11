@@ -14,6 +14,7 @@ using PA.TileList.Quadrant;
 using PA.TileList.Tests;
 using PA.TileList.Tests.Utils;
 using PA.TileList.Tile;
+using System.Linq;
 
 namespace PA.TileList.Drawing.Tests
 {
@@ -28,10 +29,10 @@ namespace PA.TileList.Drawing.Tests
             IQuantifiedTile<IContextual<Item>> t1 = tile
                .Flatten<SubTile, Item>();
 
-            var item1 = t1.ElementAt(27.4, 38);
+            var item1 = t1.ElementAt(t1.GetCoordinateAt(27.4, 38));
             item1.Context.Color = Color.Red;
 
-            var item2 = t1.ElementAt(0, 0);
+            var item2 = t1.ElementAt(t1.GetCoordinateAt(0, 0));
             item2.Context.Color = Color.Blue;
 
             var i1 = t1.GetImage(2000, 2000, (z, s) => z.Context.ToBitmap(100, 50, z.X + "\n" + z.Y));
@@ -48,7 +49,7 @@ namespace PA.TileList.Drawing.Tests
             var t1 = tile
                .Flatten<SubTile, Item>();
 
-            var item = t1.ElementAt(1000, 500);
+            var item = t1.ElementAt(t1.GetCoordinateAt(1000, 500));
             item.Context.Color = Color.Red;
 
             ICoordinate coord = t1.GetCoordinateAt(1000, 500);
@@ -68,7 +69,7 @@ namespace PA.TileList.Drawing.Tests
             string signature0 = q0.GetImage(1000, 1000, (z, s) =>
                 z.ToBitmap(100, 50, z.X + "\n" + z.Y)).Item.GetSignature();
 
-            foreach (ICoordinate c in q0.GetCoordinatesIn(250, 250, 600, 600))
+            foreach (var c in q0.GetCoordinatesIn(250, 250, 600, 600))
             {
                 t0.Find(c).Color = Color.Blue;
             }
@@ -76,7 +77,7 @@ namespace PA.TileList.Drawing.Tests
             string signature1 = q0.GetImage(1000, 1000, (z, s) =>
                 z.ToBitmap(100, 50, z.X + "\n" + z.Y)).Item.GetSignature();
 
-            foreach (ICoordinate c in q0.GetCoordinatesIn(52, 52, 62, 62))
+            foreach (var c in q0.GetCoordinatesIn(52, 52, 62, 62))
             {
                 t0.Find(c).Color = Color.White;
             }
@@ -84,7 +85,7 @@ namespace PA.TileList.Drawing.Tests
             string signature2 = q0.GetImage(1000, 1000, (z, s) =>
                 z.ToBitmap(100, 50, z.X + "\n" + z.Y)).Item.GetSignature();
 
-            foreach (ICoordinate c in q0.GetCoordinatesIn(12, 12, 13, 13))
+            foreach (var c in q0.GetCoordinatesIn(12, 12, 13, 13))
             {
                 t0.Find(c).Color = Color.Black;
             }
@@ -103,19 +104,66 @@ namespace PA.TileList.Drawing.Tests
 
             t1.Reference.Context.Color = Color.Lavender;
 
-            var item = t1.ElementAt(500, 1000);
+            var item = t1.GetCoordinateAt(500, 1000);
             //item.Context.Color = Color.Red;
 
-            RectangleD<Bitmap> i1 = t1.GetImage(2000, 2000, (z, s) => z.Context.ToBitmap(100, 100, z.X + "\n" + z.Y));
+            var i1 = t1.GetImage(2000, 2000, (z, s) => z.Context.ToBitmap(100, 100, z.X + "\n" + z.Y));
 
-            CircularProfile p = new CircularProfile(1000);
+            var p = new CircularProfile(1000);
 
-            RectangleD<Bitmap> i2 = p.GetImage(i1, ScaleMode.ALL, null, null, Pens.DarkOrange);
+            var i2 = p.GetImage(i1, null, null, Pens.DarkViolet);
 
             string signature = t1.GetRulers(i2, new float[] { 100f, 500f }).Item.GetSignature();
             Assert.AreEqual("9272D2C42A039C2122B649DAD516B390A3A2A3C51BA861B6E615F27BA0F1BDA3", signature, "Image hash");
         }
 
+
+        [Test, Category("Image hash")]
+        public void CoordinatesIn2()
+        {
+            const float factor = 1f;
+
+            var tile = MainTile.GetTile(factor)
+                 .Flatten<SubTile, Item>();
+
+            var p = new CircularProfile(1400);
+
+            bool change = true;
+            var q = tile.Take(p, new CircularConfiguration(1f, CircularConfiguration.SelectionFlag.Inside), ref change);
+
+            var i = q.GetImage(5000, 5000, ScaleMode.ALL, (z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y));
+
+            TestCoordinates(tile, new Rectangle(-100, -100, 200, 200), i, (z) => z.Context.Color = Color.Violet);
+
+            var ii = q.GetImage(i, (z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y));
+
+            var pi = p.GetImage(ii);
+
+            var pj = q.GetRulers(pi, new float[] { 100f, 500f });
+
+            string signature = pj.Item.GetSignature();
+
+        }
+
+        private void TestCoordinates<T>(IQuantifiedTile<T> q, Rectangle r, RectangleD<Bitmap> i, Action<T> a)
+            where T : class, ICoordinate
+        {
+            foreach (var c in q.GetCoordinatesIn(r.Left, r.Top, r.Right, r.Bottom))
+            {
+                var z = q.ElementAt(c);
+
+                if (z != null)
+                {
+                    a(z);
+                    break;
+                }
+            }
+
+            using (var g = i.GetGraphicsD())
+            {
+                g.Graphics.DrawRectangle(Pens.Black, r.Left * g.ScaleX, r.Top * g.ScaleY, r.Width * g.ScaleX, r.Height * g.ScaleY);
+            }
+        }
 
     }
 }

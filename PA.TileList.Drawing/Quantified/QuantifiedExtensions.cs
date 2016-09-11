@@ -23,7 +23,7 @@ namespace PA.TileList.Drawing.Quantified
     {
         #region Dimension
 
-        public static SizeF GetSize<T>(this IQuantifiedTile<T> c)
+        public static SizeF GetSize<T>(this IQuantifiedTile<T> c, ScaleMode mode = ScaleMode.NONE)
          where T : ICoordinate
         {
             return new SizeF((float)(c.ElementStepX * c.Zone.SizeX), (float)(c.ElementStepY * c.Zone.SizeY));
@@ -32,22 +32,22 @@ namespace PA.TileList.Drawing.Quantified
         public static PointF GetOrigin<T>(this IQuantifiedTile<T> c, ScaleMode mode)
             where T : ICoordinate
         {
-            float x = c.Zone.Min.X - (mode.HasFlag(ScaleMode.CENTER) ? c.Reference.X + 0.5f : c.Reference.X);
-            float y = c.Zone.Min.Y - (mode.HasFlag(ScaleMode.CENTER) ? c.Reference.Y + 0.5f : c.Reference.Y);
+            // var o = mode.HasFlag(ScaleMode.CENTER) ? 0.5f : 0;
+
+            var x = c.Zone.Min.X - c.Reference.X - 0.5f;
+            var y = c.Zone.Min.Y - c.Reference.Y - 0.5f;
 
             return new PointF((float)(x * c.ElementStepX), (float)(y * c.ElementStepY));
         }
 
-        public static RectangleF GetBounds<T>(this IQuantifiedTile<T> c, ScaleMode mode = ScaleMode.ALL)
+        public static RectangleF GetBounds<T>(this IQuantifiedTile<T> c, ScaleMode mode = ScaleMode.NONE)
             where T : ICoordinate
         {
             PointF o = c.GetOrigin(mode);
-            SizeF s = c.GetSize();
+            SizeF s = c.GetSize(mode);
 
             return new RectangleF(o, s);
         }
-
-
 
         #endregion
 
@@ -57,14 +57,14 @@ namespace PA.TileList.Drawing.Quantified
             where T : ICoordinate
             where U : Image
         {
-            return new RectangleD<U>(new Bitmap(s.Width, s.Height) as U, c.GetOrigin(mode), c.GetSize());
+            return new RectangleD<U>(new Bitmap(s.Width, s.Height) as U, c.GetOrigin(mode), c.GetSize(mode), mode);
         }
 
         private static RectangleD<U> GetBaseImage<T, U>(this IQuantifiedTile<T> c, int Width, int Height, ScaleMode mode)
             where T : ICoordinate
             where U : Image
         {
-            return new RectangleD<U>(new Bitmap(Width, Height) as U, c.GetOrigin(mode), c.GetSize());
+            return new RectangleD<U>(new Bitmap(Width, Height) as U, c.GetOrigin(mode), c.GetSize(mode), mode);
         }
 
         #endregion
@@ -75,37 +75,37 @@ namespace PA.TileList.Drawing.Quantified
             where T : ICoordinate
             where U : Image
         {
-            return c.GetImage<T, U>(c.GetBaseImage<T, U>(s, ScaleMode.ALL), ScaleMode.ALL, getImagePart);
+            return c.GetImage<T, U>(c.GetBaseImage<T, U>(s, ScaleMode.NONE), getImagePart);
+        }
+
+        public static RectangleD<U> GetImage<T, U>(this IQuantifiedTile<T> c, Size s, ScaleMode mode, Func<T, SizeF, U> getImagePart)
+           where T : ICoordinate
+           where U : Image
+        {
+            return c.GetImage<T, U>(c.GetBaseImage<T, U>(s, mode), getImagePart);
         }
 
         public static RectangleD<U> GetImage<T, U>(this IQuantifiedTile<T> c, int Width, int Height, Func<T, SizeF, U> getImagePart)
             where T : ICoordinate
             where U : Image
         {
-            return c.GetImage<T, U>(c.GetBaseImage<T, U>(Width, Height, ScaleMode.ALL), ScaleMode.ALL, getImagePart);
+            return c.GetImage<T, U>(c.GetBaseImage<T, U>(Width, Height, ScaleMode.NONE), getImagePart);
         }
 
-        public static RectangleD<U> GetImage<T, U>(this IQuantifiedTile<T> c, Size s, ScaleMode mode, Func<T, SizeF, U> getImagePart)
+        public static RectangleD<U> GetImage<T, U>(this IQuantifiedTile<T> c, int Width, int Height, ScaleMode mode, Func<T, SizeF, U> getImagePart)
+           where T : ICoordinate
+           where U : Image
+        {
+            return c.GetImage<T, U>(c.GetBaseImage<T, U>(Width, Height, mode), getImagePart);
+        }
+
+        public static RectangleD<U> GetImage<T, U>(this IQuantifiedTile<T> c, RectangleD<U> image, Func<T, SizeF, U> getImagePortion)
             where T : ICoordinate
             where U : Image
         {
-            return c.GetImage<T, U>(c.GetBaseImage<T, U>(s, mode), mode, getImagePart);
-        }
-
-        public static RectangleD<U> GetImage<T, U>(this IQuantifiedTile<T> c, RectangleD<U> image, Func<T, SizeF, U> getImagePart)
-            where T : ICoordinate
-            where U : Image
-        {
-            return c.GetImage<T, U>(image, ScaleMode.ALL, getImagePart);
-        }
-
-        public static RectangleD<U> GetImage<T, U>(this IQuantifiedTile<T> c, RectangleD<U> image, ScaleMode mode, Func<T, SizeF, U> getImagePortion)
-            where T : ICoordinate
-            where U : Image
-        {
-            using (GraphicsD g = image.GetGraphicsD(mode))
+            using (GraphicsD g = image.GetGraphicsD())
             {
-                foreach (RectangleD<T> portion in c.GetPortions(g, mode)
+                foreach (RectangleD<T> portion in c.GetPortions(g, image.Mode)
                     .Where(p => p.Outer.Height >= 1f && p.Outer.Width >= 1f))
                 {
                     using (U partial = getImagePortion(portion.Item, portion.Inner.Size))
@@ -120,7 +120,6 @@ namespace PA.TileList.Drawing.Quantified
 
             return image;
         }
-
 
         #endregion
 
@@ -138,23 +137,39 @@ namespace PA.TileList.Drawing.Quantified
             float offsetX = (float)tile.RefOffsetX * g.ScaleX + g.OffsetX;
             float offsetY = (float)tile.RefOffsetY * g.ScaleY + g.OffsetY;
 
-            float refX = mode.HasFlag(ScaleMode.CENTER) ? tile.Reference.X + 0.5f : tile.Reference.X;
-            float refY = mode.HasFlag(ScaleMode.CENTER) ? tile.Reference.Y + 0.5f : tile.Reference.Y;
+            float refX = tile.Reference.X + 0.5f;
+            float refY = tile.Reference.Y + 0.5f;
 
             float offX = (stepX - sizeX) / 2f;
             float offY = (stepY - sizeY) / 2f;
 
             foreach (T e in tile)
             {
-                var portionO = new RectangleF((e.X - refX) * stepX + offsetX, (e.Y - refY) * stepY + offsetY, stepX, stepY);
-                var portionI = new RectangleF(portionO.X + offX, portionO.Y + offY, sizeX, sizeY);
-                yield return new RectangleD<T>(e, portionO, portionI);
+                var portionOuter = new RectangleF((e.X - refX) * stepX + offsetX, (e.Y - refY) * stepY + offsetY, stepX, stepY);
+                var portionInner = new RectangleF(portionOuter.X + offX, portionOuter.Y + offY, sizeX, sizeY);
+                yield return new RectangleD<T>(e, portionOuter, portionInner, mode);
             }
         }
 
         #endregion
 
+        #region AddOns
 
+        /// <summary>
+        /// Gets the coordinates within specified RectangleF
+        /// </summary>
+        /// <returns>The coordinates in.</returns>
+        /// <param name="list">List.</param>
+        /// <param name="inner">Inner.</param>
+        /// <param name="strict">If set to <c>true</c> strict.</param>
+        /// <typeparam name="T">The 1st type parameter.</typeparam>
+        public static IEnumerable<ICoordinate> GetCoordinatesIn<T>(this IQuantifiedTile<T> list, RectangleF inner, bool strict = false)
+            where T : ICoordinate
+        {
+            return list.GetCoordinatesIn(inner.Left, inner.Top, inner.Right, inner.Bottom, strict);
+        }
+
+        #endregion
     }
 
 

@@ -205,17 +205,14 @@ namespace PA.TileList.Tile
         }
 
 
-        public virtual ICoordinate Clone()
+        public virtual object Clone()
         {
-            return this.Clone(X, Y);
+            return new Tile<T>(this.X, this.Y, this.Zone, this.Select((t) => (T)t.Clone()), this.IndexOf(this.Reference));
         }
 
-        public virtual ICoordinate Clone(int x, int y)
+        public virtual object Clone(int x, int y)
         {
-            var c = this.MemberwiseClone() as ICoordinate;
-            c.X = x;
-            c.Y = y;
-            return c;
+            return new Tile<T>(x, y, this.Zone, this.Select((t) => (T)t.Clone()), this.IndexOf(this.Reference));
         }
     }
 }

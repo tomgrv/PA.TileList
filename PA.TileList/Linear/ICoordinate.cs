@@ -5,11 +5,11 @@ using System.Text;
 
 namespace PA.TileList.Linear
 {
-    public interface ICoordinate
+    public interface ICoordinate 
     {
         int X { get; set; }
         int Y { get; set; }
-        ICoordinate Clone(int x, int y);
-        ICoordinate Clone();
+        object Clone(int x, int y);
+        object Clone();
     }
 }

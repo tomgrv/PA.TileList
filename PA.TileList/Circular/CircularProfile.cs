@@ -102,7 +102,6 @@ namespace PA.TileList.Circular
         public void ResetProfile()
         {
             this.profile = new List<ProfileStep>();
-            //       this.AddProfileStep(-Math.PI, this.Radius);
         }
 
         public void AddProfileStep(ProfileStep step)

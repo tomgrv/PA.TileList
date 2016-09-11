@@ -12,6 +12,8 @@ namespace PA.TileList.Drawing.Graphics2D
 
         public RectangleF Outer { get; private set; }
 
+
+
         public RectangleD(float x, float y, float width, float height)
         {
             this.Inner = new RectangleF(x, y, width, height);
@@ -46,34 +48,41 @@ namespace PA.TileList.Drawing.Graphics2D
     {
         public T Item { get; private set; }
 
-        public RectangleD(T item, float x, float y, float width, float height)
+        public ScaleMode Mode { get; private set; }
+
+        public RectangleD(T item, float x, float y, float width, float height, ScaleMode mode = ScaleMode.NONE)
             : base(x, y, width, height)
         {
             this.Item = item;
+            this.Mode = mode;
         }
 
-        public RectangleD(T item, PointF p, SizeF s)
+        public RectangleD(T item, PointF p, SizeF s, ScaleMode mode = ScaleMode.NONE)
             : base(p, s)
         {
             this.Item = item;
+            this.Mode = mode;
         }
 
-        public RectangleD(T item, RectangleD portion)
+        public RectangleD(T item, RectangleD portion, ScaleMode mode = ScaleMode.NONE)
             : base(portion.Outer, portion.Inner)
         {
             this.Item = item;
+            this.Mode = mode;
         }
 
-        public RectangleD(T item, RectangleF inner)
+        public RectangleD(T item, RectangleF inner, ScaleMode mode = ScaleMode.NONE)
             : base(inner)
         {
             this.Item = item;
+            this.Mode = mode;
         }
 
-        public RectangleD(T item, RectangleF outer, RectangleF inner)
+        public RectangleD(T item, RectangleF outer, RectangleF inner, ScaleMode mode = ScaleMode.NONE)
             : base(outer, inner)
         {
             this.Item = item;
+            this.Mode = mode;
         }
     }
 }

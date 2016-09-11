@@ -46,13 +46,13 @@ namespace PA.TileList.Drawing.Graphics2D
     public static class GraphicExtensions
     {
 
-        public static GraphicsD GetGraphicsD<U>(this RectangleD<U> image, ScaleMode mode, Pen extraPen = null)
+        public static GraphicsD GetGraphicsD<U>(this RectangleD<U> image, Pen extraPen = null)
                    where U : Image
         {
             float scaleX = (float)image.Item.Width / image.Outer.Width;
             float scaleY = (float)image.Item.Height / image.Outer.Height;
 
-            if (mode.HasFlag(ScaleMode.NOSTRETCH))
+            if (image.Mode.HasFlag(ScaleMode.XYRATIO))
             {
                 float scale = Math.Min(scaleX, scaleY);
                 scaleX = scale;

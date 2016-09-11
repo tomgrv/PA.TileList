@@ -35,7 +35,7 @@ using PA.TileList.Cropping;
 
 namespace PA.TileList.Quantified
 {
-    public static class CropExtensions
+    public static class CroppingExtensions
     {
         public static IQuantifiedTile<T> Crop<T>(this IQuantifiedTile<T> list, IZone a)
        where T : ICoordinate

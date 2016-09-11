@@ -50,9 +50,10 @@ namespace PA.TileList.Tests.Utils
         {
         }
 
-        public SubTile(SubTile t)
+        public SubTile(Tile<Item> t, Quadrant.Quadrant q)
             : base(t)
         {
+            this.Quadrant = q;
         }
 
         public SubTile(IEnumerable<Item> t, int referenceIndex = 0)
@@ -67,5 +68,14 @@ namespace PA.TileList.Tests.Utils
             throw new NotImplementedException();
         }
 
+        public override object Clone()
+        {
+            return new SubTile((Tile<Item>)base.Clone(), this.Quadrant);
+        }
+
+        public override object Clone(int x, int y)
+        {
+            return new SubTile((Tile<Item>)base.Clone(x, y), this.Quadrant);
+        }
     }
 }

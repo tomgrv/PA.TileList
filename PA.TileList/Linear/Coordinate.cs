@@ -70,20 +70,19 @@ namespace PA.TileList.Linear
             return this.X + "," + this.Y;
         }
 
-        public virtual ICoordinate Clone()
+        public virtual object Clone()
         {
-            return this.MemberwiseClone() as ICoordinate;
+            return this.MemberwiseClone();
         }
 
 
-        public virtual ICoordinate Clone(int x, int y)
+        public virtual object Clone(int x, int y)
         {
             var c = this.MemberwiseClone() as ICoordinate;
             c.X = x;
             c.Y = y;
             return c;
         }
-
 
     }
 }

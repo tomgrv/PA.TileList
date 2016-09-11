@@ -21,31 +21,23 @@ namespace PA.TileList.Tests
     public class TileTest
     {
 
-
-
-
-
-
         [Test, Category("Image hash")]
         public void Crop()
         {
-            Tile<Item> t0 = new Tile<Item>(new Cropping.Zone(0, 0, 100, 100), new Item(0, 0, Color.Red));
+            var t0 = new Tile<Item>(new Zone(0, 0, 100, 100), new Item(0, 0, Color.Red));
 
             t0.Fill(c => c.X > 25 && c.X < 75 && c.Y > 30 && c.Y < 60 ? new Item(c.X, c.Y, c.X == c.Y ? Color.Yellow : Color.Green) : new Item(c.X, c.Y, Color.Red));
-
-
 
             var q0 = t0.AsQuantified();
 
             var c0 = t0.GetChecksum(i => i.Color.Name);
             //  var s0 = q0.GetImage(1000, 1000, (z, s) => z.ToBitmap(100, 50, z.X + "\n" + z.Y)).Item.GetSignature();
 
-
             // Assert.AreEqual("BFE39DA3858C0A979B54F99442B397DA", s0, "Image hash");
             Assert.AreEqual("0,0;100,100", t0.GetZone().ToString(), "Area");
 
-            IEnumerable<Item> crop1 = t0.Cropping(new Cropping.Zone(25, 30, 75, 60));
-            Tile<Item> t1 = new Tile<Item>(crop1);
+            var crop1 = t0.Crop(new Zone(25, 30, 75, 60));
+            var t1 = new Tile<Item>(crop1);
 
             //string signature1 = t1.AsQuantified().GetImage(1000, 1000, (z, s) =>
             //    z.ToBitmap(100, 50, z.X + "\n" + z.Y)).Item.GetSignature();
@@ -54,8 +46,8 @@ namespace PA.TileList.Tests
             Assert.AreEqual("25,30;75,60", t1.GetZone().ToString(), "Area");
 
 
-            IEnumerable<Item> crop2 = t0.Cropping(t => t.Color != Color.Yellow);
-            Tile<Item> t2 = new Tile<Item>(crop2);
+            var crop2 = t0.Crop(t => t.Color != Color.Yellow);
+            var t2 = new Tile<Item>(crop2);
 
             //string signature2 = t2.AsQuantified().GetImage(1000, 1000, (z, s) =>
             //   z.ToBitmap(100, 50, z.X + "\n" + z.Y)).Item.GetSignature();

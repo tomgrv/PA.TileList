@@ -91,13 +91,13 @@ namespace PA.TileList.Drawing.Tests
 
             Assert.AreEqual(false, change, "Reference Changed");
 
-
-            var i = q.GetImage(5000, 5000, (z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y));
+            var i = q.GetImage(5000, 5000, ScaleMode.ALL, (z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y));
             var pi = p.GetImage(i);
 
             string signature = pi.Item.GetSignature();
 
             Assert.AreEqual(1799, q.Count(), "Selected item count");
+
             Assert.AreEqual("ADE22DBF99F378AEE20F993BF51705756AFFF2539CA8D6CC5CCA7266C9F2B551", signature, "Image hash");
         }
 

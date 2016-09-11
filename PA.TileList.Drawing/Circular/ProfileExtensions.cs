@@ -10,6 +10,7 @@ using PA.TileList.Circular;
 using PA.Utilities;
 using System.Drawing.Text;
 using PA.TileList.Drawing.Graphics2D;
+using System.Xml.Linq;
 
 namespace PA.TileList.Drawing.Circular
 {
@@ -17,23 +18,21 @@ namespace PA.TileList.Drawing.Circular
     {
         public static RectangleD<Bitmap> GetImage(this CircularProfile p, int width, int height, RectangleF inner, ScaleMode mode = ScaleMode.NONE, Pen radiusPen = null, Pen arcPen = null, Pen extraPen = null)
         {
-            return p.GetImage(new RectangleD<Bitmap>(new Bitmap(width, height), new PointF(inner.X - (mode.HasFlag(ScaleMode.CENTER) ? inner.Width / 2f : 0f), inner.Y - (mode.HasFlag(ScaleMode.CENTER) ? inner.Height / 2f : 0f)), inner.Size), mode, radiusPen, arcPen, extraPen);
+            return p.GetImage(new RectangleD<Bitmap>(new Bitmap(width, height), inner, mode), radiusPen, arcPen, extraPen);
         }
 
 
         public static RectangleD<Bitmap> GetImage(this CircularProfile p, int width, int height, ScaleMode mode = ScaleMode.NONE, Pen radiusPen = null, Pen arcPen = null, Pen extraPen = null)
         {
-            return p.GetImage(new RectangleD<Bitmap>(new Bitmap(width, height), mode.HasFlag(ScaleMode.CENTER) ? new PointF(-width / 2f, -height / 2f) : PointF.Empty, new SizeF(width, height)), mode, radiusPen, arcPen, extraPen);
+            return p.GetImage(new RectangleD<Bitmap>(new Bitmap(width, height), new PointF(-width / 2f, -height / 2f), new SizeF(width, height), mode), radiusPen, arcPen, extraPen);
         }
 
 
-        public static RectangleD<U> GetImage<U>(this CircularProfile p, RectangleD<U> image, ScaleMode mode = ScaleMode.ALL, Pen radiusPen = null, Pen arcPen = null, Pen extraPen = null)
+        public static RectangleD<U> GetImage<U>(this CircularProfile p, RectangleD<U> image, Pen radiusPen = null, Pen arcPen = null, Pen extraPen = null)
             where U : Image
         {
-
-            using (GraphicsD g = image.GetGraphicsD(mode, extraPen))
+            using (GraphicsD g = image.GetGraphicsD(extraPen))
             {
-
                 float maxsize = (float)p.GetMaxRadius() * 2f;
                 float minsize = (float)p.GetMinRadius() * 2f;
                 float midsize = (float)p.Radius * 2f;
@@ -51,14 +50,19 @@ namespace PA.TileList.Drawing.Circular
 
                 foreach (CircularProfile.ProfileStep current in p.Profile)
                 {
-                    double ad = 180f * -last.Angle / Math.PI;
+
+                    double ad = 180f * -g.ScaleAngle(last.Angle) / Math.PI;
                     double sw = 180f * -(current.Angle - last.Angle) / Math.PI;
 
                     float lastRadius = (float)last.Radius;
 
                     if (lastRadius > 0f)
                     {
-                        g.Graphics.DrawArc(arcPen ?? Pens.Green, g.OffsetX - lastRadius * g.ScaleX, g.OffsetY - lastRadius * g.ScaleY, lastRadius * g.ScaleX * 2f, lastRadius * g.ScaleY * 2f, (float)ad, (float)sw);
+                        double x = g.OffsetX - (double)g.ScaleX * lastRadius;
+                        double y = g.OffsetY - (double)g.ScaleY * lastRadius;
+                        double w = (double)g.ScaleX * lastRadius * 2f;
+                        double h = (double)g.ScaleY * lastRadius * 2f;
+                        g.Graphics.DrawArc(radiusPen ?? Pens.Green, (float)x, (float)y, (float)w, (float)h, (float)ad, (float)sw);
                     }
 
                     if (!current.Radius.NearlyEquals(last.Radius))
@@ -75,6 +79,29 @@ namespace PA.TileList.Drawing.Circular
             }
 
             return image;
+        }
+
+        public static double ScaleAngle(this GraphicsD g, double angle)
+        {
+            while (angle < -Math.PI)
+            {
+                angle += 2 * Math.PI;
+            }
+
+            while (angle > Math.PI)
+            {
+                angle -= 2 * Math.PI;
+            }
+
+            double a = Math.Atan2(g.ScaleY * Math.Tan(angle), g.ScaleX);
+
+            if (angle > Math.PI / 2f)
+                return a + Math.PI;
+
+            if (angle < -Math.PI / 2f)
+                return a - Math.PI;
+
+            return a;
         }
     }
 }

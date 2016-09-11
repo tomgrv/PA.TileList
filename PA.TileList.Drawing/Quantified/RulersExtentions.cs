@@ -14,21 +14,31 @@ namespace PA.TileList.Drawing.Quantified
     public static class RulersExtentions
     {
 
-        public static RectangleD<Bitmap> GetRulers<T>(this IQuantifiedTile<T> c, int width, int height, float[] steps, ScaleMode mode = ScaleMode.ALL)
+        public static RectangleD<Bitmap> GetRulers<T>(this IQuantifiedTile<T> c, int width, int height, float[] steps, ScaleMode mode = ScaleMode.NONE)
            where T : ICoordinate
         {
             RectangleF b = c.GetBounds();
-            return c.GetRulers(new RectangleD<Bitmap>(new Bitmap(width, height), b, b), steps, mode);
+            return c.GetRulers(new RectangleD<Bitmap>(new Bitmap(width, height), b, b, mode), steps);
         }
 
-        public static RectangleD<U> GetRulers<T, U>(this IQuantifiedTile<T> c, RectangleD<U> image, float[] steps, ScaleMode mode = ScaleMode.ALL)
+        public static RectangleD<U> GetRulers<T, U>(this IQuantifiedTile<T> c, RectangleD<U> image, float[] steps)
            where T : ICoordinate
             where U : Image
         {
-            using (GraphicsD g = image.GetGraphicsD(mode, null))
+            using (GraphicsD g = image.GetGraphicsD(null))
             {
-                g.Graphics.DrawSteps(steps, g.Portion.Inner.Left, g.Portion.Inner.Right, g.OffsetX, Direction.Horizontal, g.ScaleX);
-                g.Graphics.DrawSteps(steps, g.Portion.Inner.Top, g.Portion.Inner.Bottom, g.OffsetY, Direction.Vertical, g.ScaleY);
+
+
+                if (image.Mode.HasFlag(ScaleMode.XYRATIO))
+                {
+                    g.Graphics.DrawSteps(steps, image.Inner.Left, image.Inner.Right, g.OffsetX, Direction.Horizontal, g.ScaleX);
+                    g.Graphics.DrawSteps(steps, image.Inner.Top, image.Inner.Bottom, g.OffsetY, Direction.Vertical, g.ScaleY);
+                }
+                else
+                {
+                    g.Graphics.DrawSteps(steps, g.Portion.Inner.Left, g.Portion.Inner.Right, g.OffsetX, Direction.Horizontal, g.ScaleX);
+                    g.Graphics.DrawSteps(steps, g.Portion.Inner.Top, g.Portion.Inner.Bottom, g.OffsetY, Direction.Vertical, g.ScaleY);
+                }
             }
 
             return image;
@@ -45,10 +55,10 @@ namespace PA.TileList.Drawing.Quantified
             switch (d)
             {
                 case Direction.Horizontal:
-                    g.DrawLine(Pens.Black, min, 0, max, 0);
+                    g.DrawLine(Pens.Black, min * scale, 0, max * scale, 0);
                     break;
                 case Direction.Vertical:
-                    g.DrawLine(Pens.Black, 0, min, 0, max);
+                    g.DrawLine(Pens.Black, 0, min * scale, 0, max * scale);
                     break;
             }
 
@@ -58,17 +68,17 @@ namespace PA.TileList.Drawing.Quantified
                 float step = steps[i] * scale;
                 float size = (i + 1f) / scale;
 
-                while (start < min)
+                while (start < min * scale)
                 {
                     start += step;
                 }
 
-                while (start > min)
+                while (start > min * scale)
                 {
                     start -= step;
                 }
 
-                for (float position = start + step; position < max; position += step)
+                for (float position = start + step; position < max * scale; position += step)
                 {
                     switch (d)
                     {

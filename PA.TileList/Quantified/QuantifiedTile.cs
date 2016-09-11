@@ -65,9 +65,15 @@ namespace PA.TileList.Quantified
             this.SetReference(this.ElementAt(reference));
         }
 
-        public new ICoordinate Clone()
+
+        public override object Clone()
         {
-            return this.MemberwiseClone() as ICoordinate;
+            return new QuantifiedTile<T>((Tile<T>)base.Clone(), this.ElementSizeX, this.ElementSizeY, this.ElementStepX, this.ElementStepY, this.RefOffsetX, this.RefOffsetY);
+        }
+
+        public override object Clone(int x, int y)
+        {
+            return new QuantifiedTile<T>((Tile<T>)base.Clone(x, y), this.ElementSizeX, this.ElementSizeY, this.ElementStepX, this.ElementStepY, this.RefOffsetX, this.RefOffsetY);
         }
 
     }

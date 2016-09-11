@@ -124,7 +124,7 @@
     <Compile Include="Linear\Segment.cs" />
     <Compile Include="Linear\SegmentExtensions.cs" />
     <Compile Include="Cropping\CroppingExtensions.cs" />
-    <Compile Include="Quantified\CropExtensions.cs" />
+    <Compile Include="Quantified\CroppingExtensions.cs" />
     <Compile Include="Linear\Coordinate.cs" />
     <Compile Include="Linear\CoordinateComparer.cs" />
     <Compile Include="Linear\CoordinateExtensions.cs" />

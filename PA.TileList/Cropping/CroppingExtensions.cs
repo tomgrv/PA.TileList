@@ -77,7 +77,7 @@ namespace PA.TileList.Cropping
             return crop;
         }
 
-        public static ITile<T> Cropping<T>(this ITile<T> list, IZone a)
+        public static ITile<T> Crop<T>(this ITile<T> list, IZone a)
       where T : ICoordinate
         {
             foreach (var e in list.Where(e => !a.Contains(e)).ToArray())
@@ -89,10 +89,10 @@ namespace PA.TileList.Cropping
             return list;
         }
 
-        public static ITile<T> Cropping<T>(this ITile<T> list, Func<T, bool> predicate)
+        public static ITile<T> Crop<T>(this ITile<T> list, Func<T, bool> predicate)
             where T : ICoordinate
         {
-            return list.Cropping(list.GetCroppingZone(predicate));
+            return list.Crop(list.GetCroppingZone(predicate));
         }
 
         public static IEnumerable<T> Cropping<T>(this IEnumerable<T> list, IZone a)
