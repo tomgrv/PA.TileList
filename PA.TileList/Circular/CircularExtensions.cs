@@ -23,7 +23,7 @@ namespace PA.TileList.Circular
             return Math.Pow(testX, 2d) + Math.Pow(testY, 2d);
         }
 
-        public static IEnumerable<KeyValuePair<T, int>> Points<T>(this IQuantifiedTile<T> tile, CircularProfile p, CircularConfiguration config, Func<T, bool> predicate = null)
+        public static IEnumerable<KeyValuePair<T, int>> Points<T>(this IQuantifiedTile<T> tile, CircularProfile p, SelectionConfiguration config, Func<T, bool> predicate = null)
             where T : ICoordinate
         {
             double minRadius2 = Math.Pow(p.GetMinRadius(), 2d);
@@ -100,7 +100,7 @@ namespace PA.TileList.Circular
         /// <param name="config">Config.</param>
         /// <param name="predicate">Select point by angle and squared radius</param>
         /// <typeparam name="T">ICoordinate</typeparam>
-        internal static int Points<T>(this IQuantifiedTile<T> tile, T c, CircularConfiguration config, Func<double, double, bool> predicate)
+        internal static int Points<T>(this IQuantifiedTile<T> tile, T c, SelectionConfiguration config, Func<double, double, bool> predicate)
             where T : ICoordinate
         {
             return tile.Points(c, config, (testX, testY, r2) => predicate(Math.Atan2(testY, testX), r2));
@@ -114,7 +114,7 @@ namespace PA.TileList.Circular
         /// <param name = "config">Config.</param>
         /// <param name="predicate">Select point at x, y and squared distance from tile center</param>
         /// <typeparam name="T">ICoordinate</typeparam>
-        internal static int Points<T>(this IQuantifiedTile<T> tile, T c, CircularConfiguration config, Func<double, double, double, bool> predicate)
+        internal static int Points<T>(this IQuantifiedTile<T> tile, T c, SelectionConfiguration config, Func<double, double, double, bool> predicate)
             where T : ICoordinate
         {
             int points = 0;
@@ -145,7 +145,7 @@ namespace PA.TileList.Circular
             return points;
         }
 
-        public static IEnumerable<KeyValuePair<T, float>> Percent<T>(this IQuantifiedTile<T> tile, CircularProfile p, CircularConfiguration config, Func<T, bool> predicate = null)
+        public static IEnumerable<KeyValuePair<T, float>> Percent<T>(this IQuantifiedTile<T> tile, CircularProfile p, SelectionConfiguration config, Func<T, bool> predicate = null)
             where T : ICoordinate
         {
             foreach (KeyValuePair<T, int> c in tile.Points(p, config, predicate))
@@ -154,29 +154,29 @@ namespace PA.TileList.Circular
             }
         }
 
-        public static IEnumerable<T> Take<T>(this IQuantifiedTile<T> tile, CircularProfile p, CircularConfiguration config, Func<T, bool> predicate = null)
+        public static IEnumerable<T> Take<T>(this IQuantifiedTile<T> tile, CircularProfile p, SelectionConfiguration config, Func<T, bool> predicate = null)
             where T : class, ICoordinate
         {
             foreach (KeyValuePair<T, int> c in tile.Points(p, config, predicate))
             {
-                if (config.SelectionType.HasFlag(CircularConfiguration.SelectionFlag.Inside) && config.MinSurface <= c.Value)
+                if (config.SelectionType.HasFlag(SelectionConfiguration.SelectionFlag.Inside) && config.MinSurface <= c.Value)
                 {
                     yield return c.Key;
                 }
 
-                if (config.SelectionType.HasFlag(CircularConfiguration.SelectionFlag.Under) && 0 < c.Value && c.Value < config.MinSurface)
+                if (config.SelectionType.HasFlag(SelectionConfiguration.SelectionFlag.Under) && 0 < c.Value && c.Value < config.MinSurface)
                 {
                     yield return c.Key;
                 }
 
-                if (config.SelectionType.HasFlag(CircularConfiguration.SelectionFlag.Outside) && c.Value == 0)
+                if (config.SelectionType.HasFlag(SelectionConfiguration.SelectionFlag.Outside) && c.Value == 0)
                 {
                     yield return c.Key;
                 }
             }
         }
 
-        public static IQuantifiedTile<T> Take<T>(this IQuantifiedTile<T> tile, CircularProfile p, CircularConfiguration config, ref bool referenceChange, Func<T, bool> predicate = null)
+        public static IQuantifiedTile<T> Take<T>(this IQuantifiedTile<T> tile, CircularProfile p, SelectionConfiguration config, ref bool referenceChange, Func<T, bool> predicate = null)
             where T : class, ICoordinate
         {
             IQuantifiedTile<T> qtile = new QuantifiedTile<T>(tile);

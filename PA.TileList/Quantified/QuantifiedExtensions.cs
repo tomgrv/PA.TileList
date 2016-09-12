@@ -54,6 +54,7 @@ namespace PA.TileList.Quantified
         /// <param name="y2">The second y value.</param>
         /// <param name="strict">If set to <c>true</c> strict.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
+        [Obsolete]
         public static IEnumerable<ICoordinate> GetCoordinatesIn<T>(this IQuantifiedTile<T> list, double x1, double y1, double x2, double y2, bool strict = false)
             where T : ICoordinate
         {
@@ -65,23 +66,13 @@ namespace PA.TileList.Quantified
             int pointsInX = Math.Max(1, (int)Math.Ceiling(list.ElementStepX / (maxX - minX))) + 1;
             int pointsInY = Math.Max(1, (int)Math.Ceiling(list.ElementStepY / (maxY - minY))) + 1;
 
-            double stepSizeX = 1d / (pointsInX);
-            double stepSizeY = 1d / (pointsInY);
 
-            return list.Zone.Where(c =>
-{
-    var pp = c.CountPoints(list, pointsInX, pointsInY, stepSizeX, stepSizeY,
-                                                                    (xc, yc) => xc >= minX && xc <= maxX && yc >= minY && yc <= maxY);
 
-    if (pp > 0)
-    {
-        return true;
-    }
-    return pp >= (strict ? 4 : 1);
-}
-);
+            return list.Zone.Where(c => c.CountPoints(list, pointsInX, pointsInY,
+                                                                    (xc, yc) => xc >= minX && xc <= maxX && yc >= minY && yc <= maxY) >= (strict ? 4 : 1));
         }
 
+        [Obsolete]
         public static IEnumerable<T> Crop<T>(this IQuantifiedTile<T> list, double x1, double y1, double x2, double y2, bool strict = false)
            where T : ICoordinate
         {
@@ -159,6 +150,7 @@ namespace PA.TileList.Quantified
         /// <param name="predicate">Predicate in cartesian coordinates (x,y)</param>
         /// <param name="polarCoordinates">Predicate is expressed in polar coordinates (angle, radius²)</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
+        [Obsolete]
         private static int CountPoints<T>(this ICoordinate c, IQuantifiedTile<T> tile, int pointsInX, int pointsInY, double stepSizeX, double stepSizeY, Func<double, double, bool> predicate, bool polarCoordinates = false)
             where T : ICoordinate
         {
@@ -199,6 +191,65 @@ namespace PA.TileList.Quantified
             }
 
             return points;
+        }
+
+        private static int CountPoints<T>(this ICoordinate c, IQuantifiedTile<T> tile, int pointsInX, int pointsInY, Func<double, double, bool> predicate, bool polarCoordinates = false)
+         where T : ICoordinate
+        {
+            Contract.Requires(pointsInX > 1);
+            Contract.Requires(pointsInY > 1);
+            Contract.Requires(predicate != null);
+
+            var points = 0;
+
+            c.GetPoints(tile, pointsInX, pointsInY, (xc, yc) => points += predicate(xc,yc) ? 1 : 0, polarCoordinates);
+
+            return points;
+        }
+
+        public static void GetPoints<T>(this ICoordinate c, IQuantifiedTile<T> tile, int pointsInX, int pointsInY, Action<double, double> predicate, bool polarCoordinates = false)
+        where T : ICoordinate
+        {
+            Contract.Requires(pointsInX > 1);
+            Contract.Requires(pointsInY > 1);
+            Contract.Requires(predicate != null);
+
+            var ratioX = tile.ElementSizeX/tile.ElementStepX;
+            var ratioY = tile.ElementSizeY/tile.ElementStepY;
+
+            var stepSizeX = ratioX / (pointsInX - 1) ;
+            var stepSizeY = ratioY/ (pointsInY - 1);
+
+            var offsetX = ratioX / 2f;
+            var offsetY = ratioY / 2f;
+
+            var testY = new double[pointsInY];
+            var testY2 = new double[pointsInY];
+
+            for (var i = 0; i < pointsInX; i++)
+            {
+                var testX = ((c.X - tile.Reference.X) - offsetX + i * stepSizeX) * tile.ElementStepX + tile.RefOffsetX;
+                var testX2 = Math.Pow(testX, 2d);
+
+                for (var j = 0; j < pointsInY; j++)
+                {
+                    if (i == 0)
+                    {
+                        testY[j] = ((c.Y - tile.Reference.Y) - offsetY + j * stepSizeY) * tile.ElementStepY + tile.RefOffsetY;
+                        testY2[j] = Math.Pow(testY[j], 2);
+                    }
+
+                    if (polarCoordinates)
+                    {
+                        predicate(Math.Atan2(testY[j], testX), testX2 + testY2[j]);
+                    }
+                    else
+                    {
+                        predicate(testX, testY[j]);
+                    }
+                }
+
+            }
         }
 
         #region ToQuantified

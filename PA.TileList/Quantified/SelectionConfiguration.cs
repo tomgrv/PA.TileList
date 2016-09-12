@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using PA.Utilities;
+using PA.TileList.Quantified;
 
-namespace PA.TileList.Circular
+namespace PA.TileList.Quantified
 {
     /// <summary>
     /// Parameters for circular operations
     /// </summary>
-    public class CircularConfiguration
+    public class SelectionConfiguration
     {
         [Flags]
         public enum SelectionFlag
@@ -51,7 +52,7 @@ namespace PA.TileList.Circular
         /// </summary>
         /// <param name="tolerance">Tolerance percentage for selectionType</param>
         /// <param name="selectionType"></param>
-        public CircularConfiguration(float tolerance, SelectionFlag selectionType)
+        public SelectionConfiguration(float tolerance, SelectionFlag selectionType, float stepSize = 0)
         {
             if (tolerance < 0f || tolerance > 1f)
                 throw new ArgumentOutOfRangeException("tolerance", "Should be a percentage");
@@ -60,12 +61,17 @@ namespace PA.TileList.Circular
             this.StepSize = 1f;
             this.SelectionType = selectionType;
 
-            // Automatic resolution
-            float factor = tolerance;
-            while (!Math.Floor(factor).NearlyEquals(factor))
+                // Automatic resolution
+                float factor = tolerance;
+                while (!Math.Floor(factor).NearlyEquals(factor))
+                {
+                    this.StepSize = this.StepSize/10f;
+                    factor = factor*10f;
+                }
+
+            if (stepSize > 0)
             {
-                this.StepSize = this.StepSize / 10f;
-                factor = factor * 10f;
+                this.StepSize = Math.Min(stepSize, this.StepSize);
             }
 
             // Members
@@ -75,7 +81,7 @@ namespace PA.TileList.Circular
         }
 
         [Obsolete("Please use CircularConfiguration(float tolerance, SelectionFlag selectionType) as constructor")]
-        public CircularConfiguration(float tolerance, float resolution, SelectionFlag selectionType)
+        public SelectionConfiguration(float tolerance, float resolution, SelectionFlag selectionType)
         {
             if (tolerance < 0f || tolerance > 1f)
                 throw new ArgumentOutOfRangeException("tolerance", "Should be a percentage");

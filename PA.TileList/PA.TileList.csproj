@@ -14,7 +14,8 @@
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <ReleaseVersion></ReleaseVersion>
+    <ReleaseVersion>
+    </ReleaseVersion>
     <NuGetPackageImportStamp>4c4505ba</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -108,7 +109,7 @@
     <Compile Include="Cropping\ZoneExtensions.cs" />
     <Compile Include="Extensions\PolygonExtensions.cs" />
     <Compile Include="Extensions\TranslateExtensions.cs" />
-    <Compile Include="Circular\CircularConfiguration.cs" />
+    <Compile Include="Quantified\SelectionConfiguration.cs" />
     <Compile Include="Circular\CircularExtensions.cs" />
     <Compile Include="Circular\CircularProfile.cs" />
     <Compile Include="Contextual\Contextual.cs" />
@@ -124,7 +125,6 @@
     <Compile Include="Linear\Segment.cs" />
     <Compile Include="Linear\SegmentExtensions.cs" />
     <Compile Include="Cropping\CroppingExtensions.cs" />
-    <Compile Include="Quantified\CroppingExtensions.cs" />
     <Compile Include="Linear\Coordinate.cs" />
     <Compile Include="Linear\CoordinateComparer.cs" />
     <Compile Include="Linear\CoordinateExtensions.cs" />
@@ -137,14 +137,7 @@
     <None Include="PA.Toolbox.snk" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Circular\" />
-    <Folder Include="Contextual\" />
-    <Folder Include="Linear\" />
-    <Folder Include="Quadrant\" />
-    <Folder Include="Quantified\" />
-    <Folder Include="Rotation\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Reference Include="PA.Utilities">
       <HintPath>..\packages\PA.Utilities.4.7.4\lib\portable-net45+win+wp80+MonoAndroid10+xamarinios10+MonoTouch10\PA.Utilities.dll</HintPath>
