@@ -3,12 +3,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E3124597-2916-4D24-A270-F4CE70EC6924}</ProjectGuid>
+    <ProjectGuid>{715D7012-4F0A-4F09-A2B0-395958296D17}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>PA.TileList.Tests</RootNamespace>
     <AssemblyName>PA.TileList.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <ReleaseVersion></ReleaseVersion>
+    <ReleaseVersion>
+    </ReleaseVersion>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -37,7 +40,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\GitVersionTask.2.0.1\Build\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.2.0.1\Build\GitVersionTask.targets')" />
-  <Import Project="..\packages\GitVersionTask.3.6.3\build\dotnet\GitVersionTask.targets" Condition="Exists('..\packages\GitVersionTask.3.6.3\build\dotnet\GitVersionTask.targets')" />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
@@ -54,17 +56,11 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Utils\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\PA.TileList\PA.TileList.csproj">
       <Project>{5B4FACE3-DDB3-4EAA-985A-9DE4AAC34A91}</Project>
       <Name>PA.TileList</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PA.TileList.Drawing\PA.TileList.Drawing.csproj">
-      <Project>{2D187F72-216C-40D5-B9DD-FFB52F7B3AAF}</Project>
-      <Name>PA.TileList.Drawing</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

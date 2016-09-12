@@ -4,12 +4,12 @@ using System.Drawing;
 using System.Linq;
 using NUnit.Framework;
 using PA.TileList;
-using PA.TileList.Circular;
+using PA.TileList.Quantified;
 using PA.TileList.Contextual;
 using PA.TileList.Drawing.Graphics2D;
 using PA.TileList.Drawing.Quantified;
 using PA.TileList.Drawing.Circular;
-using PA.TileList.Quantified;
+using PA.TileList.Circular;
 using PA.TileList.Quadrant;
 using PA.TileList.Tests;
 using PA.TileList.Tests.Utils;
@@ -87,11 +87,11 @@ namespace PA.TileList.Drawing.Tests
 
             bool change = true;
 
-            var q = tile.Take(p, new CircularConfiguration(1f, CircularConfiguration.SelectionFlag.Inside), ref change);
+            var q = tile.Take(p, new SelectionConfiguration(1f, 0.1f, SelectionConfiguration.SelectionFlag.Inside), ref change);
 
             Assert.AreEqual(false, change, "Reference Changed");
 
-            var i = q.GetImage(5000, 5000, ScaleMode.ALL, (z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y));
+            var i = q.GetImage(5000, 5000, ScaleMode.ALL, (z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y), Pens.Red);
             var pi = p.GetImage(i);
 
             string signature = pi.Item.GetSignature();
@@ -115,7 +115,7 @@ namespace PA.TileList.Drawing.Tests
 
             bool change = true;
 
-            var q = tile.Take(p, new CircularConfiguration(1f, CircularConfiguration.SelectionFlag.Inside), ref change);
+            var q = tile.Take(p, new SelectionConfiguration(1f, SelectionConfiguration.SelectionFlag.Inside), ref change);
 
             //var i = q.GetImage(5000, 5000, (z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y));
             //var pi = p.GetImage(i);
@@ -123,7 +123,7 @@ namespace PA.TileList.Drawing.Tests
 
             foreach (var tt in tile.Except(q))
             {
-                tt.Context.Color = Color.Red;
+                tt.Context.Color = Color.Transparent;
             }
 
             //Assert.AreEqual(47860, q.Count(), "Selected item count");

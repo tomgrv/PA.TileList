@@ -2,16 +2,15 @@
 using System.Drawing;
 using System.IO;
 using NUnit.Framework;
-using PA.TileList.Circular;
+using PA.TileList.Quantified;
 using PA.TileList.Contextual;
 using PA.TileList.Cropping;
 using PA.TileList.Drawing.Circular;
 using PA.TileList.Drawing.Graphics2D;
 using PA.TileList.Drawing.Quantified;
 using PA.TileList.Linear;
-using PA.TileList.Quantified;
+using PA.TileList.Circular;
 using PA.TileList.Quadrant;
-using PA.TileList.Tests;
 using PA.TileList.Tests.Utils;
 using PA.TileList.Tile;
 using System.Linq;
@@ -128,12 +127,18 @@ namespace PA.TileList.Drawing.Tests
 
             var p = new CircularProfile(1400);
 
+            var r1 = new Rectangle(-100, -100, 200, 200);
+            var r2 = new Rectangle(-525, -525, 500, 10);
+            var r3 = new Rectangle(-450, -450, 20, 20);
+
             bool change = true;
-            var q = tile.Take(p, new CircularConfiguration(1f, CircularConfiguration.SelectionFlag.Inside), ref change);
+            var q = tile.Take(p, new SelectionConfiguration(1f, SelectionConfiguration.SelectionFlag.Inside), ref change);
 
-            var i = q.GetImage(5000, 5000, ScaleMode.ALL, (z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y));
+            var i = q.GetImage(5000, 5000, ScaleMode.ALL, (z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y), Pens.Crimson);
 
-            TestCoordinates(tile, new Rectangle(-100, -100, 200, 200), i, (z) => z.Context.Color = Color.Violet);
+            TestCoordinates(tile,r1, i, (z) => z.Context.Color = Color.Violet, Color.Aqua);
+            TestCoordinates(tile, r2, i, (z) => z.Context.Color = Color.Violet, Color.OrangeRed);
+            TestCoordinates(tile, r3, i, (z) => z.Context.Color = Color.Violet, Color.Blue);
 
             var ii = q.GetImage(i, (z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y));
 
@@ -145,26 +150,52 @@ namespace PA.TileList.Drawing.Tests
 
         }
 
-        private void TestCoordinates<T>(IQuantifiedTile<T> q, Rectangle r, RectangleD<Bitmap> i, Action<T> a)
+        private void TestCoordinates<T>(IQuantifiedTile<T> q, Rectangle r, RectangleD<Bitmap> i, Action<T> a, Color cl)
             where T : class, ICoordinate
         {
-            foreach (var c in q.GetCoordinatesIn(r.Left, r.Top, r.Right, r.Bottom))
+            foreach (var c in q.GetCoordinatesIn(r.Left, r.Top, r.Right, r.Bottom, false))
             {
+                DrawPoints(q, r, i, cl);
+
+
                 var z = q.ElementAt(c);
 
                 if (z != null)
                 {
                     a(z);
-                    break;
+                   
                 }
             }
 
             using (var g = i.GetGraphicsD())
             {
-                g.Graphics.DrawRectangle(Pens.Black, r.Left * g.ScaleX, r.Top * g.ScaleY, r.Width * g.ScaleX, r.Height * g.ScaleY);
+                g.Graphics.FillRectangle(Brushes.Black, r.Left * g.ScaleX, r.Top * g.ScaleY, r.Width * g.ScaleX, r.Height * g.ScaleY);
             }
         }
 
+
+        public void DrawPoints<T>(IQuantifiedTile<T> list, Rectangle r, RectangleD<Bitmap> i, Color cl)
+            where T : ICoordinate
+        {
+            double minX = r.Left;
+            double minY = r.Top;
+            double maxX = r.Right;
+            double maxY = r.Bottom;
+
+            int pointsInX = Math.Max(1, (int) Math.Ceiling(list.ElementStepX/(maxX - minX))) + 1;
+            int pointsInY = Math.Max(1, (int) Math.Ceiling(list.ElementStepY/(maxY - minY))) + 1;
+
+            var g = i.GetGraphicsD();
+
+            foreach (var c in list.Zone)
+            {
+                c.GetPoints(list, pointsInX, pointsInY,
+                    (xc, yc) =>
+                    {
+                        g.Graphics.FillRectangle(new SolidBrush(cl), ((float) xc - 1f)*g.ScaleX, ((float) yc - 1f) * g.ScaleY, 3f * g.ScaleX, 3f * g.ScaleY);
+                    });
+            }
+        }
     }
 }
 

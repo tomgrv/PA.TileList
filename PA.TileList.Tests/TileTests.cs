@@ -5,7 +5,6 @@ using System.Drawing;
 using NUnit.Framework;
 using PA.TileList;
 using PA.TileList.Cropping;
-using PA.TileList.Drawing.Graphics2D;
 using PA.TileList.Extensions;
 using PA.TileList.Linear;
 using PA.TileList.Quadrant;
