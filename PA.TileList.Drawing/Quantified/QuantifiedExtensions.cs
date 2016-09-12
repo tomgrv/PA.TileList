@@ -10,7 +10,7 @@ using System.Runtime.Remoting;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using PA.TileList.Circular;
+using PA.TileList.Quantified;
 using PA.TileList.Contextual;
 using PA.TileList.Linear;
 using PA.TileList.Quantified;
@@ -71,39 +71,39 @@ namespace PA.TileList.Drawing.Quantified
 
         #region Image
 
-        public static RectangleD<U> GetImage<T, U>(this IQuantifiedTile<T> c, Size s, Func<T, SizeF, U> getImagePart)
+        public static RectangleD<U> GetImage<T, U>(this IQuantifiedTile<T> c, Size s, Func<T, SizeF, U> getImagePart, Pen extraPen = null)
             where T : ICoordinate
             where U : Image
         {
-            return c.GetImage<T, U>(c.GetBaseImage<T, U>(s, ScaleMode.NONE), getImagePart);
+            return c.GetImage<T, U>(c.GetBaseImage<T, U>(s, ScaleMode.NONE), getImagePart, extraPen);
         }
 
-        public static RectangleD<U> GetImage<T, U>(this IQuantifiedTile<T> c, Size s, ScaleMode mode, Func<T, SizeF, U> getImagePart)
+        public static RectangleD<U> GetImage<T, U>(this IQuantifiedTile<T> c, Size s, ScaleMode mode, Func<T, SizeF, U> getImagePart, Pen extraPen = null)
            where T : ICoordinate
            where U : Image
         {
-            return c.GetImage<T, U>(c.GetBaseImage<T, U>(s, mode), getImagePart);
+            return c.GetImage<T, U>(c.GetBaseImage<T, U>(s, mode), getImagePart, extraPen);
         }
 
-        public static RectangleD<U> GetImage<T, U>(this IQuantifiedTile<T> c, int Width, int Height, Func<T, SizeF, U> getImagePart)
+        public static RectangleD<U> GetImage<T, U>(this IQuantifiedTile<T> c, int Width, int Height, Func<T, SizeF, U> getImagePart, Pen extraPen = null)
             where T : ICoordinate
             where U : Image
         {
-            return c.GetImage<T, U>(c.GetBaseImage<T, U>(Width, Height, ScaleMode.NONE), getImagePart);
+            return c.GetImage<T, U>(c.GetBaseImage<T, U>(Width, Height, ScaleMode.NONE), getImagePart,  extraPen);
         }
 
-        public static RectangleD<U> GetImage<T, U>(this IQuantifiedTile<T> c, int Width, int Height, ScaleMode mode, Func<T, SizeF, U> getImagePart)
+        public static RectangleD<U> GetImage<T, U>(this IQuantifiedTile<T> c, int Width, int Height, ScaleMode mode, Func<T, SizeF, U> getImagePart, Pen extraPen = null)
            where T : ICoordinate
            where U : Image
         {
-            return c.GetImage<T, U>(c.GetBaseImage<T, U>(Width, Height, mode), getImagePart);
+            return c.GetImage<T, U>(c.GetBaseImage<T, U>(Width, Height, mode), getImagePart, extraPen);
         }
 
-        public static RectangleD<U> GetImage<T, U>(this IQuantifiedTile<T> c, RectangleD<U> image, Func<T, SizeF, U> getImagePortion)
+        public static RectangleD<U> GetImage<T, U>(this IQuantifiedTile<T> c, RectangleD<U> image, Func<T, SizeF, U> getImagePortion, Pen extraPen  = null)
             where T : ICoordinate
             where U : Image
         {
-            using (GraphicsD g = image.GetGraphicsD())
+            using (GraphicsD g = image.GetGraphicsD(extraPen))
             {
                 foreach (RectangleD<T> portion in c.GetPortions(g, image.Mode)
                     .Where(p => p.Outer.Height >= 1f && p.Outer.Width >= 1f))
@@ -113,6 +113,11 @@ namespace PA.TileList.Drawing.Quantified
                         if (partial != null)
                         {
                             g.Graphics.DrawImage(partial, portion.Inner);
+
+                            if (extraPen != null)
+                            {
+                                g.Graphics.DrawRectangle(extraPen, Rectangle.Round(portion.Outer));
+                            }
                         }
                     }
                 }
