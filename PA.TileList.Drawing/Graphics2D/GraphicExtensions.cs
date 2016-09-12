@@ -32,7 +32,7 @@ using System.Collections;
 using System.Drawing;
 using PA.TileList.Quantified;
 using PA.TileList.Contextual;
-using PA.TileList.Circular;
+using PA.TileList.Quantified;
 using PA.TileList.Linear;
 using System.Security.Cryptography;
 using System.IO;
@@ -114,7 +114,7 @@ namespace PA.TileList.Drawing.Graphics2D
                 if (sf != null)
                 {
                     string name = sf.GetMethod().Name + (tag != null ? "_" + tag : string.Empty);
-                    image.Save(name + "_" + key + ".png", System.Drawing.Imaging.ImageFormat.Png);
+                    image.Save(Path.GetTempPath()+name + "_" + key + ".png", System.Drawing.Imaging.ImageFormat.Png);
                 }
 #endif
 
