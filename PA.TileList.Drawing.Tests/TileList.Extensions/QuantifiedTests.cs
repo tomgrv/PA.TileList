@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Drawing;
-using System.IO;
 using NUnit.Framework;
-using PA.TileList.Quantified;
+using PA.TileList.Circular;
 using PA.TileList.Contextual;
 using PA.TileList.Cropping;
 using PA.TileList.Drawing.Circular;
 using PA.TileList.Drawing.Graphics2D;
 using PA.TileList.Drawing.Quantified;
 using PA.TileList.Linear;
-using PA.TileList.Circular;
-using PA.TileList.Quadrant;
+using PA.TileList.Quantified;
 using PA.TileList.Tests.Utils;
 using PA.TileList.Tile;
-using System.Linq;
 
-namespace PA.TileList.Drawing.Tests
+namespace PA.TileList.Drawing.Tests.TileList.Extensions
 {
     [TestFixture]
     public class QuantifiedTests

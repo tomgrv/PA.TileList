@@ -1,20 +1,16 @@
-﻿
-using System;
+﻿using System;
 using System.Drawing;
 using System.Linq;
 using NUnit.Framework;
-using PA.TileList;
-using PA.TileList.Quantified;
+using PA.TileList.Circular;
 using PA.TileList.Contextual;
+using PA.TileList.Drawing.Circular;
 using PA.TileList.Drawing.Graphics2D;
 using PA.TileList.Drawing.Quantified;
-using PA.TileList.Drawing.Circular;
-using PA.TileList.Circular;
-using PA.TileList.Quadrant;
-using PA.TileList.Tests;
+using PA.TileList.Quantified;
 using PA.TileList.Tests.Utils;
 
-namespace PA.TileList.Drawing.Tests
+namespace PA.TileList.Drawing.Tests.TileList.Extensions
 {
     [TestFixture]
     public class CircularTests
@@ -141,7 +137,7 @@ namespace PA.TileList.Drawing.Tests
             Assert.AreEqual("E63318A4278EED31907E0374B728F045285D43B6FBE0955A1622BFCFBB7AF5B8", signature_2, "Image hash");
         }
 
-        private CircularProfile GetTestProfile(double radius, double stepping = 1f, double resolution = 1f)
+        public static CircularProfile GetTestProfile(double radius, double stepping = 1f, double resolution = 1f)
         {
             var p = new CircularProfile(radius);
 
