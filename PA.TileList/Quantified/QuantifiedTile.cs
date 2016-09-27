@@ -36,7 +36,7 @@ namespace PA.TileList.Quantified
         {
             if (stepX < sizeX || stepY < sizeY)
             {
-                throw new ArgumentOutOfRangeException("stepX/stepY", "step must be greater than size for QuantifiedTile");
+                throw new ArgumentOutOfRangeException(nameof(stepX) + "-" + nameof(stepY), "step must be greater than size for QuantifiedTile");
             }
 
             this.ElementSizeX = sizeX;
