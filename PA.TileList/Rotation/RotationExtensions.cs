@@ -61,11 +61,11 @@ namespace PA.TileList.Rotation
         public static Tile<IContextual<T>> Rotate<T>(this ITile<T> tile, RotationTable.Angle angle)
              where T : ICoordinate
         {
-            ICoordinate c = tile.Zone.Center();
+            var c = tile.Zone.Center();
 
-            IContextual<T> reference = tile.Reference.Rotate(c, angle);
+            var reference = tile.Reference.Rotate(c, angle);
 
-            Tile<IContextual<T>> list = new Tile<IContextual<T>>(tile.Rotate<T>(c, angle));
+            var list = new Tile<IContextual<T>>(tile.Rotate<T>(c, angle));
 
             list.SetReference(list.Find(reference.X, reference.Y));
 
@@ -75,11 +75,11 @@ namespace PA.TileList.Rotation
         public static Tile<IContextual<T>> Rotate<T>(this ITile<IContextual<T>> tile, RotationTable.Angle angle)
             where T : ICoordinate
         {
-            ICoordinate c = tile.Zone.Center();
+            var c = tile.Zone.Center();
 
-            IContextual<T> reference = tile.Reference.Rotate(c, angle);
+            var reference = tile.Reference.Rotate(c, angle);
 
-            Tile<IContextual<T>> list = new Tile<IContextual<T>>(tile.Rotate<T>(c, angle));
+            var list = new Tile<IContextual<T>>(tile.Rotate<T>(c, angle));
 
             list.SetReference(list.Find(reference.X, reference.Y));
 

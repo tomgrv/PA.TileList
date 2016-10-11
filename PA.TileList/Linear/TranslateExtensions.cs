@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using PA.TileList.Cropping;
 
-namespace PA.TileList.Geometrics.Extensions
+namespace PA.TileList.Linear
 {
     public static class TranslateExtensions
     {

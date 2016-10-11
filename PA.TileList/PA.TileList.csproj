@@ -108,8 +108,6 @@
     <Compile Include="Cropping\Zone.cs" />
     <Compile Include="Cropping\ZoneExtensions.cs" />
     <Compile Include="Extensions\PolygonExtensions.cs" />
-    <Compile Include="Extensions\TranslateExtensions.cs" />
-    <Compile Include="Quantified\SelectionConfiguration.cs" />
     <Compile Include="Circular\CircularExtensions.cs" />
     <Compile Include="Circular\CircularProfile.cs" />
     <Compile Include="Contextual\Contextual.cs" />
@@ -131,6 +129,12 @@
     <Compile Include="Linear\ICoordinate.cs" />
     <Compile Include="Linear\OrientationExtensions.cs" />
     <Compile Include="Linear\Orientation.cs" />
+    <Compile Include="Quantified\RectangularProfile.cs" />
+    <Compile Include="Linear\TranslateExtensions.cs" />
+    <Compile Include="Selection\SelectionConfiguration.cs" />
+    <Compile Include="Selection\SelectionExtensions.cs" />
+    <Compile Include="Selection\ISelectionProfile.cs" />
+    <Compile Include="Selection\SelectionPosition.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PA.TileList.nuspec" />
@@ -142,6 +146,9 @@
     <Reference Include="PA.Utilities">
       <HintPath>..\packages\PA.Utilities.4.7.4\lib\portable-net45+win+wp80+MonoAndroid10+xamarinios10+MonoTouch10\PA.Utilities.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Selection\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

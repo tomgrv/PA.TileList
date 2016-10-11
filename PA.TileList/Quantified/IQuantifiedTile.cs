@@ -41,6 +41,8 @@ namespace PA.TileList.Quantified
         /// Distance from tile center to tile reference center, on Y
         /// </summary>
         double RefOffsetY { get; }
+
+
     }
 
     public interface IQuantifiedTile<T> : ITile<T>, IQuantifiedTile

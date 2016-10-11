@@ -6,6 +6,7 @@ using System.Collections;
 using PA.TileList.Linear;
 using PA.TileList.Tile;
 using PA.TileList.Cropping;
+using System.Diagnostics.Contracts;
 
 namespace PA.TileList.Tile
 {
@@ -183,21 +184,34 @@ namespace PA.TileList.Tile
             }
         }
 
-        public void SetReference(T reference)
+        #region Reference
+
+        public ICoordinate GetReference()
         {
+            return this.Reference;
+        }
+
+        public void SetReference(ICoordinate reference)
+        {
+            Contract.Requires(reference != null);
+
+            if (this.Contains(reference))
+            {
+                this.Reference = this.Find(reference);
+            }
+        }
+
+        public virtual void SetReference(T reference)
+        {
+            Contract.Requires(reference != null);
+
             if (this.Contains(reference))
             {
                 this.Reference = reference;
             }
         }
 
-        public void SetReference(int reference)
-        {
-            if (0 <= reference && reference < this.Count)
-            {
-                this.Reference = this[reference];
-            }
-        }
+        #endregion
 
         public override string ToString()
         {
@@ -207,12 +221,12 @@ namespace PA.TileList.Tile
 
         public virtual object Clone()
         {
-            return new Tile<T>(this.X, this.Y, this.Zone, this.Select((t) => (T)t.Clone()), this.IndexOf(this.Reference));
+            return new Tile<T>(this.X, this.Y, this.Zone, this.Select((t) => (T)t.Clone()), this.IndexOf(this.Reference as T));
         }
 
         public virtual object Clone(int x, int y)
         {
-            return new Tile<T>(x, y, this.Zone, this.Select((t) => (T)t.Clone()), this.IndexOf(this.Reference));
+            return new Tile<T>(x, y, this.Zone, this.Select((t) => (T)t.Clone()), this.IndexOf(this.Reference as T));
         }
     }
 }

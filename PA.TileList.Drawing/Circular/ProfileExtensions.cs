@@ -27,7 +27,16 @@ namespace PA.TileList.Drawing.Circular
             return p.GetImage(new RectangleD<Bitmap>(new Bitmap(width, height), new PointF(-width / 2f, -height / 2f), new SizeF(width, height), mode), radiusPen, arcPen, extraPen);
         }
 
-
+        /// <summary>
+        /// Gets the CircularProfile image in TopLeft coordinates
+        /// </summary>
+        /// <returns>The image.</returns>
+        /// <param name="p">P.</param>
+        /// <param name="image">Image.</param>
+        /// <param name="radiusPen">Radius pen.</param>
+        /// <param name="arcPen">Arc pen.</param>
+        /// <param name="extraPen">Extra pen.</param>
+        /// <typeparam name="U">The 1st type parameter.</typeparam>
         public static RectangleD<U> GetImage<U>(this CircularProfile p, RectangleD<U> image, Pen radiusPen = null, Pen arcPen = null, Pen extraPen = null)
             where U : Image
         {
@@ -50,35 +59,38 @@ namespace PA.TileList.Drawing.Circular
 
                 foreach (CircularProfile.ProfileStep current in p.Profile)
                 {
-
-                    double ad = 180f * -g.ScaleAngle(last.Angle) / Math.PI;
-                    double sw = 180f * -(current.Angle - last.Angle) / Math.PI;
-
-                    float lastRadius = (float)last.Radius;
-
-                    if (lastRadius > 0f)
-                    {
-                        double x = g.OffsetX - (double)g.ScaleX * lastRadius;
-                        double y = g.OffsetY - (double)g.ScaleY * lastRadius;
-                        double w = (double)g.ScaleX * lastRadius * 2f;
-                        double h = (double)g.ScaleY * lastRadius * 2f;
-                        g.Graphics.DrawArc(radiusPen ?? Pens.Green, (float)x, (float)y, (float)w, (float)h, (float)ad, (float)sw);
-                    }
-
-                    if (!current.Radius.NearlyEquals(last.Radius))
-                    {
-                        double x1 = g.OffsetX + (double)g.ScaleX * lastRadius * Math.Cos(current.Angle);
-                        double y1 = g.OffsetY - (double)g.ScaleY * lastRadius * Math.Sin(current.Angle);
-                        double x2 = g.OffsetX + (double)g.ScaleX * current.Radius * Math.Cos(current.Angle);
-                        double y2 = g.OffsetY - (double)g.ScaleY * current.Radius * Math.Sin(current.Angle);
-                        g.Graphics.DrawLine(radiusPen ?? Pens.Orange, (float)x1, (float)y1, (float)x2, (float)y2);
-                    }
-
+                    g.DrawStep(last, current);
                     last = current;
                 }
+
+                g.DrawStep(last, p.GetLast());
             }
 
             return image;
+        }
+
+        public static void DrawStep(this GraphicsD g, CircularProfile.ProfileStep last, CircularProfile.ProfileStep current, Pen radiusPen = null)
+        {
+            var ad = 180f * g.ScaleAngle(last.Angle) / Math.PI;
+            var sw = 180f * (current.Angle - last.Angle) / Math.PI;
+
+            if (last.Radius > 0f)
+            {
+                var x = g.OffsetX - g.ScaleX * last.Radius;
+                var y = g.OffsetY - g.ScaleY * last.Radius;
+                var w = g.ScaleX * last.Radius * 2f;
+                var h = g.ScaleY * last.Radius * 2f;
+                g.Graphics.DrawArc(radiusPen ?? Pens.Green, (float)x, (float)y, (float)w, (float)h, (float)ad, (float)sw);
+            }
+
+            if (!current.Radius.NearlyEquals(last.Radius))
+            {
+                var x1 = g.OffsetX + g.ScaleX * last.Radius * Math.Cos(current.Angle);
+                var y1 = g.OffsetY + g.ScaleY * last.Radius * Math.Sin(current.Angle);
+                var x2 = g.OffsetX + g.ScaleX * current.Radius * Math.Cos(current.Angle);
+                var y2 = g.OffsetY + g.ScaleY * current.Radius * Math.Sin(current.Angle);
+                g.Graphics.DrawLine(radiusPen ?? Pens.Orange, (float)x1, (float)y1, (float)x2, (float)y2);
+            }
         }
 
         public static double ScaleAngle(this GraphicsD g, double angle)

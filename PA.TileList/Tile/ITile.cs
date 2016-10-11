@@ -12,6 +12,9 @@ namespace PA.TileList.Tile
     {
         IZone Zone { get; }
         void UpdateZone();
+
+        ICoordinate GetReference();
+        void SetReference(ICoordinate reference);
     }
 
     public interface ITile<T> : IList<T>, ITile
@@ -19,6 +22,5 @@ namespace PA.TileList.Tile
     {
         T Reference { get; }
         void SetReference(T reference);
-        void SetReference(int reference);
     }
 }

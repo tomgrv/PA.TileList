@@ -2,6 +2,7 @@
 using System.Drawing;
 using NUnit.Framework;
 using PA.TileList.Circular;
+using PA.TileList.Selection;
 using PA.TileList.Contextual;
 using PA.TileList.Cropping;
 using PA.TileList.Drawing.Circular;
@@ -65,15 +66,16 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             string signature0 = q0.GetImage(1000, 1000, (z, s) =>
                 z.ToBitmap(100, 50, z.X + "\n" + z.Y)).Item.GetSignature();
 
-            foreach (var c in q0.GetCoordinatesIn(250, 250, 600, 600))
+
+            foreach (var c in q0.SelectCoordinates(new RectangularProfile(250, 250, 600, 600), new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under)))
             {
-                t0.Find(c).Color = Color.Blue;
+                t0.Find(c).Color = Color.Chocolate;
             }
 
             string signature1 = q0.GetImage(1000, 1000, (z, s) =>
                 z.ToBitmap(100, 50, z.X + "\n" + z.Y)).Item.GetSignature();
 
-            foreach (var c in q0.GetCoordinatesIn(52, 52, 62, 62))
+            foreach (var c in q0.SelectCoordinates(new RectangularProfile(52, 52, 62, 62), new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under)))
             {
                 t0.Find(c).Color = Color.White;
             }
@@ -81,7 +83,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             string signature2 = q0.GetImage(1000, 1000, (z, s) =>
                 z.ToBitmap(100, 50, z.X + "\n" + z.Y)).Item.GetSignature();
 
-            foreach (var c in q0.GetCoordinatesIn(12, 12, 13, 13))
+            foreach (var c in q0.SelectCoordinates(new RectangularProfile(12, 12, 13, 13), new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under)))
             {
                 t0.Find(c).Color = Color.Black;
             }
@@ -129,11 +131,11 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             var r3 = new Rectangle(-450, -450, 20, 20);
 
             bool change = true;
-            var q = tile.Take(p, new SelectionConfiguration(1f, SelectionConfiguration.SelectionFlag.Inside), ref change);
+            var q = tile.Take(p, new SelectionConfiguration(SelectionPosition.Inside), ref change, true);
 
             var i = q.GetImage(5000, 5000, ScaleMode.ALL, (z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y), Pens.Crimson);
 
-            TestCoordinates(tile,r1, i, (z) => z.Context.Color = Color.Violet, Color.Aqua);
+            TestCoordinates(tile, r1, i, (z) => z.Context.Color = Color.Violet, Color.Aqua);
             TestCoordinates(tile, r2, i, (z) => z.Context.Color = Color.Violet, Color.OrangeRed);
             TestCoordinates(tile, r3, i, (z) => z.Context.Color = Color.Violet, Color.Blue);
 
@@ -150,7 +152,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
         private void TestCoordinates<T>(IQuantifiedTile<T> q, Rectangle r, RectangleD<Bitmap> i, Action<T> a, Color cl)
             where T : class, ICoordinate
         {
-            foreach (var c in q.GetCoordinatesIn(r.Left, r.Top, r.Right, r.Bottom, false))
+            foreach (var c in q.SelectCoordinates(new RectangularProfile(r.Left, r.Top, r.Right, r.Bottom), new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under), false))
             {
                 DrawPoints(q, r, i, cl);
 
@@ -160,7 +162,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
                 if (z != null)
                 {
                     a(z);
-                   
+
                 }
             }
 
@@ -179,17 +181,17 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             double maxX = r.Right;
             double maxY = r.Bottom;
 
-            int pointsInX = Math.Max(1, (int) Math.Ceiling(list.ElementStepX/(maxX - minX))) + 1;
-            int pointsInY = Math.Max(1, (int) Math.Ceiling(list.ElementStepY/(maxY - minY))) + 1;
+            int pointsInX = Math.Max(1, (int)Math.Ceiling(list.ElementStepX / (maxX - minX))) + 1;
+            int pointsInY = Math.Max(1, (int)Math.Ceiling(list.ElementStepY / (maxY - minY))) + 1;
 
             var g = i.GetGraphicsD();
 
             foreach (var c in list.Zone)
             {
                 c.GetPoints(list, pointsInX, pointsInY,
-                    (xc, yc) =>
+                    (xc, yc, xc2, yc2) =>
                     {
-                        g.Graphics.FillRectangle(new SolidBrush(cl), ((float) xc - 1f)*g.ScaleX, ((float) yc - 1f) * g.ScaleY, 3f * g.ScaleX, 3f * g.ScaleY);
+                        g.Graphics.FillRectangle(new SolidBrush(cl), ((float)xc - 1f) * g.ScaleX, ((float)yc - 1f) * g.ScaleY, 3f * g.ScaleX, 3f * g.ScaleY);
                     });
             }
         }

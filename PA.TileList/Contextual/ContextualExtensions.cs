@@ -34,6 +34,13 @@ namespace PA.TileList.Contextual
             return new Contextual<T>(item.X + t.X * sizeX, item.Y + t.Y * sizeY, item);
         }
 
+        public static void DeContextualize<T>(this IContextual<T> t)
+           where T : ICoordinate
+        {
+            t.Context.X = t.X;
+            t.Context.Y = t.Y;
+        }
+
         #endregion
 
         #region Flatten
@@ -42,7 +49,8 @@ namespace PA.TileList.Contextual
             where U : ITile<T>
             where T : ICoordinate
         {
-            IContextual<T> reference = t.Reference.Contextualize(t.Reference.Reference);
+
+            var reference = t.Reference.Contextualize(t.Reference.Reference);
 
             // Sizes in flattened output Tile
             double sizeX = t.ElementSizeX / t.Reference.Zone.SizeX;

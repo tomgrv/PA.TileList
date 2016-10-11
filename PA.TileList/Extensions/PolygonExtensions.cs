@@ -58,7 +58,7 @@ namespace PA.TileList.Geometrics.Extensions
 
             var p = new List<P>(polygon);
 
-            if (p.Last().GetCoordinate() != p.First().GetCoordinate())
+            if (p.Last().ToCoordinate() != p.First().ToCoordinate())
             {
                 p.Add(p.First());
             }

@@ -47,7 +47,7 @@ namespace PA.TileList.Quantified
             this.RefOffsetY = offsetY;
         }
 
-        public new void SetReference(T reference)
+        public override void SetReference(T reference)
         {
             if (this.Contains(reference))
             {
@@ -59,12 +59,6 @@ namespace PA.TileList.Quantified
                 base.SetReference(reference);
             }
         }
-
-        public new void SetReference(int reference)
-        {
-            this.SetReference(this.ElementAt(reference));
-        }
-
 
         public override object Clone()
         {

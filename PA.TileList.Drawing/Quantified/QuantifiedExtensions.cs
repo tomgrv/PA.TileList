@@ -13,8 +13,8 @@ using System.Text.RegularExpressions;
 using PA.TileList.Quantified;
 using PA.TileList.Contextual;
 using PA.TileList.Linear;
-using PA.TileList.Quantified;
 using PA.TileList.Drawing.Graphics2D;
+using PA.TileList.Selection;
 
 
 namespace PA.TileList.Drawing.Quantified
@@ -89,7 +89,7 @@ namespace PA.TileList.Drawing.Quantified
             where T : ICoordinate
             where U : Image
         {
-            return c.GetImage<T, U>(c.GetBaseImage<T, U>(Width, Height, ScaleMode.NONE), getImagePart,  extraPen);
+            return c.GetImage<T, U>(c.GetBaseImage<T, U>(Width, Height, ScaleMode.NONE), getImagePart, extraPen);
         }
 
         public static RectangleD<U> GetImage<T, U>(this IQuantifiedTile<T> c, int Width, int Height, ScaleMode mode, Func<T, SizeF, U> getImagePart, Pen extraPen = null)
@@ -99,7 +99,7 @@ namespace PA.TileList.Drawing.Quantified
             return c.GetImage<T, U>(c.GetBaseImage<T, U>(Width, Height, mode), getImagePart, extraPen);
         }
 
-        public static RectangleD<U> GetImage<T, U>(this IQuantifiedTile<T> c, RectangleD<U> image, Func<T, SizeF, U> getImagePortion, Pen extraPen  = null)
+        public static RectangleD<U> GetImage<T, U>(this IQuantifiedTile<T> c, RectangleD<U> image, Func<T, SizeF, U> getImagePortion, Pen extraPen = null)
             where T : ICoordinate
             where U : Image
         {
@@ -171,7 +171,9 @@ namespace PA.TileList.Drawing.Quantified
         public static IEnumerable<ICoordinate> GetCoordinatesIn<T>(this IQuantifiedTile<T> list, RectangleF inner, bool strict = false)
             where T : ICoordinate
         {
-            return list.GetCoordinatesIn(inner.Left, inner.Top, inner.Right, inner.Bottom, strict);
+            var sc = new SelectionConfiguration(strict ? SelectionPosition.Inside : SelectionPosition.Inside | SelectionPosition.Under);
+
+            return list.SelectCoordinates(new RectangularProfile(inner.Left, inner.Top, inner.Right, inner.Bottom), sc, true);
         }
 
         #endregion

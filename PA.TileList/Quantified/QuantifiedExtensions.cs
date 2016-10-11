@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics.Contracts;
-using PA.TileList.Tile;
+using System.Linq;
+using PA.TileList.Extensions;
 using PA.TileList.Linear;
-using PA.TileList.Cropping;
+using PA.TileList.Quantified;
+using PA.TileList.Tile;
+using PA.TileList.Selection;
+
 
 namespace PA.TileList.Quantified
 {
@@ -39,51 +41,16 @@ namespace PA.TileList.Quantified
         public static ICoordinate GetCoordinateAt<T>(this IQuantifiedTile<T> list, double x, double y)
              where T : ICoordinate
         {
-            return list.Zone.FirstOrDefault(c => c.CountPoints(list, 2, 2, 1d, 1d,
-                                                        (xc, yc) => Math.Abs(xc - x) < list.ElementStepX && Math.Abs(yc - y) < list.ElementStepY) == 4);
+            return list.Zone.FirstOrDefault(c =>
+            {
+                int points = 0;
+                c.GetPoints(list, 2, 2,
+                              (xc, yc, xc2, yc2) => points += (Math.Abs(xc - x) < list.ElementStepX && Math.Abs(yc - y) < list.ElementStepY) ? 1 : 0);
+                return points == 4;
+
+            });
         }
 
-        /// <summary>
-        /// Gets the coordinates within specified points
-        /// </summary>
-        /// <returns>The coordinates in.</returns>
-        /// <param name="list">List.</param>
-        /// <param name="x1">The first x value.</param>
-        /// <param name="y1">The first y value.</param>
-        /// <param name="x2">The second x value.</param>
-        /// <param name="y2">The second y value.</param>
-        /// <param name="strict">If set to <c>true</c> strict.</param>
-        /// <typeparam name="T">The 1st type parameter.</typeparam>
-        [Obsolete]
-        public static IEnumerable<ICoordinate> GetCoordinatesIn<T>(this IQuantifiedTile<T> list, double x1, double y1, double x2, double y2, bool strict = false)
-            where T : ICoordinate
-        {
-            double minX = Math.Min(x1, x2);
-            double minY = Math.Min(y1, y2);
-            double maxX = Math.Max(x1, x2);
-            double maxY = Math.Max(y1, y2);
-
-            int pointsInX = Math.Max(1, (int)Math.Ceiling(list.ElementStepX / (maxX - minX))) + 1;
-            int pointsInY = Math.Max(1, (int)Math.Ceiling(list.ElementStepY / (maxY - minY))) + 1;
-
-
-
-            return list.Zone.Where(c => c.CountPoints(list, pointsInX, pointsInY,
-                                                                    (xc, yc) => xc >= minX && xc <= maxX && yc >= minY && yc <= maxY) >= (strict ? 4 : 1));
-        }
-
-        [Obsolete]
-        public static IEnumerable<T> Crop<T>(this IQuantifiedTile<T> list, double x1, double y1, double x2, double y2, bool strict = false)
-           where T : ICoordinate
-        {
-            double minX = Math.Min(x1, x2);
-            double minY = Math.Min(y1, y2);
-            double maxX = Math.Max(x1, x2);
-            double maxY = Math.Max(y1, y2);
-
-            return list.Where(c => c.CountPoints(list, 2, 2, 1d, 1d,
-                                                        (xc, yc) => xc >= minX && xc <= maxX && yc >= minY && yc <= maxY) >= (strict ? 4 : 1));
-        }
 
 
 
@@ -193,64 +160,7 @@ namespace PA.TileList.Quantified
             return points;
         }
 
-        private static int CountPoints<T>(this ICoordinate c, IQuantifiedTile<T> tile, int pointsInX, int pointsInY, Func<double, double, bool> predicate, bool polarCoordinates = false)
-         where T : ICoordinate
-        {
-            Contract.Requires(pointsInX > 1);
-            Contract.Requires(pointsInY > 1);
-            Contract.Requires(predicate != null);
 
-            var points = 0;
-
-            c.GetPoints(tile, pointsInX, pointsInY, (xc, yc) => points += predicate(xc,yc) ? 1 : 0, polarCoordinates);
-
-            return points;
-        }
-
-        public static void GetPoints<T>(this ICoordinate c, IQuantifiedTile<T> tile, int pointsInX, int pointsInY, Action<double, double> predicate, bool polarCoordinates = false)
-        where T : ICoordinate
-        {
-            Contract.Requires(pointsInX > 1);
-            Contract.Requires(pointsInY > 1);
-            Contract.Requires(predicate != null);
-
-            var ratioX = tile.ElementSizeX/tile.ElementStepX;
-            var ratioY = tile.ElementSizeY/tile.ElementStepY;
-
-            var stepSizeX = ratioX / (pointsInX - 1) ;
-            var stepSizeY = ratioY/ (pointsInY - 1);
-
-            var offsetX = ratioX / 2f;
-            var offsetY = ratioY / 2f;
-
-            var testY = new double[pointsInY];
-            var testY2 = new double[pointsInY];
-
-            for (var i = 0; i < pointsInX; i++)
-            {
-                var testX = ((c.X - tile.Reference.X) - offsetX + i * stepSizeX) * tile.ElementStepX + tile.RefOffsetX;
-                var testX2 = Math.Pow(testX, 2d);
-
-                for (var j = 0; j < pointsInY; j++)
-                {
-                    if (i == 0)
-                    {
-                        testY[j] = ((c.Y - tile.Reference.Y) - offsetY + j * stepSizeY) * tile.ElementStepY + tile.RefOffsetY;
-                        testY2[j] = Math.Pow(testY[j], 2);
-                    }
-
-                    if (polarCoordinates)
-                    {
-                        predicate(Math.Atan2(testY[j], testX), testX2 + testY2[j]);
-                    }
-                    else
-                    {
-                        predicate(testX, testY[j]);
-                    }
-                }
-
-            }
-        }
 
         #region ToQuantified
 

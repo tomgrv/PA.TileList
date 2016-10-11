@@ -22,7 +22,7 @@ namespace PA.TileList.Linear
 
         public Coordinate Vector()
         {
-            return this.Point.GetCoordinate() - this.Origin;
+            return this.Point.ToCoordinate() - this.Origin;
         }
 
         public bool Contains(ICoordinate p)
