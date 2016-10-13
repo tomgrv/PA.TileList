@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace PA.TileList.Rotation
+﻿namespace PA.TileList.Rotation
 {
     public static class RotationTable
     {
@@ -15,17 +10,17 @@ namespace PA.TileList.Rotation
             d270 = 3
         }
 
-        private static int[] cosTable = new int[] { 1, 0, -1, 0 };
-        private static int[] sinTable = new int[] { 0, 1, 0, -1 };
+        private static readonly int[] cosTable = {1, 0, -1, 0};
+        private static readonly int[] sinTable = {0, 1, 0, -1};
 
         internal static int Cos(Angle angle)
         {
-            return cosTable[(int)angle];
+            return cosTable[(int) angle];
         }
 
         internal static int Sin(Angle angle)
         {
-            return sinTable[(int)angle];
+            return sinTable[(int) angle];
         }
     }
 }

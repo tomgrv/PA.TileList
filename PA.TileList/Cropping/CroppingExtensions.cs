@@ -27,23 +27,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using PA.TileList.Tile;
 using PA.TileList.Linear;
+using PA.TileList.Tile;
 
 namespace PA.TileList.Cropping
 {
     public static class CroppingExtensions
     {
-
         internal static IZone GetCroppingZone<T>(this IEnumerable<T> list, Func<T, bool> predicate)
-     where T : ICoordinate
+            where T : ICoordinate
         {
             // Crop area
             var crop = list.GetZone();
 
             // Reduce on x increasing
-            IEnumerable<T> l1 = list.Where(c => c.X == crop.Min.X);
+            var l1 = list.Where(c => c.X == crop.Min.X);
             while (l1.All(predicate))
             {
                 crop.Min.X++;
@@ -51,7 +49,7 @@ namespace PA.TileList.Cropping
             }
 
             // Reduce on x decreasing
-            IEnumerable<T> l2 = list.Where(c => c.X == crop.Max.X);
+            var l2 = list.Where(c => c.X == crop.Max.X);
             while (l2.All(predicate))
             {
                 crop.Max.X--;
@@ -59,31 +57,29 @@ namespace PA.TileList.Cropping
             }
 
             // Reduce on y increasing, limit to x-cropping
-            IEnumerable<T> l3 = list.Where(c => c.Y == crop.Min.Y && c.X >= crop.Min.X && c.X <= crop.Max.X);
+            var l3 = list.Where(c => (c.Y == crop.Min.Y) && (c.X >= crop.Min.X) && (c.X <= crop.Max.X));
             while (l3.All(predicate))
             {
                 crop.Min.Y++;
-                l3 = list.Where(c => c.Y == crop.Min.Y && c.X >= crop.Min.X && c.X <= crop.Max.X);
+                l3 = list.Where(c => (c.Y == crop.Min.Y) && (c.X >= crop.Min.X) && (c.X <= crop.Max.X));
             }
 
             // Reduce on y decreasing, limit to x-cropping
-            IEnumerable<T> l4 = list.Where(c => c.Y == crop.Max.Y && c.X >= crop.Min.X && c.X <= crop.Max.X);
+            var l4 = list.Where(c => (c.Y == crop.Max.Y) && (c.X >= crop.Min.X) && (c.X <= crop.Max.X));
             while (l4.All(predicate))
             {
                 crop.Max.Y--;
-                l4 = list.Where(c => c.Y == crop.Max.Y && c.X >= crop.Min.X && c.X <= crop.Max.X);
+                l4 = list.Where(c => (c.Y == crop.Max.Y) && (c.X >= crop.Min.X) && (c.X <= crop.Max.X));
             }
 
             return crop;
         }
 
         public static ITile<T> Crop<T>(this ITile<T> list, IZone a)
-      where T : ICoordinate
+            where T : ICoordinate
         {
             foreach (var e in list.Where(e => !a.Contains(e)).ToArray())
-            {
                 list.Remove(e);
-            }
 
             list.UpdateZone();
             return list;
@@ -96,7 +92,7 @@ namespace PA.TileList.Cropping
         }
 
         public static IEnumerable<T> Cropping<T>(this IEnumerable<T> list, IZone a)
-        where T : ICoordinate
+            where T : ICoordinate
         {
             return list.Where(e => a.Contains(e));
         }

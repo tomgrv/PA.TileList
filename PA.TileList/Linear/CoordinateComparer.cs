@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace PA.TileList.Linear
 {
@@ -10,7 +6,7 @@ namespace PA.TileList.Linear
     {
         public bool Equals(ICoordinate a, ICoordinate b)
         {
-            return a.X == b.X && a.Y == b.Y;
+            return (a.X == b.X) && (a.Y == b.Y);
         }
 
         public int GetHashCode(ICoordinate c)
@@ -19,4 +15,3 @@ namespace PA.TileList.Linear
         }
     }
 }
-

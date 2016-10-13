@@ -1,7 +1,6 @@
-﻿
-using System.Collections.Generic;
-using PA.TileList.Tile;
+﻿using System.Collections.Generic;
 using PA.TileList.Linear;
+using PA.TileList.Tile;
 
 namespace PA.TileList.Quadrant
 {

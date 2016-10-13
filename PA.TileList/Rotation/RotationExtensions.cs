@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using PA.TileList.Tile;
 using PA.TileList.Contextual;
 using PA.TileList.Linear;
-using PA.TileList.Extensions;
+using PA.TileList.Tile;
 
 namespace PA.TileList.Rotation
 {
@@ -19,8 +16,8 @@ namespace PA.TileList.Rotation
             float cX = c.X - center.X;
             float cY = c.Y - center.Y;
 
-            c.X = Convert.ToInt32(center.X + RotationTable.Cos(angle) * cX - RotationTable.Sin(angle) * cY);
-            c.Y = Convert.ToInt32(center.Y + RotationTable.Sin(angle) * cX + RotationTable.Cos(angle) * cY);
+            c.X = Convert.ToInt32(center.X + RotationTable.Cos(angle)*cX - RotationTable.Sin(angle)*cY);
+            c.Y = Convert.ToInt32(center.Y + RotationTable.Sin(angle)*cX + RotationTable.Cos(angle)*cY);
 
             return c;
         }
@@ -36,22 +33,20 @@ namespace PA.TileList.Rotation
 
         #region IEnumerable
 
-        public static IEnumerable<IContextual<T>> Rotate<T>(this IEnumerable<T> list, ICoordinate center, RotationTable.Angle angle)
+        public static IEnumerable<IContextual<T>> Rotate<T>(this IEnumerable<T> list, ICoordinate center,
+            RotationTable.Angle angle)
             where T : ICoordinate
         {
-            foreach (T e in list)
-            {
+            foreach (var e in list)
                 yield return e.Rotate(center, angle);
-            }
         }
 
-        public static IEnumerable<IContextual<T>> Rotate<T>(this IEnumerable<IContextual<T>> list, ICoordinate center, RotationTable.Angle angle)
+        public static IEnumerable<IContextual<T>> Rotate<T>(this IEnumerable<IContextual<T>> list, ICoordinate center,
+            RotationTable.Angle angle)
             where T : ICoordinate
         {
-            foreach (IContextual<T> e in list)
-            {
-                yield return e.Rotate<T>(center, angle);
-            }
+            foreach (var e in list)
+                yield return e.Rotate(center, angle);
         }
 
         #endregion
@@ -59,7 +54,7 @@ namespace PA.TileList.Rotation
         #region ITile
 
         public static Tile<IContextual<T>> Rotate<T>(this ITile<T> tile, RotationTable.Angle angle)
-             where T : ICoordinate
+            where T : ICoordinate
         {
             var c = tile.Zone.Center();
 
@@ -87,7 +82,5 @@ namespace PA.TileList.Rotation
         }
 
         #endregion
-
-
     }
 }

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Collections;
+﻿using System.Collections.Generic;
 using PA.TileList.Linear;
-using PA.TileList.Tile;
 
 namespace PA.TileList.Cropping
 {
@@ -19,6 +14,5 @@ namespace PA.TileList.Cropping
         bool Contains(IZone b);
         void Offset(ICoordinate c);
         ICoordinate Center();
-
     }
 }

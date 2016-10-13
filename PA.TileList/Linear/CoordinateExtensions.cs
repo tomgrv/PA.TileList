@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Collections;
-using PA.TileList.Contextual;
+﻿using PA.TileList.Contextual;
 
 namespace PA.TileList.Linear
 {
@@ -16,7 +11,7 @@ namespace PA.TileList.Linear
         }
 
         public static Coordinate ToCoordinate<T>(this T c)
-           where T : ICoordinate
+            where T : ICoordinate
         {
             return new Coordinate(c.X, c.Y);
         }
@@ -28,7 +23,7 @@ namespace PA.TileList.Linear
         }
 
         public static IContextual<T> Offset<T>(this T c, ICoordinate o)
-           where T : ICoordinate
+            where T : ICoordinate
         {
             return new Contextual<T>(c.X + o.X, c.Y + o.Y, c);
         }
@@ -40,13 +35,9 @@ namespace PA.TileList.Linear
         }
 
         public static IContextual<T> Offset<T>(this IContextual<T> c, ICoordinate o)
-           where T : ICoordinate
+            where T : ICoordinate
         {
             return new Contextual<T>(c.X + o.X, c.Y + o.Y, c.Context);
         }
-
-
     }
-
-
 }

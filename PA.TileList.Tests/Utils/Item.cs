@@ -24,47 +24,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Drawing;
-using NUnit.Framework;
-using PA.TileList;
-using PA.TileList.Cropping;
-using PA.TileList.Extensions;
 using PA.TileList.Linear;
-using PA.TileList.Quadrant;
-using PA.TileList.Quantified;
-using PA.TileList.Tile;
 
 namespace PA.TileList.Tests.Utils
 {
-
-
     public class Item : Coordinate
     {
-        public Color Color { get; set; }
-
         public Item(int x, int y, Color c)
             : base(x, y)
         {
             this.Color = c;
         }
 
+        public Color Color { get; set; }
+
         public Bitmap ToBitmap(int w, int h, string s)
         {
-            Bitmap b = new Bitmap(w, h);
+            var b = new Bitmap(w, h);
 
-            using (Graphics g = Graphics.FromImage(b))
+            using (var g = Graphics.FromImage(b))
             {
                 g.DrawRectangle(Pens.Pink, 0, 0, w - 1, h - 1);
                 g.FillRectangle(new SolidBrush(this.Color), 1, 1, w - 2, h - 2);
-                g.DrawString(s, new Font(FontFamily.GenericSansSerif, (float)w / 3f), Brushes.Gray, 0, 0);
+                g.DrawString(s, new Font(FontFamily.GenericSansSerif, w/3f), Brushes.Gray, 0, 0);
             }
 
             return b;
         }
-
     }
-
 }

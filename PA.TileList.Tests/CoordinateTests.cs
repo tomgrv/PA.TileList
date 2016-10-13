@@ -1,7 +1,4 @@
-﻿using System;
-using NUnit.Framework;
-using PA.TileList;
-using PA.TileList.Geometrics;
+﻿using NUnit.Framework;
 using PA.TileList.Linear;
 
 namespace PA.TileList.Tests
@@ -16,7 +13,4 @@ namespace PA.TileList.Tests
             var b = new Coordinate(-1, -1);
         }
     }
-
-
-
 }

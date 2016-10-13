@@ -10,4 +10,3 @@ namespace PA.TileList.Drawing.Graphics2D
         ALL = 0xFF
     }
 }
-

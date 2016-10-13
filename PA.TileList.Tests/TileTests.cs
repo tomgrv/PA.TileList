@@ -1,31 +1,27 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using NUnit.Framework;
-using PA.TileList;
 using PA.TileList.Cropping;
 using PA.TileList.Extensions;
-using PA.TileList.Linear;
-using PA.TileList.Quadrant;
 using PA.TileList.Quantified;
 using PA.TileList.Tests.Utils;
 using PA.TileList.Tile;
 
 namespace PA.TileList.Tests
 {
-
-
     [TestFixture]
     public class TileTest
     {
-
-        [Test, Category("Image hash")]
+        [Test]
+        [Category("Image hash")]
         public void Crop()
         {
             var t0 = new Tile<Item>(new Zone(0, 0, 100, 100), new Item(0, 0, Color.Red));
 
-            t0.Fill(c => c.X > 25 && c.X < 75 && c.Y > 30 && c.Y < 60 ? new Item(c.X, c.Y, c.X == c.Y ? Color.Yellow : Color.Green) : new Item(c.X, c.Y, Color.Red));
+            t0.Fill(
+                c =>
+                    (c.X > 25) && (c.X < 75) && (c.Y > 30) && (c.Y < 60)
+                        ? new Item(c.X, c.Y, c.X == c.Y ? Color.Yellow : Color.Green)
+                        : new Item(c.X, c.Y, Color.Red));
 
             var q0 = t0.AsQuantified();
 
@@ -53,7 +49,6 @@ namespace PA.TileList.Tests
 
             //Assert.AreEqual("6A226FC4E4EC36837BA5042FBFE8D923", signature2, "Image hash");
             Assert.AreEqual("31,31;59,59", t2.GetZone().ToString(), "Area");
-
         }
     }
 }

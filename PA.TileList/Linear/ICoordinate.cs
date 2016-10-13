@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace PA.TileList.Linear
+﻿namespace PA.TileList.Linear
 {
-    public interface ICoordinate 
+    public interface ICoordinate
     {
         int X { get; set; }
         int Y { get; set; }

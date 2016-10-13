@@ -1,26 +1,15 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
-using System.Collections;
-using PA.TileList.Linear;
-using PA.TileList.Tile;
-using PA.TileList.Cropping;
 using System.Diagnostics.Contracts;
+using System.Linq;
+using PA.TileList.Cropping;
+using PA.TileList.Linear;
 
 namespace PA.TileList.Tile
 {
     public class Tile<T> : List<T>, ITile<T>
-    where T : class, ICoordinate
+        where T : class, ICoordinate
     {
-        public int X { get; set; }
-
-        public int Y { get; set; }
-
-        public T Reference { get; private set; }
-
-        public IZone Zone { get; private set; }
-
         protected Tile(ITile<T> t)
             : base(t)
         {
@@ -43,10 +32,8 @@ namespace PA.TileList.Tile
         public Tile(IZone area, IEnumerable<T> t, int referenceIndex = 0)
             : base(t)
         {
-            if (base.Count == 0)
-            {
+            if (this.Count == 0)
                 throw new ArgumentNullException();
-            }
 
             this.X = 0;
             this.Y = 0;
@@ -55,7 +42,7 @@ namespace PA.TileList.Tile
         }
 
         public Tile(IZone area, T reference)
-            : base(new T[] { reference })
+            : base(new[] {reference})
         {
             this.X = 0;
             this.Y = 0;
@@ -66,10 +53,8 @@ namespace PA.TileList.Tile
         public Tile(int x, int y, IZone area, IEnumerable<T> t, int referenceIndex = 0)
             : base(t)
         {
-            if (base.Count == 0)
-            {
+            if (this.Count == 0)
                 throw new ArgumentNullException();
-            }
 
             this.X = x;
             this.Y = y;
@@ -78,7 +63,7 @@ namespace PA.TileList.Tile
         }
 
         public Tile(int x, int y, IZone area, T reference)
-            : base(new T[] { reference })
+            : base(new[] {reference})
         {
             this.X = x;
             this.Y = y;
@@ -86,15 +71,39 @@ namespace PA.TileList.Tile
             this.Zone = area;
         }
 
+        public int X { get; set; }
+
+        public int Y { get; set; }
+
+        public T Reference { get; private set; }
+
+        public IZone Zone { get; private set; }
+
+        public void UpdateZone()
+        {
+            this.Zone = this.GetZone();
+        }
+
+
+        public virtual object Clone()
+        {
+            return new Tile<T>(this.X, this.Y, this.Zone, this.Select(t => (T) t.Clone()), this.IndexOf(this.Reference));
+        }
+
+        public virtual object Clone(int x, int y)
+        {
+            return new Tile<T>(x, y, this.Zone, this.Select(t => (T) t.Clone()), this.IndexOf(this.Reference));
+        }
+
 
         public T Find(int x, int y)
         {
-            return this.Find(e => e.X == x && e.Y == y);
+            return this.Find(e => (e.X == x) && (e.Y == y));
         }
 
         public T Find(ICoordinate c)
         {
-            return this.Find(e => e.X == c.X && e.Y == c.Y);
+            return this.Find(e => (e.X == c.X) && (e.Y == c.Y));
         }
 
         public List<T> FindAll(IZone a)
@@ -112,13 +121,8 @@ namespace PA.TileList.Tile
             this.RemoveAll(a.Contains);
         }
 
-        public void UpdateZone()
-        {
-            this.Zone = this.GetZone();
-        }
-
         /// <summary>
-        /// Fill area  with specified filler.
+        ///     Fill area  with specified filler.
         /// </summary>
         /// <param name="filler">Filler.</param>
         /// <param name="overwrite">Overwrite existing element</param>
@@ -129,7 +133,7 @@ namespace PA.TileList.Tile
 
 
         /// <summary>
-        /// Fill area  with specified filler.
+        ///     Fill area  with specified filler.
         /// </summary>
         /// <param name="zone">Area.</param>
         /// <param name="filler">Filler.</param>
@@ -138,17 +142,13 @@ namespace PA.TileList.Tile
         {
             foreach (Coordinate c in zone)
             {
-                T item = this.FirstOrDefault(t => t.X == c.X && t.Y == c.Y);
+                var item = this.FirstOrDefault(t => (t.X == c.X) && (t.Y == c.Y));
 
-                if (item != null && overwrite)
-                {
+                if ((item != null) && overwrite)
                     this.Remove(item);
-                }
 
-                if (item == null || overwrite)
-                {
+                if ((item == null) || overwrite)
                     this.Add(filler(c));
-                }
             }
 
             this.TrimExcess();
@@ -156,7 +156,7 @@ namespace PA.TileList.Tile
         }
 
         /// <summary>
-        /// Fill zone with specified filler.
+        ///     Fill zone with specified filler.
         /// </summary>
         /// <param name="SizeX">Size to fill</param>
         /// <param name="SizeY">Size to fill</param>
@@ -164,10 +164,11 @@ namespace PA.TileList.Tile
         /// <param name="ShiftX">Shift regarding area center</param>
         /// <param name="ShiftY">Shift regarding area center</param>
         /// <param name="overwrite">Overwrite existing element</param>
-        public void Fill(ushort SizeX, ushort SizeY, Func<Coordinate, T> filler, decimal ShiftX = 0, decimal ShiftY = 0, bool overwrite = false)
+        public void Fill(ushort SizeX, ushort SizeY, Func<Coordinate, T> filler, decimal ShiftX = 0, decimal ShiftY = 0,
+            bool overwrite = false)
         {
-            int StartX = Math.Min(this.Zone.Max.X, Math.Max(this.Zone.Min.X, Convert.ToInt32(ShiftX - SizeX / 2m)));
-            int StartY = Math.Min(this.Zone.Max.Y, Math.Max(this.Zone.Min.Y, Convert.ToInt32(ShiftY - SizeY / 2m)));
+            var StartX = Math.Min(this.Zone.Max.X, Math.Max(this.Zone.Min.X, Convert.ToInt32(ShiftX - SizeX/2m)));
+            var StartY = Math.Min(this.Zone.Max.Y, Math.Max(this.Zone.Min.Y, Convert.ToInt32(ShiftY - SizeY/2m)));
 
             var area = new Zone(StartX, StartY, StartX + SizeX - 1, StartY + SizeY - 1);
 
@@ -179,9 +180,12 @@ namespace PA.TileList.Tile
             var zone = new Zone(a ?? this.Zone);
 
             foreach (var c in zone)
-            {
                 yield return this.Find(c.X, c.Y);
-            }
+        }
+
+        public override string ToString()
+        {
+            return this.X + "," + this.Y;
         }
 
         #region Reference
@@ -196,9 +200,7 @@ namespace PA.TileList.Tile
             Contract.Requires(reference != null);
 
             if (this.Contains(reference))
-            {
                 this.Reference = this.Find(reference);
-            }
         }
 
         public virtual void SetReference(T reference)
@@ -206,27 +208,9 @@ namespace PA.TileList.Tile
             Contract.Requires(reference != null);
 
             if (this.Contains(reference))
-            {
                 this.Reference = reference;
-            }
         }
 
         #endregion
-
-        public override string ToString()
-        {
-            return this.X + "," + this.Y;
-        }
-
-
-        public virtual object Clone()
-        {
-            return new Tile<T>(this.X, this.Y, this.Zone, this.Select((t) => (T)t.Clone()), this.IndexOf(this.Reference as T));
-        }
-
-        public virtual object Clone(int x, int y)
-        {
-            return new Tile<T>(x, y, this.Zone, this.Select((t) => (T)t.Clone()), this.IndexOf(this.Reference as T));
-        }
     }
 }

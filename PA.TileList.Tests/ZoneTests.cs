@@ -1,15 +1,13 @@
-﻿using System;
-using NUnit.Framework;
-using PA.TileList;
+﻿using NUnit.Framework;
 using PA.TileList.Cropping;
 using PA.TileList.Linear;
 
 namespace PA.TileList.Tests
 {
-    [TestFixture()]
+    [TestFixture]
     public class ZoneTests
     {
-        [Test()]
+        [Test]
         public void CreateArea()
         {
             var a = new Zone(-1, -1, 10, 10);
@@ -17,8 +15,6 @@ namespace PA.TileList.Tests
 
             Assert.AreEqual(a.SizeX, b.SizeX);
             Assert.AreEqual(a.SizeY, b.SizeY);
-
         }
-
     }
 }

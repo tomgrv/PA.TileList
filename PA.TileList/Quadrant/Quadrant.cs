@@ -1,11 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using System.Collections;
-using PA.TileList.Tile;
-using PA.TileList.Linear;
-
 namespace PA.TileList.Quadrant
 {
     public enum Quadrant

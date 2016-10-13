@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using PA.TileList.Linear;
 
 namespace PA.TileList.Tile
@@ -9,9 +7,9 @@ namespace PA.TileList.Tile
     public static class TileExtensions
     {
         public static T ElementAt<T>(this IEnumerable<T> list, ICoordinate c)
-        where T : class, ICoordinate
+            where T : class, ICoordinate
         {
-            return list.First(e => e.X == c.X && e.Y == c.Y);
+            return list.First(e => (e.X == c.X) && (e.Y == c.Y));
         }
 
         public static Tile<T> ToTile<T>(this IEnumerable<T> c, int referenceIndex = 0)

@@ -1,19 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 
 namespace PA.TileList.Drawing.Graphics2D
 {
     public class RectangleD
     {
-        public RectangleF Inner { get; private set; }
-
-        public RectangleF Outer { get; private set; }
-
-
-
         public RectangleD(float x, float y, float width, float height)
         {
             this.Inner = new RectangleF(x, y, width, height);
@@ -35,21 +26,19 @@ namespace PA.TileList.Drawing.Graphics2D
         public RectangleD(RectangleF outer, RectangleF inner)
         {
             if (!outer.Contains(inner))
-            {
                 throw new ArgumentOutOfRangeException("inner", "Outer RectangleF must contain Inner RectangleF");
-            }
 
             this.Inner = inner;
             this.Outer = outer;
         }
+
+        public RectangleF Inner { get; }
+
+        public RectangleF Outer { get; }
     }
 
     public class RectangleD<T> : RectangleD
     {
-        public T Item { get; private set; }
-
-        public ScaleMode Mode { get; private set; }
-
         public RectangleD(T item, float x, float y, float width, float height, ScaleMode mode = ScaleMode.NONE)
             : base(x, y, width, height)
         {
@@ -84,5 +73,9 @@ namespace PA.TileList.Drawing.Graphics2D
             this.Item = item;
             this.Mode = mode;
         }
+
+        public T Item { get; private set; }
+
+        public ScaleMode Mode { get; private set; }
     }
 }

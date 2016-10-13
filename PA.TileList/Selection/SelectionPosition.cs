@@ -23,13 +23,14 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 using System;
+
 namespace PA.TileList.Selection
 {
     [Flags]
     public enum SelectionPosition
     {
-
         Inside = 0x01,
         Outside = 0x02,
         Under = 0x04

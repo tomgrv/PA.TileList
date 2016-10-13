@@ -25,59 +25,55 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Collections;
+using System.Diagnostics;
 using System.Drawing;
-using PA.TileList.Quantified;
-using PA.TileList.Contextual;
-using PA.TileList.Quantified;
-using PA.TileList.Linear;
-using System.Security.Cryptography;
-using System.IO;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
-using System.Runtime.Remoting;
-using System.Text.RegularExpressions;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
 
 namespace PA.TileList.Drawing.Graphics2D
 {
     public static class GraphicExtensions
     {
-
         public static GraphicsD GetGraphicsD<U>(this RectangleD<U> image, Pen extraPen = null)
-                   where U : Image
+            where U : Image
         {
-            float scaleX = (float)image.Item.Width / image.Outer.Width;
-            float scaleY = (float)image.Item.Height / image.Outer.Height;
+            var scaleX = image.Item.Width/image.Outer.Width;
+            var scaleY = image.Item.Height/image.Outer.Height;
 
             if (image.Mode.HasFlag(ScaleMode.XYRATIO))
             {
-                float scale = Math.Min(scaleX, scaleY);
+                var scale = Math.Min(scaleX, scaleY);
                 scaleX = scale;
                 scaleY = scale;
             }
 
             // Zone definition
-            var outerZone = new RectangleF(image.Outer.X * scaleX, image.Outer.Y * scaleY, image.Outer.Width * scaleX, image.Outer.Height * scaleY);
-            var innerZone = new RectangleF(image.Inner.X * scaleX, image.Inner.Y * scaleY, image.Inner.Width * scaleX, image.Inner.Height * scaleY);
+            var outerZone = new RectangleF(image.Outer.X*scaleX, image.Outer.Y*scaleY, image.Outer.Width*scaleX,
+                image.Outer.Height*scaleY);
+            var innerZone = new RectangleF(image.Inner.X*scaleX, image.Inner.Y*scaleY, image.Inner.Width*scaleX,
+                image.Inner.Height*scaleY);
 
             // Extract graphic
             var g = Graphics.FromImage(image.Item);
 
             // Update
-            g.TranslateTransform((image.Item.Width - image.Inner.Width * scaleX) / 2f, (image.Item.Height - image.Inner.Height * scaleY) / 2f);
+            g.TranslateTransform((image.Item.Width - image.Inner.Width*scaleX)/2f,
+                (image.Item.Height - image.Inner.Height*scaleY)/2f);
             g.TranslateTransform(-outerZone.Left, -outerZone.Top);
 
-            g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
-            g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+            g.CompositingQuality = CompositingQuality.HighQuality;
+            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
             // Extra trace
             if (extraPen != null)
             {
-                g.DrawRectangle(extraPen, outerZone.Left + 1f, outerZone.Top + 1f, outerZone.Width - 1f, outerZone.Height - 1f);
-                g.DrawRectangle(extraPen, innerZone.Left + 1f, innerZone.Top + 1f, innerZone.Width - 1f, innerZone.Height - 1f);
+                g.DrawRectangle(extraPen, outerZone.Left + 1f, outerZone.Top + 1f, outerZone.Width - 1f,
+                    outerZone.Height - 1f);
+                g.DrawRectangle(extraPen, innerZone.Left + 1f, innerZone.Top + 1f, innerZone.Width - 1f,
+                    innerZone.Height - 1f);
 
                 g.DrawLine(extraPen, outerZone.Left, outerZone.Top, outerZone.Right, outerZone.Bottom);
                 g.DrawLine(extraPen, outerZone.Right, outerZone.Top, outerZone.Left, outerZone.Bottom);
@@ -100,21 +96,22 @@ namespace PA.TileList.Drawing.Graphics2D
         {
             using (var sha = new MD5CryptoServiceProvider())
             {
-                byte[] hash = sha.ComputeHash(image.GetRawData());
-                string key = BitConverter.ToString(hash).Replace("-", String.Empty);
+                var hash = sha.ComputeHash(image.GetRawData());
+                var key = BitConverter.ToString(hash).Replace("-", string.Empty);
 
 #if DEBUG
-                System.Diagnostics.StackTrace st = new System.Diagnostics.StackTrace();
+                var st = new StackTrace();
 
-                System.Diagnostics.StackFrame sf = st.GetFrames().FirstOrDefault(s => s.GetMethod().GetCustomAttributes(false)
-                    .Any(i => i.ToString().EndsWith("TestAttribute")));
+                var sf =
+                    st.GetFrames().FirstOrDefault(s => s.GetMethod().GetCustomAttributes(false)
+                        .Any(i => i.ToString().EndsWith("TestAttribute")));
 
-                var p = System.IO.Directory.GetCurrentDirectory();
+                var p = Directory.GetCurrentDirectory();
 
                 if (sf != null)
                 {
-                    string name = sf.GetMethod().Name + (tag != null ? "_" + tag : string.Empty);
-                    image.Save(Path.GetTempPath()+name + "_" + key + ".png", System.Drawing.Imaging.ImageFormat.Png);
+                    var name = sf.GetMethod().Name + (tag != null ? "_" + tag : string.Empty);
+                    image.Save(Path.GetTempPath() + name + "_" + key + ".png", ImageFormat.Png);
                 }
 #endif
 

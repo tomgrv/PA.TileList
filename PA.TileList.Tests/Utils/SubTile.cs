@@ -25,25 +25,15 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using NUnit.Framework;
-using PA.TileList;
 using PA.TileList.Cropping;
-using PA.TileList.Extensions;
-using PA.TileList.Linear;
 using PA.TileList.Quadrant;
-using PA.TileList.Quantified;
 using PA.TileList.Tile;
 
 namespace PA.TileList.Tests.Utils
 {
-
-
     public class SubTile : Tile<Item>, IQuadrant<Item>
     {
-
         public SubTile(IZone a, Item t)
             : base(a, t)
         {
@@ -60,7 +50,7 @@ namespace PA.TileList.Tests.Utils
         {
         }
 
-        public Quadrant.Quadrant Quadrant { get; private set; }
+        public Quadrant.Quadrant Quadrant { get; }
 
         public void SetQuadrant(Quadrant.Quadrant q)
         {
@@ -69,12 +59,12 @@ namespace PA.TileList.Tests.Utils
 
         public override object Clone()
         {
-            return new SubTile((Tile<Item>)base.Clone(), this.Quadrant);
+            return new SubTile((Tile<Item>) base.Clone(), this.Quadrant);
         }
 
         public override object Clone(int x, int y)
         {
-            return new SubTile((Tile<Item>)base.Clone(x, y), this.Quadrant);
+            return new SubTile((Tile<Item>) base.Clone(x, y), this.Quadrant);
         }
     }
 }

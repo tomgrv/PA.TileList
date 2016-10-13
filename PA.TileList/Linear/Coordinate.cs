@@ -1,8 +1,3 @@
-
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace PA.TileList.Linear
 {
     public class Coordinate : ICoordinate
@@ -13,35 +8,37 @@ namespace PA.TileList.Linear
 
         public int[] Coordinates;
 
-        public int X
-        {
-            get
-            {
-                return Coordinates[0];
-            }
-            set
-            {
-                Coordinates[0] = value;
-            }
-        }
-
-        public int Y
-        {
-            get
-            {
-                return Coordinates[1];
-            }
-            set
-            {
-                Coordinates[1] = value;
-            }
-        }
-
         public Coordinate(int x, int y)
         {
             this.Coordinates = new int[2];
             this.X = x;
             this.Y = y;
+        }
+
+        public int X
+        {
+            get { return this.Coordinates[0]; }
+            set { this.Coordinates[0] = value; }
+        }
+
+        public int Y
+        {
+            get { return this.Coordinates[1]; }
+            set { this.Coordinates[1] = value; }
+        }
+
+        public virtual object Clone()
+        {
+            return this.MemberwiseClone();
+        }
+
+
+        public virtual object Clone(int x, int y)
+        {
+            var c = this.MemberwiseClone() as ICoordinate;
+            c.X = x;
+            c.Y = y;
+            return c;
         }
 
         public void Offset(ICoordinate c)
@@ -69,20 +66,5 @@ namespace PA.TileList.Linear
         {
             return this.X + "," + this.Y;
         }
-
-        public virtual object Clone()
-        {
-            return this.MemberwiseClone();
-        }
-
-
-        public virtual object Clone(int x, int y)
-        {
-            var c = this.MemberwiseClone() as ICoordinate;
-            c.X = x;
-            c.Y = y;
-            return c;
-        }
-
     }
 }

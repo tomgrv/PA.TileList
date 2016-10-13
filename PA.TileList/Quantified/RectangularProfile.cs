@@ -1,19 +1,13 @@
-﻿using System;
-using System.Diagnostics.Contracts;
+﻿using System.Diagnostics.Contracts;
 using PA.TileList.Selection;
 
 namespace PA.TileList.Quantified
 {
     public class RectangularProfile : ISelectionProfile
     {
-        public double xMin { get; private set; }
-        public double yMin { get; private set; }
-        public double xMax { get; private set; }
-        public double yMax { get; private set; }
-
         public RectangularProfile(double xMin, double yMin, double xMax, double yMax)
         {
-            Contract.Assert(xMin <= xMax && yMin <= yMax, "Values are not coherent");
+            Contract.Assert((xMin <= xMax) && (yMin <= yMax), "Values are not coherent");
 
             this.xMin = xMin;
             this.yMin = yMin;
@@ -21,12 +15,17 @@ namespace PA.TileList.Quantified
             this.yMax = yMax;
         }
 
+        public double xMin { get; }
+        public double yMin { get; }
+        public double xMax { get; }
+        public double yMax { get; }
+
         public SelectionPosition Position(double x, double y)
         {
-            if (x > xMin && x < xMax && y > yMin && y < yMax)
+            if ((x > this.xMin) && (x < this.xMax) && (y > this.yMin) && (y < this.yMax))
                 return SelectionPosition.Inside;
 
-            if (x < xMin || x > xMax || y < yMin || y > yMax)
+            if ((x < this.xMin) || (x > this.xMax) || (y < this.yMin) || (y > this.yMax))
                 return SelectionPosition.Outside;
 
             return SelectionPosition.Under;

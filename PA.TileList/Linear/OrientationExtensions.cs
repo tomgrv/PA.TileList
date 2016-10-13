@@ -25,18 +25,13 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using PA.TileList.Linear;
-
 
 namespace PA.TileList.Linear
 {
     public static class OrientationExtensions
     {
         /// <summary>
-        /// Dot Product OA.OB
+        ///     Dot Product OA.OB
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="p"></param>
@@ -49,7 +44,7 @@ namespace PA.TileList.Linear
         }
 
         /// <summary>
-        /// Dot Product OA.OB
+        ///     Dot Product OA.OB
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="o"></param>
@@ -57,13 +52,13 @@ namespace PA.TileList.Linear
         /// <param name="b"></param>
         /// <returns></returns>
         public static int DotProduct<T>(this T o, ICoordinate a, ICoordinate b)
-        where T : ICoordinate
+            where T : ICoordinate
         {
-            return (a.X - o.X) * (b.X - o.X) + (a.Y - o.Y) * (b.Y - o.Y);
+            return (a.X - o.X)*(b.X - o.X) + (a.Y - o.Y)*(b.Y - o.Y);
         }
 
         /// <summary>
-        /// Gets the orientation.
+        ///     Gets the orientation.
         /// </summary>
         /// <returns>The orientation.</returns>
         /// <param name="o">O.</param>
@@ -73,23 +68,19 @@ namespace PA.TileList.Linear
         public static Orientation GetOrientation<P>(this P o, P p1, P p2)
             where P : ICoordinate
         {
-            var a = (p1.X - o.X) * (p2.Y - o.Y) - (p2.X - o.X) * (p1.Y - o.Y);
+            var a = (p1.X - o.X)*(p2.Y - o.Y) - (p2.X - o.X)*(p1.Y - o.Y);
 
             if (a < 0)
-            {
                 return Orientation.ClockWise;
-            }
 
             if (a > 0)
-            {
                 return Orientation.CounterClockWise;
-            }
 
             return Orientation.Collinear;
         }
 
         /// <summary>
-        /// Determine whether or not OA and OB are Collinear
+        ///     Determine whether or not OA and OB are Collinear
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="o"></param>

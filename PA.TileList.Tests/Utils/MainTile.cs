@@ -25,22 +25,14 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Drawing;
-using NUnit.Framework;
-using PA.TileList;
 using PA.TileList.Cropping;
-using PA.TileList.Extensions;
-using PA.TileList.Linear;
 using PA.TileList.Quadrant;
 using PA.TileList.Quantified;
 using PA.TileList.Tile;
 
 namespace PA.TileList.Tests.Utils
 {
-
-
     public class MainTile : Tile<SubTile>, IQuadrant<SubTile>, IQuantifiedTile<SubTile>, ITile<SubTile>
     {
         public MainTile(IZone a, SubTile t)
@@ -69,24 +61,24 @@ namespace PA.TileList.Tests.Utils
 
         public static MainTile GetTile(float factor)
         {
-            IZone first = new Zone((int)(-5 * factor), (int)(-5 * factor), (int)(5 * factor), (int)(5 * factor));
+            IZone first = new Zone((int) (-5*factor), (int) (-5*factor), (int) (5*factor), (int) (5*factor));
             IZone second = new Zone(1, 1, 5, 5);
 
-            SubTile t1 = new SubTile(second, new Item(3, 3, Color.Red));
+            var t1 = new SubTile(second, new Item(3, 3, Color.Red));
             t1.Fill(c => new Item(c.X, c.Y, c.X + c.Y == 6 ? Color.Green : Color.Yellow), false);
 
 
-            MainTile t0 = new MainTile(first, t1);
+            var t0 = new MainTile(first, t1);
             t0.Fill(c =>
             {
                 var a = t1.Clone(c.X, c.Y) as SubTile;
                 return a;
             });
 
-            t0.ElementSizeX = 45f / factor * second.SizeX;
-            t0.ElementSizeY = 50f / factor * second.SizeY;
-            t0.ElementStepX = 50f / factor * second.SizeX;
-            t0.ElementStepY = 60f / factor * second.SizeY;
+            t0.ElementSizeX = 45f/factor*second.SizeX;
+            t0.ElementSizeY = 50f/factor*second.SizeY;
+            t0.ElementStepX = 50f/factor*second.SizeX;
+            t0.ElementStepY = 60f/factor*second.SizeY;
             t0.RefOffsetX = 25;
             t0.RefOffsetY = 0;
 
@@ -95,24 +87,23 @@ namespace PA.TileList.Tests.Utils
 
         public static MainTile GetTileFullSpace(float factor)
         {
-            IZone first = new Cropping.Zone((int)(-5 * factor), (int)(-5 * factor), (int)(5 * factor), (int)(5 * factor));
-            IZone second = new Cropping.Zone(1, 1, 5, 5);
+            IZone first = new Zone((int) (-5*factor), (int) (-5*factor), (int) (5*factor), (int) (5*factor));
+            IZone second = new Zone(1, 1, 5, 5);
 
-            SubTile t1 = new SubTile(second, new Item(3, 3, Color.Red));
+            var t1 = new SubTile(second, new Item(3, 3, Color.Red));
             t1.Fill(c => new Item(c.X, c.Y, c.X + c.Y == 6 ? Color.Green : Color.Yellow));
 
-            MainTile t0 = new MainTile(first, t1);
+            var t0 = new MainTile(first, t1);
             t0.Fill(c => t1.Clone(c.X, c.Y) as SubTile);
 
-            t0.ElementSizeX = 50f / factor * second.SizeX;
-            t0.ElementSizeY = 50f / factor * second.SizeY;
-            t0.ElementStepX = 50f / factor * second.SizeX;
-            t0.ElementStepY = 50f / factor * second.SizeY;
+            t0.ElementSizeX = 50f/factor*second.SizeX;
+            t0.ElementSizeY = 50f/factor*second.SizeY;
+            t0.ElementStepX = 50f/factor*second.SizeX;
+            t0.ElementStepY = 50f/factor*second.SizeY;
             t0.RefOffsetX = 50;
             t0.RefOffsetY = 0;
 
             return t0;
         }
     }
-
 }
