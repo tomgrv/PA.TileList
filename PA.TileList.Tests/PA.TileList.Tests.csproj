@@ -35,7 +35,7 @@
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.3.4.1\lib\net45\nunit.framework.dll</HintPath>
+      <HintPath>..\packages\NUnit.3.5.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -63,4 +63,5 @@
       <Name>PA.TileList</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="..\packages\GitVersionTask.3.6.4\build\dotnet\GitVersionTask.targets" Condition="Exists('..\packages\GitVersionTask.3.6.4\build\dotnet\GitVersionTask.targets')" />
 </Project>
