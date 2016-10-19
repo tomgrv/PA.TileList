@@ -40,8 +40,8 @@ namespace PA.TileList.Drawing.Graphics2D
         public static GraphicsD GetGraphicsD<U>(this RectangleD<U> image, Pen extraPen = null)
             where U : Image
         {
-            var scaleX = image.Item.Width/image.Outer.Width;
-            var scaleY = image.Item.Height/image.Outer.Height;
+            var scaleX = image.Item.Width / image.Outer.Width;
+            var scaleY = image.Item.Height / image.Outer.Height;
 
             if (image.Mode.HasFlag(ScaleMode.XYRATIO))
             {
@@ -51,17 +51,17 @@ namespace PA.TileList.Drawing.Graphics2D
             }
 
             // Zone definition
-            var outerZone = new RectangleF(image.Outer.X*scaleX, image.Outer.Y*scaleY, image.Outer.Width*scaleX,
-                image.Outer.Height*scaleY);
-            var innerZone = new RectangleF(image.Inner.X*scaleX, image.Inner.Y*scaleY, image.Inner.Width*scaleX,
-                image.Inner.Height*scaleY);
+            var outerZone = new RectangleF(image.Outer.X * scaleX, image.Outer.Y * scaleY, image.Outer.Width * scaleX,
+                image.Outer.Height * scaleY);
+            var innerZone = new RectangleF(image.Inner.X * scaleX, image.Inner.Y * scaleY, image.Inner.Width * scaleX,
+                image.Inner.Height * scaleY);
 
             // Extract graphic
             var g = Graphics.FromImage(image.Item);
 
             // Update
-            g.TranslateTransform((image.Item.Width - image.Inner.Width*scaleX)/2f,
-                (image.Item.Height - image.Inner.Height*scaleY)/2f);
+            g.TranslateTransform((image.Item.Width - image.Inner.Width * scaleX) / 2f,
+                (image.Item.Height - image.Inner.Height * scaleY) / 2f);
             g.TranslateTransform(-outerZone.Left, -outerZone.Top);
 
             g.CompositingQuality = CompositingQuality.HighQuality;
@@ -82,7 +82,7 @@ namespace PA.TileList.Drawing.Graphics2D
                 g.DrawLine(extraPen, innerZone.Right, innerZone.Top, innerZone.Left, innerZone.Bottom);
             }
 
-            return new GraphicsD(g, scaleX, scaleY, innerZone, outerZone);
+            return new GraphicsD(g, scaleX, scaleY, outerZone, innerZone);
         }
 
 
