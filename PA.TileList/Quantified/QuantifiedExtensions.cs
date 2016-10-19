@@ -12,8 +12,8 @@ namespace PA.TileList.Quantified
     {
         public static double GetScaleFactor(this IQuantifiedTile list, double sizeX, double sizeY)
         {
-            var ratioX = sizeX/(list.Zone.SizeX*list.ElementStepX);
-            var ratioY = sizeY/(list.Zone.SizeY*list.ElementStepY);
+            var ratioX = sizeX / (list.Zone.SizeX * list.ElementStepX);
+            var ratioY = sizeY / (list.Zone.SizeY * list.ElementStepY);
 
             return Math.Round(Math.Min(ratioX, ratioY), 4);
         }
@@ -21,9 +21,9 @@ namespace PA.TileList.Quantified
         public static IQuantifiedTile<T> Scale<T>(this IQuantifiedTile<T> list, double scaleFactor)
             where T : class, ICoordinate
         {
-            return new QuantifiedTile<T>(list, list.ElementSizeX*scaleFactor, list.ElementSizeY*scaleFactor,
-                list.ElementStepX*scaleFactor, list.ElementStepY*scaleFactor, list.RefOffsetX*scaleFactor,
-                list.RefOffsetY*scaleFactor);
+            return new QuantifiedTile<T>(list, list.ElementSizeX * scaleFactor, list.ElementSizeY * scaleFactor,
+                list.ElementStepX * scaleFactor, list.ElementStepY * scaleFactor, list.RefOffsetX * scaleFactor,
+                list.RefOffsetY * scaleFactor);
         }
 
 
@@ -59,21 +59,16 @@ namespace PA.TileList.Quantified
         /// <param name="resolution">Resolution per element <P> on X. Must be >1</param>
         /// <param name="predicate">Predicate.</param>
         /// <typeparam name="P">The 1st type parameter.</typeparam>
-        public static IEnumerable<IGrouping<float, P>> GroupByPercent<P>(this IQuantifiedTile<P> tile, float resolution,
-            Func<double, double, bool> predicate, bool polarCoordinates = false)
+        public static IEnumerable<IGrouping<float, P>> GroupByPercent<P>(this IQuantifiedTile<P> tile, ISelectionProfile profile,
+ SelectionConfiguration config, bool fullSize = false)
             where P : ICoordinate
         {
-            Contract.Requires((0 < resolution) && (resolution < 1));
-            Contract.Requires(predicate != null);
-
-            var points = (int) Math.Ceiling(1d/resolution) + 1;
-            var area = points*points;
 
             return tile.GroupBy(c =>
             {
-                var p = c.CountPoints(tile, points, points, resolution, resolution, predicate, polarCoordinates);
-                if ((p == 0) || (p == area)) return p;
-                return (float) p/area;
+                var p = c.CountPoints(tile, profile, config, fullSize);
+                if (p == 0 || p == config.MaxSurface) return p;
+                return (float)p / config.MaxSurface;
             });
         }
 
@@ -95,8 +90,8 @@ namespace PA.TileList.Quantified
             Contract.Requires(pointsInY > 1);
             Contract.Requires(predicate != null);
 
-            var stepSizeX = 1d/(pointsInX - 1);
-            var stepSizeY = 1d/(pointsInY - 1);
+            var stepSizeX = 1d / (pointsInX - 1);
+            var stepSizeY = 1d / (pointsInY - 1);
 
             return
                 tile.GroupBy(
@@ -135,14 +130,14 @@ namespace PA.TileList.Quantified
 
             for (var i = 0; i < pointsInX; i++)
             {
-                var testX = (c.X - tile.Reference.X - 0.5f + i*stepSizeX)*tile.ElementStepX + tile.RefOffsetX;
+                var testX = (c.X - tile.Reference.X - 0.5f + i * stepSizeX) * tile.ElementStepX + tile.RefOffsetX;
                 var testX2 = Math.Pow(testX, 2d);
 
                 for (var j = 0; j < pointsInY; j++)
                 {
                     if (i == 0)
                     {
-                        testY[j] = (c.Y - tile.Reference.Y - 0.5f + j*stepSizeY)*tile.ElementStepY + tile.RefOffsetY;
+                        testY[j] = (c.Y - tile.Reference.Y - 0.5f + j * stepSizeY) * tile.ElementStepY + tile.RefOffsetY;
                         testY2[j] = Math.Pow(testY[j], 2);
                     }
 
