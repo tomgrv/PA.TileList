@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PA.TileList</RootNamespace>
     <AssemblyName>PA.TileList</AssemblyName>
-    <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -143,12 +143,12 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Reference Include="PA.Utilities">
-      <HintPath>..\packages\PA.Utilities.4.7.4\lib\portable-net45+win+wp80+MonoAndroid10+xamarinios10+MonoTouch10\PA.Utilities.dll</HintPath>
-    </Reference>
+    <Folder Include="Selection\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Selection\" />
+    <Reference Include="PA.Utilities">
+      <HintPath>..\packages\PA.Utilities.5.0.1\lib\portable45-net45+win8+wpa81\PA.Utilities.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
