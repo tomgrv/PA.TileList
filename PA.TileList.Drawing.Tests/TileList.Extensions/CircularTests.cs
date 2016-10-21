@@ -19,12 +19,12 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
         {
             var p = new CircularProfile(radius);
 
-            p.AddProfileFlat(-Math.PI/2, radius - 100, 100, stepping);
-            p.AddProfileFlat(7*Math.PI/4, radius - 200, 100, stepping);
+            p.AddProfileFlat(-Math.PI / 2, radius - 100, 100, stepping);
+            p.AddProfileFlat(7 * Math.PI / 4, radius - 200, 100, stepping);
             //p.AddProfileFlat(-Math.PI / 4, radius - 200, 100, stepping);
             p.AddProfileFlat(0, radius - 300, 100, stepping, resolution);
-            p.AddProfileFlat(Math.PI/3f, radius - 400, 200, stepping, resolution);
-            p.AddProfileFlat(2f*Math.PI/3f, radius - 500, 400, stepping, resolution);
+            p.AddProfileFlat(Math.PI / 3f, radius - 400, 200, stepping, resolution);
+            p.AddProfileFlat(2f * Math.PI / 3f, radius - 500, 400, stepping, resolution);
 
             return p;
         }
@@ -46,7 +46,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
         {
             var p = GetTestProfile(1400);
 
-            var i = p.GetImage(1000, 1000, new RectangleF(-2000, -2000, 4000, 4000));
+            var i = p.GetImage(1000, 1000, new RectangleF(-2000, -2000, 4000, 4000), ScaleMode.NONE, Pens.Red, Pens.Red, Pens.Pink);
 
             var signature = i.Item.GetSignature();
             Assert.AreEqual("DAA3296DC2EE2A6682DFFBD8425ED029E34004676D6AB80E67DBB691E85CD2E0", signature, "Image hash");
@@ -60,8 +60,8 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             for (var a = 0; a < 4; a++)
             {
-                var a0 = -13f*Math.PI/12f + a*Math.PI/2f;
-                var a1 = -11f*Math.PI/12f + a*Math.PI/2f;
+                var a0 = -13f * Math.PI / 12f + a * Math.PI / 2f;
+                var a1 = -11f * Math.PI / 12f + a * Math.PI / 2f;
                 search.AddProfileStep(a0, 0);
                 search.AddProfileStep(a1, 1000);
             }
@@ -80,9 +80,9 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             search.AddProfileFlatByLength(0, 1500);
             search.AddProfileFlatByLength(Math.PI, 500, 0.0001, 500);
-            search.AddProfileFlat(Math.PI/2f, 200, 1000);
-            search.AddProfileStep(-Math.PI/4, 1000);
-            search.AddProfileStep(-3*Math.PI/4, 800);
+            search.AddProfileFlat(Math.PI / 2f, 200, 1000);
+            search.AddProfileStep(-Math.PI / 4, 1000);
+            search.AddProfileStep(-3 * Math.PI / 4, 800);
 
             var signature =
                 search.GetImage(1000, 1000, new RectangleF(-1000, -1000, 2000, 2000), ScaleMode.NONE)
@@ -146,8 +146,8 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             // Assert.AreEqual(23467, q.Count(), "Selected item count");
 
-            var pi = p.GetImage(5000, 5000, tile.GetBounds());
-            var i = tile.GetImage(pi, (z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y));
+            var pi = p.GetImage(5000, 5000, tile.GetBounds(), ScaleMode.NONE, Pens.Red, Pens.Red, Pens.Pink);
+            var i = tile.GetImage(pi, (z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y), Pens.Blue);
             var signature_1 = i.Item.GetSignature();
             //    Assert.AreEqual("E63318A4278EED31907E0374B728F045285D43B6FBE0955A1622BFCFBB7AF5B8", signature_1, "Image hash");
 
