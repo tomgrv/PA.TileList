@@ -37,7 +37,36 @@ namespace PA.TileList.Drawing.Graphics2D
 {
     public static class GraphicExtensions
     {
-        public static GraphicsD GetGraphicsD<U>(this RectangleD<U> image, Pen extraPen = null)
+
+        #region Renderer
+
+        public static RectangleD<U> RenderImage<T, U>(this T c, int width, int height, ScaleMode mode, IRenderer<T, U> renderer)
+            where U : Image
+        {
+            return renderer.Render(c, width, height, mode);
+        }
+
+        public static RectangleD<U> RenderImage<T, U>(this T c, int width, int height, RectangleF inner, ScaleMode mode, IRenderer<T, U> renderer)
+            where U : Image
+        {
+            return renderer.Render(c, width, height, inner, mode);
+        }
+
+        public static RectangleD<U> RenderImage<T, U>(this T c, RectangleD<U> image, IRenderer<T, U> renderer)
+            where U : Image
+        {
+            return renderer.Render(c, image);
+        }
+
+        #endregion
+
+        #region Renderer
+
+
+
+        #endregion
+
+        public static GraphicsD GetGraphicsD<U>(this RectangleD<U> image)
             where U : Image
         {
             var scaleX = image.Item.Width / image.Outer.Width;
@@ -51,38 +80,18 @@ namespace PA.TileList.Drawing.Graphics2D
             }
 
             // Zone definition
-            var outerZone = new RectangleF(image.Outer.X * scaleX, image.Outer.Y * scaleY, image.Outer.Width * scaleX,
-                image.Outer.Height * scaleY);
-            var innerZone = new RectangleF(image.Inner.X * scaleX, image.Inner.Y * scaleY, image.Inner.Width * scaleX,
-                image.Inner.Height * scaleY);
+            var outerZone = new RectangleF(image.Outer.X * scaleX, image.Outer.Y * scaleY, image.Outer.Width * scaleX, image.Outer.Height * scaleY);
+            var innerZone = new RectangleF(image.Inner.X * scaleX, image.Inner.Y * scaleY, image.Inner.Width * scaleX, image.Inner.Height * scaleY);
 
             // Extract graphic
             var g = Graphics.FromImage(image.Item);
 
-            // Update
-            g.TranslateTransform((image.Item.Width - image.Inner.Width * scaleX) / 2f,
-                (image.Item.Height - image.Inner.Height * scaleY) / 2f);
-            g.TranslateTransform(-outerZone.Left, -outerZone.Top);
+            // Offset
+            var offsetX = (image.Item.Width - image.Inner.Width * scaleX) / 2f - outerZone.Left;
+            var offsetY = (image.Item.Height - image.Inner.Height * scaleY) / 2f - outerZone.Top;
 
-            g.CompositingQuality = CompositingQuality.HighQuality;
-            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-
-            // Extra trace
-            if (extraPen != null)
-            {
-                g.DrawRectangle(extraPen, outerZone.Left + 1f, outerZone.Top + 1f, outerZone.Width - 1f,
-                    outerZone.Height - 1f);
-                g.DrawRectangle(extraPen, innerZone.Left + 1f, innerZone.Top + 1f, innerZone.Width - 1f,
-                    innerZone.Height - 1f);
-
-                g.DrawLine(extraPen, outerZone.Left, outerZone.Top, outerZone.Right, outerZone.Bottom);
-                g.DrawLine(extraPen, outerZone.Right, outerZone.Top, outerZone.Left, outerZone.Bottom);
-
-                g.DrawLine(extraPen, innerZone.Left, innerZone.Top, innerZone.Right, innerZone.Bottom);
-                g.DrawLine(extraPen, innerZone.Right, innerZone.Top, innerZone.Left, innerZone.Bottom);
-            }
-
-            return new GraphicsD(g, scaleX, scaleY, outerZone, innerZone);
+            // Return Item
+            return new GraphicsD(g, scaleX, scaleY, outerZone, innerZone, offsetX, offsetY);
         }
 
 

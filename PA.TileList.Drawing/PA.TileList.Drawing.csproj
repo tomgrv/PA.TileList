@@ -64,10 +64,12 @@
     <Compile Include="Graphics2D\RectangleD.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Graphics2D\ScaleMode.cs" />
-    <Compile Include="Circular\ProfileExtensions.cs" />
-    <Compile Include="Quantified\RulersExtentions.cs" />
     <Compile Include="Quantified\QuantifiedExtensions.cs" />
     <Compile Include="Graphics2D\GraphicExtensions.cs" />
+    <Compile Include="Graphics2D\IRenderer.cs" />
+    <Compile Include="Quantified\QuantifiedRenderer.cs" />
+    <Compile Include="Quantified\RulersRenderer.cs" />
+    <Compile Include="Circular\CircularProfileRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PA.TileList.Drawing.nuspec" />
