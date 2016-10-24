@@ -51,6 +51,8 @@ namespace PA.TileList.Selection
             foreach (var e in q.Except(l).ToArray())
                 q.Remove(e);
 
+            q.UpdateZone();
+
             return q;
         }
 
@@ -128,14 +130,14 @@ namespace PA.TileList.Selection
             if (pointsInY < 2)
                 throw new ArgumentOutOfRangeException(nameof(pointsInY), pointsInY, "must be >= 2");
 
-            var ratioX = fullSize ? 1f : tile.ElementSizeX/tile.ElementStepX;
-            var ratioY = fullSize ? 1f : tile.ElementSizeY/tile.ElementStepY;
+            var ratioX = fullSize ? 1f : tile.ElementSizeX / tile.ElementStepX;
+            var ratioY = fullSize ? 1f : tile.ElementSizeY / tile.ElementStepY;
 
-            var stepSizeX = ratioX/(pointsInX - 1);
-            var stepSizeY = ratioY/(pointsInY - 1);
+            var stepSizeX = ratioX / (pointsInX - 1);
+            var stepSizeY = ratioY / (pointsInY - 1);
 
-            var offsetX = ratioX/2f;
-            var offsetY = ratioY/2f;
+            var offsetX = ratioX / 2f;
+            var offsetY = ratioY / 2f;
 
             var testY = new double[pointsInY];
             var testY2 = new double[pointsInY];
@@ -144,14 +146,14 @@ namespace PA.TileList.Selection
 
             for (var i = 0; i < pointsInX; i++)
             {
-                var testX = (c.X - reference.X - offsetX + i*stepSizeX)*tile.ElementStepX + tile.RefOffsetX;
+                var testX = (c.X - reference.X - offsetX + i * stepSizeX) * tile.ElementStepX + tile.RefOffsetX;
                 var testX2 = Math.Pow(testX, 2d);
 
                 for (var j = 0; j < pointsInY; j++)
                 {
                     if (i == 0)
                     {
-                        testY[j] = (c.Y - reference.Y - offsetY + j*stepSizeY)*tile.ElementStepY + tile.RefOffsetY;
+                        testY[j] = (c.Y - reference.Y - offsetY + j * stepSizeY) * tile.ElementStepY + tile.RefOffsetY;
                         testY2[j] = Math.Pow(testY[j], 2);
                     }
 
