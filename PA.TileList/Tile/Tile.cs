@@ -101,7 +101,7 @@ namespace PA.TileList.Tile
         {
             get
             {
-                return (this._reference == null || this.IndexOf(this._reference) < 0) ? null : this._reference;
+                return (this._reference == null) || (this.IndexOf(this._reference) < 0) ? null : this._reference;
             }
             private set
             {

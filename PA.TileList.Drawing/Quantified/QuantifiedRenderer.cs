@@ -48,8 +48,8 @@ namespace PA.TileList.Drawing.Quantified
 
         public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, int width, int height, ScaleMode mode)
         {
-            var s = (mode.HasFlag(ScaleMode.STRETCH)) ? obj.GetSize() : new SizeF(width, height);
-            var p = (mode.HasFlag(ScaleMode.STRETCH)) ? obj.GetOrigin() : new PointF(-s.Width / 2f, -s.Height / 2f);
+            var s = mode.HasFlag(ScaleMode.STRETCH) ? obj.GetSize() : new SizeF(width, height);
+            var p = mode.HasFlag(ScaleMode.STRETCH) ? obj.GetOrigin() : new PointF(-s.Width / 2f, -s.Height / 2f);
 
             return this.Render(obj, new Bitmap(width, height), new RectangleD(p, s), mode);
         }
@@ -70,24 +70,20 @@ namespace PA.TileList.Drawing.Quantified
 
             using (var g = rendered.GetGraphicsD())
             {
-                g.Draw(_extraPen);
+                g.Draw(this._extraPen);
 
                 foreach (var subportion in obj.GetPortions(g, rendered.Mode)
                     .Where(p => (p.Outer.Height >= 1f) && (p.Outer.Width >= 1f)))
-                {
-                    using (var partial = _getImagePortion(subportion.Item, subportion.Inner.Size))
+                    using (var partial = this._getImagePortion(subportion.Item, subportion.Inner.Size))
                     {
                         if (partial != null)
                         {
                             g.Graphics.DrawImage(partial, subportion.Inner);
 
-                            if (_portionPen != null)
-                            {
+                            if (this._portionPen != null)
                                 g.Graphics.DrawRectangle(this._portionPen, Rectangle.Round(subportion.Outer));
-                            }
                         }
                     }
-                }
             }
 
             return rendered;

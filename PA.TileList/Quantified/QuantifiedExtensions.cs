@@ -67,7 +67,7 @@ namespace PA.TileList.Quantified
             return tile.GroupBy(c =>
             {
                 var p = c.CountPoints(tile, profile, config, fullSize);
-                if (p == 0 || p == config.MaxSurface) return p;
+                if ((p == 0) || (p == config.MaxSurface)) return p;
                 return (float)p / config.MaxSurface;
             });
         }

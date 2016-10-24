@@ -50,12 +50,12 @@ namespace PA.TileList.Drawing.Quantified
 
         public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, int width, int height, ScaleMode mode)
         {
-            return Render(obj, new Bitmap(width, height), new RectangleD(obj.GetOrigin(), obj.GetSize()), mode);
+            return this.Render(obj, new Bitmap(width, height), new RectangleD(obj.GetOrigin(), obj.GetSize()), mode);
         }
 
         public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, int width, int height, RectangleF inner, ScaleMode mode)
         {
-            return Render(obj, new RectangleD<Bitmap>(new Bitmap(width, height), inner, mode));
+            return this.Render(obj, new RectangleD<Bitmap>(new Bitmap(width, height), inner, mode));
         }
 
         public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, RectangleD<Bitmap> portion)
@@ -71,16 +71,16 @@ namespace PA.TileList.Drawing.Quantified
             {
                 if (rendered.Mode.HasFlag(ScaleMode.XYRATIO))
                 {
-                    DrawSteps(g.Graphics, _steps, rendered.Inner.Left, rendered.Inner.Right, g.OffsetX, Direction.Horizontal,
+                    DrawSteps(g.Graphics, this._steps, rendered.Inner.Left, rendered.Inner.Right, g.OffsetX, Direction.Horizontal,
                         g.ScaleX);
-                    DrawSteps(g.Graphics, _steps, rendered.Inner.Top, rendered.Inner.Bottom, g.OffsetY, Direction.Vertical,
+                    DrawSteps(g.Graphics, this._steps, rendered.Inner.Top, rendered.Inner.Bottom, g.OffsetY, Direction.Vertical,
                           g.ScaleY);
                 }
                 else
                 {
-                    DrawSteps(g.Graphics, _steps, g.Portion.Inner.Left, g.Portion.Inner.Right, g.OffsetX,
+                    DrawSteps(g.Graphics, this._steps, g.Portion.Inner.Left, g.Portion.Inner.Right, g.OffsetX,
                         Direction.Horizontal, g.ScaleX);
-                    DrawSteps(g.Graphics, _steps, g.Portion.Inner.Top, g.Portion.Inner.Bottom, g.OffsetY,
+                    DrawSteps(g.Graphics, this._steps, g.Portion.Inner.Top, g.Portion.Inner.Bottom, g.OffsetY,
                         Direction.Vertical, g.ScaleY);
                 }
             }

@@ -57,17 +57,17 @@ namespace PA.TileList.Drawing.Circular
         {
             var m = 2 * obj.GetMaxRadius();
 
-            var s = (mode == ScaleMode.STRETCH) ? new SizeF((float)m, (float)m) : new SizeF(width, height);
+            var s = mode == ScaleMode.STRETCH ? new SizeF((float)m, (float)m) : new SizeF(width, height);
             var p = new PointF(-s.Width / 2f, -s.Height / 2f);
             var r = new RectangleD<Bitmap>(new Bitmap(width, height), p, s, mode);
 
-            return Render(obj, r);
+            return this.Render(obj, r);
 
         }
 
         public RectangleD<Bitmap> Render(CircularProfile obj, int width, int height, RectangleF inner, ScaleMode mode)
         {
-            return Render(obj, new RectangleD<Bitmap>(new Bitmap(width, height), inner, mode));
+            return this.Render(obj, new RectangleD<Bitmap>(new Bitmap(width, height), inner, mode));
         }
 
         private RectangleD<Bitmap> Render(CircularProfile obj, Bitmap image, RectangleD portion, ScaleMode mode)
@@ -80,12 +80,12 @@ namespace PA.TileList.Drawing.Circular
                 var minsize = (float)obj.GetMinRadius() * 2f;
                 var midsize = (float)obj.Radius * 2f;
 
-                if (_extraPen != null)
+                if (this._extraPen != null)
                 {
-                    g.Draw(_extraPen);
+                    g.Draw(this._extraPen);
 
-                    g.Graphics.DrawEllipse(_extraPen, g.OffsetX - maxsize * g.ScaleX / 2f, g.OffsetY - maxsize * g.ScaleY / 2f, maxsize * g.ScaleX, maxsize * g.ScaleY);
-                    g.Graphics.DrawEllipse(_extraPen, g.OffsetX - minsize * g.ScaleX / 2f, g.OffsetY - minsize * g.ScaleY / 2f, minsize * g.ScaleX, minsize * g.ScaleY);
+                    g.Graphics.DrawEllipse(this._extraPen, g.OffsetX - maxsize * g.ScaleX / 2f, g.OffsetY - maxsize * g.ScaleY / 2f, maxsize * g.ScaleX, maxsize * g.ScaleY);
+                    g.Graphics.DrawEllipse(this._extraPen, g.OffsetX - minsize * g.ScaleX / 2f, g.OffsetY - minsize * g.ScaleY / 2f, minsize * g.ScaleX, minsize * g.ScaleY);
                 }
 
                 var last = obj.GetFirst();
@@ -96,7 +96,7 @@ namespace PA.TileList.Drawing.Circular
                     last = current;
                 }
 
-                DrawStep(g, last, obj.GetLast(), _radiusPen, _arcPen);
+                DrawStep(g, last, obj.GetLast(), this._radiusPen, this._arcPen);
             }
 
             return rendered;
