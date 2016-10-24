@@ -46,5 +46,24 @@ namespace PA.TileList.Drawing.Graphics2D
         }
 
         #endregion
+
+        #region Debug
+
+        public void Draw(Pen p)
+        {
+            var o = new SizeF(this.OffsetX, this.OffsetY);
+            var r = new RectangleF(this.Portion.Inner.Location + o, this.Portion.Inner.Size);
+
+            // Diagonal bars = Inner Zone
+            this.Graphics.DrawRectangle(p, r.X, r.Y, r.Width, r.Height);
+            this.Graphics.DrawLine(p, r.Left, r.Top, r.Right, r.Bottom);
+            this.Graphics.DrawLine(p, r.Left, r.Bottom, r.Right, r.Top);
+
+            // Vertical Bars  = Offset
+            this.Graphics.DrawLine(p, this.OffsetX, r.Top, this.OffsetX, r.Bottom);
+            this.Graphics.DrawLine(p, r.Left, this.OffsetY, r.Right, this.OffsetY);
+        }
+
+        #endregion
     }
 }

@@ -1,6 +1,5 @@
-version: 'build.{build}'
-
 branches:
+ # whitelist
 
   # blacklist
   except:

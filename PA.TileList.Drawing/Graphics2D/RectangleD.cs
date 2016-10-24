@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Diagnostics.Contracts;
 
 namespace PA.TileList.Drawing.Graphics2D
 {
@@ -26,7 +27,7 @@ namespace PA.TileList.Drawing.Graphics2D
         public RectangleD(RectangleF outer, RectangleF inner)
         {
             if (!outer.Contains(inner))
-                throw new ArgumentOutOfRangeException("inner", "Outer RectangleF must contain Inner RectangleF");
+                throw new ArgumentOutOfRangeException(nameof(inner), nameof(outer) + " must contain " + nameof(inner));
 
             this.Inner = inner;
             this.Outer = outer;
