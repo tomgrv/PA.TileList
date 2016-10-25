@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Diagnostics.Contracts;
 
 namespace PA.TileList.Drawing.Graphics2D
 {
@@ -51,6 +52,8 @@ namespace PA.TileList.Drawing.Graphics2D
 
         public void Draw(Pen p)
         {
+            Contract.Requires(p != null);
+
             var o = new SizeF(this.OffsetX, this.OffsetY);
             var r = new RectangleF(this.Portion.Inner.Location + o, this.Portion.Inner.Size);
 

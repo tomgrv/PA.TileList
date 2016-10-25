@@ -70,7 +70,10 @@ namespace PA.TileList.Drawing.Quantified
 
             using (var g = rendered.GetGraphicsD())
             {
-                g.Draw(this._extraPen);
+                if (this._extraPen != null)
+                {
+                    g.Draw(this._extraPen);
+                }
 
                 foreach (var subportion in obj.GetPortions(g, rendered.Mode)
                     .Where(p => (p.Outer.Height >= 1f) && (p.Outer.Width >= 1f)))
@@ -81,7 +84,9 @@ namespace PA.TileList.Drawing.Quantified
                             g.Graphics.DrawImage(partial, subportion.Inner);
 
                             if (this._portionPen != null)
+                            {
                                 g.Graphics.DrawRectangle(this._portionPen, Rectangle.Round(subportion.Outer));
+                            }
                         }
                     }
             }
