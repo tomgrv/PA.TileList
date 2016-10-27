@@ -40,6 +40,12 @@ namespace PA.TileList.Drawing.Graphics2D
 
         #region Renderer
 
+        public static RectangleD<U> RenderImage<T, U>(this T c, U baseImage, ScaleMode mode, IRenderer<T, U> renderer)
+           where U : Image
+        {
+            return renderer.Render(c, baseImage, mode);
+        }
+
         public static RectangleD<U> RenderImage<T, U>(this T c, int width, int height, ScaleMode mode, IRenderer<T, U> renderer)
             where U : Image
         {

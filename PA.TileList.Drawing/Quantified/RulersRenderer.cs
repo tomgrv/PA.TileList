@@ -50,7 +50,12 @@ namespace PA.TileList.Drawing.Quantified
 
         public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, int width, int height, ScaleMode mode)
         {
-            return this.Render(obj, new Bitmap(width, height), new RectangleD(obj.GetOrigin(), obj.GetSize()), mode);
+            return this.Render(obj, new Bitmap(width, height), mode);
+        }
+
+        public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, Bitmap baseImage, ScaleMode mode)
+        {
+            return this.Render(obj, baseImage, new RectangleD(obj.GetOrigin(), obj.GetSize()), mode);
         }
 
         public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, int width, int height, RectangleF inner, ScaleMode mode)
