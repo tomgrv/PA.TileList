@@ -18,10 +18,10 @@ namespace PA.TileList.Tile
             return new Tile<T>(c, referenceIndex);
         }
 
-        public static ITile<T> AsTile<T>(this IEnumerable<T> l, int referenceIndex = 0)
+        public static ITile<T> AsTile<T>(this IEnumerable<T> l)
             where T : class, ICoordinate
         {
-            return l as ITile<T> ?? l.ToTile(referenceIndex);
+            return l as ITile<T> ?? l.ToTile();
         }
     }
 }

@@ -92,7 +92,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
                         ? new Item(c.X, c.Y, c.X == c.Y ? Color.Yellow : Color.Green)
                         : new Item(c.X, c.Y, Color.Red));
 
-            var q0 = t0.AsQuantified(10, 10);
+            var q0 = t0.ToQuantified(10, 10);
 
             var signature0 = q0.RenderImage(1000, 1000, ScaleMode.NONE, new QuantifiedRenderer<Item>((z, s) =>
                   z.ToBitmap(100, 50, z.X + "\n" + z.Y))).Item.GetSignature();

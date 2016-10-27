@@ -188,7 +188,7 @@ namespace PA.TileList.Quadrant
         {
             return c.AsEnumerable()
                 .ChangeQuadrant(c.Zone, source, target)
-                .AsTile(c.IndexOf(c.Reference));
+                .ToTile(c.IndexOf(c.Reference));
         }
 
         public static ITile<IContextual<T>> ChangeQuadrant<T>(this ITile<IContextual<T>> c, Quadrant source,
@@ -197,7 +197,7 @@ namespace PA.TileList.Quadrant
         {
             return c.AsEnumerable()
                 .ChangeQuadrant(c.Zone, source, target)
-                .AsTile(c.IndexOf(c.Reference));
+                .ToTile(c.IndexOf(c.Reference));
         }
 
         #endregion
@@ -253,7 +253,7 @@ namespace PA.TileList.Quadrant
 
             return c.AsTile()
                 .ChangeQuadrant(source, target)
-                .AsQuantified(c.ElementSizeX, c.ElementSizeY, c.ElementStepX, c.ElementStepY, offsetX, offsetY);
+                .ToQuantified(c.ElementSizeX, c.ElementSizeY, c.ElementStepX, c.ElementStepY, offsetX, offsetY);
         }
 
 
@@ -306,7 +306,7 @@ namespace PA.TileList.Quadrant
 
             return c.AsTile()
                 .ChangeQuadrant(source, target)
-                .AsQuantified(c.ElementSizeX, c.ElementSizeY, c.ElementStepX, c.ElementStepY, offsetX, offsetY);
+                .ToQuantified(c.ElementSizeX, c.ElementSizeY, c.ElementStepX, c.ElementStepY, offsetX, offsetY);
         }
 
         #endregion

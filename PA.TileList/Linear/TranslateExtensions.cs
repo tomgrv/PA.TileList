@@ -63,7 +63,7 @@ namespace PA.TileList.Linear
             where T : class, ICoordinate
         {
             return t.AsEnumerable().Translate(source)
-                .AsTile(t.IndexOf(t.Reference))
+                .ToTile(t.IndexOf(t.Reference))
                 .RefreshZone();
         }
 
@@ -71,7 +71,7 @@ namespace PA.TileList.Linear
             where T : class, ICoordinate
         {
             return t.AsEnumerable().Translate(source)
-                .AsTile(t.IndexOf(t.Reference))
+                .ToTile(t.IndexOf(t.Reference))
                 .RefreshZone();
         }
 
@@ -80,7 +80,7 @@ namespace PA.TileList.Linear
         {
             return t.AsTile()
                 .Translate(source)
-                .AsQuantified(t.ElementSizeX, t.ElementSizeY, t.ElementStepX, t.ElementStepY, t.RefOffsetX, t.RefOffsetY);
+                .ToQuantified(t.ElementSizeX, t.ElementSizeY, t.ElementStepX, t.ElementStepY, t.RefOffsetX, t.RefOffsetY);
         }
 
         public static IQuantifiedTile<IContextual<T>> Translate<T>(this IQuantifiedTile<IContextual<T>> t,
@@ -89,7 +89,7 @@ namespace PA.TileList.Linear
         {
             return t.AsTile()
                 .Translate(source)
-                .AsQuantified(t.ElementSizeX, t.ElementSizeY, t.ElementStepX, t.ElementStepY, t.RefOffsetX, t.RefOffsetY);
+                .ToQuantified(t.ElementSizeX, t.ElementSizeY, t.ElementStepX, t.ElementStepY, t.RefOffsetX, t.RefOffsetY);
         }
 
 
