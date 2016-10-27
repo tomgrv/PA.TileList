@@ -186,6 +186,8 @@ namespace PA.TileList.Quantified
         public static IQuantifiedTile<T> AsQuantified<T>(this ITile<T> l)
             where T : class, ICoordinate
         {
+            Contract.Requires(l is IQuantifiedTile<T>);
+
             return l as IQuantifiedTile<T> ?? l.ToQuantified();
         }
 
