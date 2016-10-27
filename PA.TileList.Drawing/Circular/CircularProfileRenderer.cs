@@ -40,6 +40,14 @@ namespace PA.TileList.Drawing.Circular
         private Pen _arcPen;
         private Pen _extraPen;
 
+        public CircularProfileRenderer(Color c, float width = 1f)
+        {
+            var p = new Pen(c, width);
+
+            this._radiusPen = p;
+            this._arcPen = p;
+            this._extraPen = null;
+        }
 
         public CircularProfileRenderer(Pen radiusPen = null, Pen arcPen = null, Pen extraPen = null)
         {
@@ -55,11 +63,16 @@ namespace PA.TileList.Drawing.Circular
 
         public RectangleD<Bitmap> Render(CircularProfile obj, int width, int height, ScaleMode mode)
         {
+            return this.Render(obj, new Bitmap(width, height), mode);
+        }
+
+        public RectangleD<Bitmap> Render(CircularProfile obj, Bitmap baseImage, ScaleMode mode)
+        {
             var m = 2 * obj.GetMaxRadius();
 
-            var s = mode == ScaleMode.STRETCH ? new SizeF((float)m, (float)m) : new SizeF(width, height);
+            var s = mode == ScaleMode.STRETCH ? new SizeF((float)m, (float)m) : new SizeF(baseImage.Width, baseImage.Height);
             var p = new PointF(-s.Width / 2f, -s.Height / 2f);
-            var r = new RectangleD<Bitmap>(new Bitmap(width, height), p, s, mode);
+            var r = new RectangleD<Bitmap>(baseImage, p, s, mode);
 
             return this.Render(obj, r);
 
@@ -96,15 +109,14 @@ namespace PA.TileList.Drawing.Circular
                     last = current;
                 }
 
-                DrawStep(g, last, obj.GetLast(), this._radiusPen, this._arcPen);
+                DrawStep(g, last, obj.GetLast());
             }
 
             return rendered;
         }
 
 
-        private static void DrawStep(GraphicsD g, CircularProfile.ProfileStep last,
-            CircularProfile.ProfileStep current, Pen radiusPen = null, Pen arcPen = null)
+        private void DrawStep(GraphicsD g, CircularProfile.ProfileStep last, CircularProfile.ProfileStep current)
         {
             var ad = 180f * ScaleAngle(g, last.Angle) / Math.PI;
             var sw = 180f * (current.Angle - last.Angle) / Math.PI;
@@ -115,8 +127,7 @@ namespace PA.TileList.Drawing.Circular
                 var y = g.OffsetY - g.ScaleY * last.Radius;
                 var w = g.ScaleX * last.Radius * 2f;
                 var h = g.ScaleY * last.Radius * 2f;
-                g.Graphics.DrawArc(arcPen ?? Pens.Green, (float)x, (float)y, (float)w, (float)h, (float)ad,
-                    (float)sw);
+                g.Graphics.DrawArc(this._arcPen ?? Pens.Black, (float)x, (float)y, (float)w, (float)h, (float)ad, (float)sw);
             }
 
             if (!current.Radius.NearlyEquals(last.Radius))
@@ -125,7 +136,7 @@ namespace PA.TileList.Drawing.Circular
                 var y1 = g.OffsetY + g.ScaleY * last.Radius * Math.Sin(current.Angle);
                 var x2 = g.OffsetX + g.ScaleX * current.Radius * Math.Cos(current.Angle);
                 var y2 = g.OffsetY + g.ScaleY * current.Radius * Math.Sin(current.Angle);
-                g.Graphics.DrawLine(radiusPen ?? Pens.Orange, (float)x1, (float)y1, (float)x2, (float)y2);
+                g.Graphics.DrawLine(this._radiusPen ?? Pens.Black, (float)x1, (float)y1, (float)x2, (float)y2);
             }
         }
 

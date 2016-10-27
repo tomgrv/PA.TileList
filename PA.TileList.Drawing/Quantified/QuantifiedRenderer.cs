@@ -46,12 +46,17 @@ namespace PA.TileList.Drawing.Quantified
             this._extraPen = extraPen;
         }
 
+        public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, Bitmap baseImage, ScaleMode mode)
+        {
+            var s = mode.HasFlag(ScaleMode.STRETCH) ? obj.GetSize() : new SizeF(baseImage.Width, baseImage.Height);
+            var p = mode.HasFlag(ScaleMode.STRETCH) ? obj.GetOrigin() : new PointF(-baseImage.Width / 2f, -baseImage.Height / 2f);
+
+            return this.Render(obj, baseImage, new RectangleD(p, s), mode);
+        }
+
         public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, int width, int height, ScaleMode mode)
         {
-            var s = mode.HasFlag(ScaleMode.STRETCH) ? obj.GetSize() : new SizeF(width, height);
-            var p = mode.HasFlag(ScaleMode.STRETCH) ? obj.GetOrigin() : new PointF(-s.Width / 2f, -s.Height / 2f);
-
-            return this.Render(obj, new Bitmap(width, height), new RectangleD(p, s), mode);
+            return this.Render(obj, new Bitmap(width, height), mode);
         }
 
         public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, int width, int height, RectangleF inner, ScaleMode mode)
@@ -75,8 +80,8 @@ namespace PA.TileList.Drawing.Quantified
                     g.Draw(this._extraPen);
                 }
 
-                foreach (var subportion in obj.GetPortions(g, rendered.Mode)
-                    .Where(p => (p.Outer.Height >= 1f) && (p.Outer.Width >= 1f)))
+                foreach (var subportion in obj.GetPortions(g, mode).Where(p => (p.Outer.Height >= 1f) && (p.Outer.Width >= 1f)))
+                {
                     using (var partial = this._getImagePortion(subportion.Item, subportion.Inner.Size))
                     {
                         if (partial != null)
@@ -89,6 +94,7 @@ namespace PA.TileList.Drawing.Quantified
                             }
                         }
                     }
+                }
             }
 
             return rendered;
