@@ -13,8 +13,7 @@ namespace PA.TileList.Drawing.Quantified
     {
         #region Portion
 
-        public static IEnumerable<RectangleD<T>> GetPortions<T>(this IQuantifiedTile<T> tile, GraphicsD g,
-            ScaleMode mode)
+        public static IEnumerable<RectangleD<T>> GetPortions<T>(this IQuantifiedTile<T> tile, GraphicsD g, ScaleMode mode)
             where T : ICoordinate
         {
             var sizeX = (float)tile.ElementSizeX * g.ScaleX;
@@ -34,8 +33,7 @@ namespace PA.TileList.Drawing.Quantified
 
             foreach (var e in tile)
             {
-                var portionOuter = new RectangleF((e.X - refX) * stepX + offsetX, (e.Y - refY) * stepY + offsetY, stepX,
-                    stepY);
+                var portionOuter = new RectangleF((e.X - refX) * stepX + offsetX, (e.Y - refY) * stepY + offsetY, stepX, stepY);
                 var portionInner = new RectangleF(portionOuter.X + offX, portionOuter.Y + offY, sizeX, sizeY);
                 yield return new RectangleD<T>(e, portionOuter, portionInner, mode);
             }
@@ -70,10 +68,14 @@ namespace PA.TileList.Drawing.Quantified
 
         #region Dimension
 
+
+
         public static SizeF GetSize<T>(this IQuantifiedTile<T> c)
             where T : ICoordinate
         {
-            return new SizeF((float)(c.ElementStepX * c.Zone.SizeX), (float)(c.ElementStepY * c.Zone.SizeY));
+            var x = c.ElementStepX * c.Zone.SizeX;
+            var y = c.ElementStepY * c.Zone.SizeY;
+            return new SizeF((float)x, (float)y);
         }
 
         public static PointF GetOrigin<T>(this IQuantifiedTile<T> c)
@@ -90,7 +92,6 @@ namespace PA.TileList.Drawing.Quantified
         {
             var o = c.GetOrigin();
             var s = c.GetSize();
-
             return new RectangleF(o, s);
         }
 
