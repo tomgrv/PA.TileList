@@ -62,6 +62,10 @@
       <Project>{5B4FACE3-DDB3-4EAA-985A-9DE4AAC34A91}</Project>
       <Name>PA.TileList</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PA.TileList.Drawing\PA.TileList.Drawing.csproj">
+      <Project>{2D187F72-216C-40D5-B9DD-FFB52F7B3AAF}</Project>
+      <Name>PA.TileList.Drawing</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\packages\GitVersionTask.3.6.4\build\dotnet\GitVersionTask.targets" Condition="Exists('..\packages\GitVersionTask.3.6.4\build\dotnet\GitVersionTask.targets')" />
 </Project>

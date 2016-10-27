@@ -28,26 +28,49 @@ using System;
 using System.Collections.Generic;
 using PA.TileList.Cropping;
 using PA.TileList.Quadrant;
+using PA.TileList.Quantified;
 using PA.TileList.Tile;
+using System.Drawing;
+using PA.TileList.Drawing.Quantified;
+using PA.TileList.Drawing.Graphics2D;
 
 namespace PA.TileList.Tests.Utils
 {
     public class SubTile : Tile<Item>, IQuadrant<Item>
     {
+        public double ElementSizeX { get; internal set; }
+
+        public double ElementSizeY { get; internal set; }
+
+        public double ElementStepX { get; internal set; }
+
+        public double ElementStepY { get; internal set; }
+
+        public double RefOffsetX { get; internal set; }
+
+        public double RefOffsetY { get; internal set; }
+
         public SubTile(IZone a, Item t)
             : base(a, t)
         {
+
+
+
         }
 
         public SubTile(Tile<Item> t, Quadrant.Quadrant q)
             : base(t)
         {
+
+
             this.Quadrant = q;
         }
 
         public SubTile(IEnumerable<Item> t, int referenceIndex = 0)
             : base(t, referenceIndex)
         {
+
+
         }
 
         public Quadrant.Quadrant Quadrant { get; }
@@ -59,12 +82,20 @@ namespace PA.TileList.Tests.Utils
 
         public override object Clone()
         {
-            return new SubTile((Tile<Item>) base.Clone(), this.Quadrant);
+            return new SubTile((Tile<Item>)base.Clone(), this.Quadrant);
         }
 
         public override object Clone(int x, int y)
         {
-            return new SubTile((Tile<Item>) base.Clone(x, y), this.Quadrant);
+            return new SubTile((Tile<Item>)base.Clone(x, y), this.Quadrant);
+        }
+
+        public Bitmap ToBitmap(int w, int h, IQuantifiedTile m, Pen p = null)
+        {
+            return this.ToQuantified(m.ElementSizeX / this.Zone.SizeX, m.ElementSizeY / this.Zone.SizeY, m.ElementStepX / this.Zone.SizeX, m.ElementStepY / this.Zone.SizeY)
+                        .RenderImage(w, h, ScaleMode.STRETCH, new QuantifiedRenderer<Item>(
+                                                                         (z, s) => z.ToBitmap((int)s.Width, (int)s.Height, z.X + "\n" + z.Y), p)
+                                                                  ).Item;
         }
     }
 }
