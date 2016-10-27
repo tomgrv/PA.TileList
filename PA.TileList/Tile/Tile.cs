@@ -32,7 +32,7 @@ namespace PA.TileList.Tile
 
             this.X = 0;
             this.Y = 0;
-            this.Reference = t.ElementAt(referenceIndex);
+            this.Reference = base[referenceIndex];
             this.UpdateZone();
         }
 
