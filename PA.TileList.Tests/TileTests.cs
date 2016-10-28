@@ -1,6 +1,9 @@
 ﻿using System.Drawing;
 using NUnit.Framework;
+using PA.TileList.Contextual;
 using PA.TileList.Cropping;
+using PA.TileList.Drawing.Graphics2D;
+using PA.TileList.Drawing.Quantified;
 using PA.TileList.Extensions;
 using PA.TileList.Quantified;
 using PA.TileList.Tests.Utils;
@@ -9,7 +12,7 @@ using PA.TileList.Tile;
 namespace PA.TileList.Tests
 {
     [TestFixture]
-    public class TileTest
+    public class TileTests
     {
         [Test]
         [Category("Image hash")]

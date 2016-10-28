@@ -33,9 +33,21 @@ namespace PA.TileList.Drawing.Graphics2D
             this.Outer = outer;
         }
 
-        public RectangleF Inner { get; }
+        public RectangleF Inner { get; private set; }
 
-        public RectangleF Outer { get; }
+        public RectangleF Outer { get; private set; }
+
+
+        public void Round()
+        {
+            this.Inner = new RectangleF(this.Round(Inner.X), this.Round(Inner.Y), this.Round(Inner.Width), this.Round(Inner.Height));
+            this.Outer = new RectangleF(this.Round(Outer.X), this.Round(Outer.Y), this.Round(Outer.Width), this.Round(Outer.Height));
+        }
+
+        private float Round(float v)
+        {
+            return (float)Math.Round(v);
+        }
     }
 
     public class RectangleD<T> : RectangleD
@@ -78,5 +90,6 @@ namespace PA.TileList.Drawing.Graphics2D
         public T Item { get; private set; }
 
         public ScaleMode Mode { get; private set; }
+
     }
 }

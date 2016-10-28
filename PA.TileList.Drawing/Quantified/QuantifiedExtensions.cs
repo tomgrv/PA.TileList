@@ -13,6 +13,14 @@ namespace PA.TileList.Drawing.Quantified
     {
         #region Portion
 
+        /// <summary>
+        /// Gets the portions according to T dimensions
+        /// </summary>
+        /// <returns>The portions.</returns>
+        /// <param name="tile">Tile.</param>
+        /// <param name="g">The GraphicsD component representing drawing zone.</param>
+        /// <param name="mode">Scale mode regarding specified drawing zone.</param>
+        /// <typeparam name="T">IQuantifiedTile</typeparam>
         public static IEnumerable<RectangleD<T>> GetPortions<T>(this IQuantifiedTile<T> tile, GraphicsD g, ScaleMode mode)
             where T : ICoordinate
         {

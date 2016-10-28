@@ -12,9 +12,9 @@ namespace PA.TileList.Quadrant
     public static class QuadrantExtension
     {
         #region ToTopLeftPositive
-
+        [Obsolete]
         public static void ToTopLeftPositive<T>(this IQuadrant<T> zl, IZone a, ref int x, ref int y)
-            where T : class, ICoordinate
+                    where T : class, ICoordinate
         {
             switch (zl.Quadrant)
             {
@@ -40,9 +40,9 @@ namespace PA.TileList.Quadrant
         #endregion
 
         #region FirstOrDefault
-
+        [Obsolete]
         public static T FirstOrDefault<R, T>(this IQuadrant<T> zl, int x, int y, bool flattenQuadrant = false)
-            where T : class, ICoordinate
+                    where T : class, ICoordinate
         {
             IZone a = new Zone(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
 
@@ -52,7 +52,7 @@ namespace PA.TileList.Quadrant
                 zl.ToTopLeftPositive(a, ref x, ref y);
             }
 
-            return zl.FirstOrDefault(delegate(T item)
+            return zl.FirstOrDefault(delegate (T item)
             {
                 var ix = item.X;
                 var iy = item.Y;
@@ -67,11 +67,11 @@ namespace PA.TileList.Quadrant
         #endregion
 
         #region Fill
-
+        [Obsolete]
         public static void Fill<T, U>(this IQuadrant<T> zl, ushort SizeX, ushort SizeY, Func<Coordinate, T> filler,
-            Quadrant q, double ShiftX = 0, double ShiftY = 0, bool overwrite = false)
-            where T : class, ICoordinate
-            where U : T
+                    Quadrant q, double ShiftX = 0, double ShiftY = 0, bool overwrite = false)
+                    where T : class, ICoordinate
+                    where U : T
         {
             int StartX;
             int StartY;
@@ -84,23 +84,23 @@ namespace PA.TileList.Quadrant
                     break;
 
                 case Quadrant.TopRight:
-                    StartX = Convert.ToInt32(ShiftX - SizeX/2d - 0.1d);
-                    StartY = Convert.ToInt32(ShiftY - SizeY/2d - 0.1d);
+                    StartX = Convert.ToInt32(ShiftX - SizeX / 2d - 0.1d);
+                    StartY = Convert.ToInt32(ShiftY - SizeY / 2d - 0.1d);
                     throw new NotImplementedException("Quadrant not VERIFIED");
 
                 case Quadrant.TopLeft:
-                    StartX = Convert.ToInt32(ShiftX - SizeX/2d - 0.1d);
-                    StartY = Convert.ToInt32(ShiftY - SizeY/2d + 0.1d);
+                    StartX = Convert.ToInt32(ShiftX - SizeX / 2d - 0.1d);
+                    StartY = Convert.ToInt32(ShiftY - SizeY / 2d + 0.1d);
                     throw new NotImplementedException("Quadrant not VERIFIED");
 
                 case Quadrant.BottomLeft:
-                    StartX = Convert.ToInt32(ShiftX - SizeX/2d + 0.1d);
-                    StartY = Convert.ToInt32(ShiftY - SizeY/2d + 0.1d);
+                    StartX = Convert.ToInt32(ShiftX - SizeX / 2d + 0.1d);
+                    StartY = Convert.ToInt32(ShiftY - SizeY / 2d + 0.1d);
                     break;
 
                 case Quadrant.BottomRight:
-                    StartX = Convert.ToInt32(ShiftX - SizeX/2d + 0.1d);
-                    StartY = Convert.ToInt32(ShiftY - SizeY/2d - 0.1d);
+                    StartX = Convert.ToInt32(ShiftX - SizeX / 2d + 0.1d);
+                    StartY = Convert.ToInt32(ShiftY - SizeY / 2d - 0.1d);
                     throw new NotImplementedException("Quadrant not VERIFIED");
 
                 default:
@@ -188,7 +188,7 @@ namespace PA.TileList.Quadrant
         {
             return c.AsEnumerable()
                 .ChangeQuadrant(c.Zone, source, target)
-                .AsTile(c.IndexOf(c.Reference));
+                .ToTile(c.IndexOf(c.Reference));
         }
 
         public static ITile<IContextual<T>> ChangeQuadrant<T>(this ITile<IContextual<T>> c, Quadrant source,
@@ -197,7 +197,7 @@ namespace PA.TileList.Quadrant
         {
             return c.AsEnumerable()
                 .ChangeQuadrant(c.Zone, source, target)
-                .AsTile(c.IndexOf(c.Reference));
+                .ToTile(c.IndexOf(c.Reference));
         }
 
         #endregion
@@ -253,7 +253,7 @@ namespace PA.TileList.Quadrant
 
             return c.AsTile()
                 .ChangeQuadrant(source, target)
-                .AsQuantified(c.ElementSizeX, c.ElementSizeY, c.ElementStepX, c.ElementStepY, offsetX, offsetY);
+                .ToQuantified(c.ElementSizeX, c.ElementSizeY, c.ElementStepX, c.ElementStepY, offsetX, offsetY);
         }
 
 
@@ -306,7 +306,7 @@ namespace PA.TileList.Quadrant
 
             return c.AsTile()
                 .ChangeQuadrant(source, target)
-                .AsQuantified(c.ElementSizeX, c.ElementSizeY, c.ElementStepX, c.ElementStepY, offsetX, offsetY);
+                .ToQuantified(c.ElementSizeX, c.ElementSizeY, c.ElementStepX, c.ElementStepY, offsetX, offsetY);
         }
 
         #endregion
@@ -376,10 +376,10 @@ namespace PA.TileList.Quadrant
         #endregion
 
         #region FirstOrAdd
-
+        [Obsolete]
         public static T FirstOrAdd<T, L>(this IQuadrant<T> zl, int x, int y, Quadrant q, bool flattenQuadrant = false)
-            where T : class, ICoordinate, IQuadrant<L>
-            where L : class, ICoordinate
+                    where T : class, ICoordinate, IQuadrant<L>
+                    where L : class, ICoordinate
         {
             var unique = zl.FirstOrDefault<IQuadrant<T>, T>(x, y, flattenQuadrant);
 
@@ -394,9 +394,9 @@ namespace PA.TileList.Quadrant
 
             return unique;
         }
-
+        [Obsolete]
         public static T FirstOrAdd<T>(this IQuadrant<T> zl, int x, int y, bool flattenQuadrant = false)
-            where T : class, ICoordinate
+                    where T : class, ICoordinate
         {
             var unique = zl.FirstOrDefault<IQuadrant<T>, T>(x, y, flattenQuadrant);
 

@@ -92,7 +92,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
                         ? new Item(c.X, c.Y, c.X == c.Y ? Color.Yellow : Color.Green)
                         : new Item(c.X, c.Y, Color.Red));
 
-            var q0 = t0.AsQuantified(10, 10);
+            var q0 = t0.ToQuantified(10, 10);
 
             var signature0 = q0.RenderImage(1000, 1000, ScaleMode.NONE, new QuantifiedRenderer<Item>((z, s) =>
                   z.ToBitmap(100, 50, z.X + "\n" + z.Y))).Item.GetSignature();
@@ -232,6 +232,28 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             //    var signature = t1.RenderImage(i2, new RulersRenderer<IContextual<Item>>(new[] { 100f, 500f })).Item.GetSignature();
             Assert.AreEqual("9272D2C42A039C2122B649DAD516B390A3A2A3C51BA861B6E615F27BA0F1BDA3", signature, "Image hash");
+        }
+
+        [Test]
+        [Category("Image hash")]
+        public void ImbricatedRendering()
+        {
+            float factor = 1;
+
+            var tile = MainTile.GetTile(factor);
+            var flat = tile.Flatten<SubTile, Item>();
+
+            var signature1 =
+                        tile.ToBitmap(5000, 5000, new RectangleF(-2000, -2000, 4000, 4000)).GetSignature("imbricated");
+
+            var signature2 =
+                       flat.RenderImage(5000, 5000, new RectangleF(-2000, -2000, 4000, 4000), ScaleMode.NONE, new QuantifiedRenderer<IContextual<Item>>(
+                                (z2, s2) =>
+                                {
+                                    return z2.Context.ToBitmap((int)s2.Width, (int)s2.Height, z2.X + "\n" + z2.Y);
+                                })
+                        ).Item.GetSignature("flattened");
+
         }
     }
 }

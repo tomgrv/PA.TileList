@@ -186,27 +186,9 @@ namespace PA.TileList.Quantified
         public static IQuantifiedTile<T> AsQuantified<T>(this ITile<T> l)
             where T : class, ICoordinate
         {
+            Contract.Requires(l is IQuantifiedTile<T>);
+
             return l as IQuantifiedTile<T> ?? l.ToQuantified();
-        }
-
-        public static IQuantifiedTile<T> AsQuantified<T>(this ITile<T> l, double sizeX, double sizeY)
-            where T : class, ICoordinate
-        {
-            return l as IQuantifiedTile<T> ?? l.ToQuantified(sizeX, sizeY);
-        }
-
-        public static IQuantifiedTile<T> AsQuantified<T>(this ITile<T> l, double sizeX, double sizeY, double stepX,
-            double stepY)
-            where T : class, ICoordinate
-        {
-            return l as IQuantifiedTile<T> ?? l.ToQuantified(sizeX, sizeY, stepX, stepY);
-        }
-
-        public static IQuantifiedTile<T> AsQuantified<T>(this ITile<T> l, double sizeX, double sizeY, double stepX,
-            double stepY, double refOffsetX, double refOffsetY)
-            where T : class, ICoordinate
-        {
-            return l as IQuantifiedTile<T> ?? l.ToQuantified(sizeX, sizeY, stepX, stepY, refOffsetX, refOffsetY);
         }
 
         #endregion

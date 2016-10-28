@@ -82,15 +82,25 @@ namespace PA.TileList.Drawing.Quantified
 
                 foreach (var subportion in obj.GetPortions(g, mode).Where(p => (p.Outer.Height >= 1f) && (p.Outer.Width >= 1f)))
                 {
-                    using (var partial = this._getImagePortion(subportion.Item, subportion.Inner.Size))
+                    if (mode.HasFlag(ScaleMode.PXLSNAP))
                     {
-                        if (partial != null)
+                        subportion.Round();
+                    }
+
+                    using (var subportionBitmap = this._getImagePortion(subportion.Item, subportion.Inner.Size))
+                    {
+                        if (subportionBitmap != null)
                         {
-                            g.Graphics.DrawImage(partial, subportion.Inner);
+                            g.Graphics.DrawImage(subportionBitmap, subportion.Inner);
 
                             if (this._portionPen != null)
                             {
+                                var p = this._portionPen.Clone() as Pen;
+                                p.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
+                                p.Width = this._portionPen.Width * 2f;
+
                                 g.Graphics.DrawRectangle(this._portionPen, Rectangle.Round(subportion.Outer));
+                                g.Graphics.DrawRectangle(p, Rectangle.Round(subportion.Inner));
                             }
                         }
                     }

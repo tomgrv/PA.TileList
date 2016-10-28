@@ -1,6 +1,7 @@
 ﻿using System;
 using PA.TileList.Linear;
 using PA.TileList.Tile;
+using System.Diagnostics.Contracts;
 
 namespace PA.TileList.Quantified
 {
@@ -31,9 +32,20 @@ namespace PA.TileList.Quantified
             double offsetY)
             : base(t)
         {
+            Contract.Requires(stepX < sizeX, nameof(stepX) + " must be greater than " + nameof(sizeX));
+            Contract.Requires(stepY < sizeY, nameof(stepY) + " must be greater than " + nameof(sizeY));
+            Contract.Requires(offsetX > 0, nameof(offsetX) + " must be positive");
+            Contract.Requires(offsetY > 0, nameof(offsetY) + " must be positive");
+            Contract.Requires(sizeX > 0, nameof(sizeX) + " must be positive");
+            Contract.Requires(sizeY > 0, nameof(sizeY) + " must be positive");
+            Contract.Requires(stepX > 0, nameof(stepX) + " must be positive");
+            Contract.Requires(stepY > 0, nameof(stepY) + " must be positive");
+
             if ((stepX < sizeX) || (stepY < sizeY))
                 throw new ArgumentOutOfRangeException(nameof(stepX) + "-" + nameof(stepY),
                     "step must be greater than size for QuantifiedTile");
+
+            Contract.EndContractBlock();
 
             this.ElementSizeX = sizeX;
             this.ElementSizeY = sizeY;
@@ -56,8 +68,8 @@ namespace PA.TileList.Quantified
             {
                 var n = new Coordinate(reference.X - this.Reference.X, reference.Y - this.Reference.Y);
 
-                this.RefOffsetX += n.X*this.ElementStepX;
-                this.RefOffsetY += n.Y*this.ElementStepY;
+                this.RefOffsetX += n.X * this.ElementStepX;
+                this.RefOffsetY += n.Y * this.ElementStepY;
 
                 base.SetReference(reference);
             }

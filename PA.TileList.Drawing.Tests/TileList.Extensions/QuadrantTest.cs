@@ -1,8 +1,10 @@
-﻿using NUnit.Framework;
+﻿using System.Drawing;
+using NUnit.Framework;
 using PA.TileList.Contextual;
 using PA.TileList.Drawing.Graphics2D;
 using PA.TileList.Drawing.Quantified;
 using PA.TileList.Quadrant;
+using PA.TileList.Quantified;
 using PA.TileList.Selection;
 using PA.TileList.Tests.Utils;
 
@@ -11,6 +13,43 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
     [TestFixture]
     public class QuadrantTest
     {
+
+        [Test]
+        [Category("Image hash")]
+        public void ChangeQuadrantMainTile()
+        {
+            float factor = 1;
+
+            var tile = MainTile.GetTile(factor);
+
+            tile.Reference.Reference.Color = Color.Blue;
+
+            tile[15].Reference.Color = Color.Pink;
+
+            var signature1 = tile.ToBitmap(5000, 5000, new RectangleF(-2000, -2000, 4000, 4000)).GetSignature("Init");
+
+            ChangeAndRender(tile, Quadrant.Quadrant.Array).GetSignature(Quadrant.Quadrant.Array.ToString());
+
+            ChangeAndRender(tile, Quadrant.Quadrant.BottomLeft).GetSignature(Quadrant.Quadrant.BottomLeft.ToString());
+
+            ChangeAndRender(tile, Quadrant.Quadrant.BottomRight).GetSignature(Quadrant.Quadrant.BottomRight.ToString());
+
+            ChangeAndRender(tile, Quadrant.Quadrant.TopLeft).GetSignature(Quadrant.Quadrant.TopLeft.ToString());
+
+            ChangeAndRender(tile, Quadrant.Quadrant.TopRight).GetSignature(Quadrant.Quadrant.TopRight.ToString());
+
+        }
+
+        private Bitmap ChangeAndRender(MainTile tile, Quadrant.Quadrant q)
+        {
+            var ntile = tile.ChangeQuadrant(tile.Quadrant, q);
+
+            return ntile.ToQuantified(ntile.ElementStepX, ntile.ElementStepY, ntile.ElementStepX, ntile.ElementStepY, ntile.RefOffsetX, ntile.RefOffsetY)
+                               .RenderImage(5000, 5000, new RectangleF(-2000, -2000, 4000, 4000), ScaleMode.NONE, new QuantifiedRenderer<IContextual<SubTile>>(
+                                   (z, s) => z.Context.ToBitmap((int)s.Width, (int)s.Height, ntile), Pens.Blue, Pens.Red)
+                        ).Item;
+        }
+
         [Test]
         [Category("Image hash")]
         public void ChangeQuadrant()
