@@ -3,6 +3,7 @@ branches:
 
   # blacklist
   except:
+  	- develop
     - gh-pages
 
 image: Visual Studio 2015
