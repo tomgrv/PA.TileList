@@ -14,6 +14,8 @@ namespace PA.TileList.Circular
 
         private List<ProfileStep> _profile;
 
+        private ProfileStep[] _ordered;
+
         public CircularProfile(double radius)
         {
             this.Radius = radius;
@@ -26,9 +28,12 @@ namespace PA.TileList.Circular
         {
             get
             {
-                if (this._profile.Count > 0)
-                    return this._profile.OrderBy(p => p.Angle);
-                return new[] {new ProfileStep(0d, this.Radius)};
+                if (this._profile.Count == 0)
+                    this._ordered = new[] { new ProfileStep(0d, this.Radius) };
+                if (this._ordered == null)
+                    this._ordered = this._profile.OrderBy(p => p.Angle).ToArray();
+
+                return this._ordered;
             }
         }
 
@@ -42,7 +47,7 @@ namespace PA.TileList.Circular
             var angle = Math.Atan2(y, x);
             var r2 = x2 + y2;
 
-            var last = this._profile.LastOrDefault(ps => ps.Angle < angle) ?? this.GetLast();
+            var last = this.Profile.LastOrDefault(ps => ps.Angle < angle) ?? this.GetLast();
             var last2 = Math.Pow(last.Radius, 2);
 
             if (r2 < last2)
@@ -82,7 +87,7 @@ namespace PA.TileList.Circular
 
         public double GetRadius()
         {
-            return this.Profile.Sum(p => p.Radius)/this.Profile.Count();
+            return this.Profile.Sum(p => p.Radius) / this.Profile.Count();
         }
 
         public ProfileStep GetStep(double angle)
@@ -90,14 +95,23 @@ namespace PA.TileList.Circular
             return this.Profile.LastOrDefault(p => p.Angle < angle) ?? this.GetLast();
         }
 
+        /// <summary>
+        /// Resets the profile.
+        /// </summary>
         public void ResetProfile()
         {
+            this._ordered = null;
             this._last = null;
             this._profile = new List<ProfileStep>();
         }
 
+        /// <summary>
+        /// Adds the profile step.
+        /// </summary>
+        /// <param name="step">Step.</param>
         public void AddProfileStep(ProfileStep step)
         {
+            this._ordered = null;
             this._last = null;
             this._profile.Add(step);
         }
@@ -109,7 +123,7 @@ namespace PA.TileList.Circular
         /// <param name="radius">Radius of selection from specified angle to next step (to end of circle if last step)</param>
         public void AddProfileStep(double angle, double radius)
         {
-            this._profile.Add(new ProfileStep(angle, radius));
+            this.AddProfileStep(new ProfileStep(angle, radius));
         }
 
         /// <summary>
@@ -120,7 +134,7 @@ namespace PA.TileList.Circular
         /// <param name="length">Zone length, centered on specified angle</param>
         public void AddProfileZone(double angle, double thickness, double length)
         {
-            var delta = Math.Atan2(length/2d, this.Radius);
+            var delta = Math.Atan2(length / 2d, this.Radius);
 
             var angle_0 = angle - delta;
             var rayon_0 = this.Radius - thickness;
@@ -146,10 +160,10 @@ namespace PA.TileList.Circular
             var r0 = this.Radius - thickness;
 
             // Arc de demi-flat
-            var delta_flat = Math.Acos(r0/this.Radius);
+            var delta_flat = Math.Acos(r0 / this.Radius);
 
             // flat
-            var length = 2d*this.Radius*Math.Sin(delta_flat);
+            var length = 2d * this.Radius * Math.Sin(delta_flat);
 
             this.AddProfileFlat(angle, r0, length, step, resolution);
         }
@@ -164,10 +178,10 @@ namespace PA.TileList.Circular
         public void AddProfileFlatByLength(double angle, double length, double step = 1d, double resolution = 1d)
         {
             // Arc de demi-flat
-            var delta_flat = Math.Atan2(length/2d, this.Radius);
+            var delta_flat = Math.Atan2(length / 2d, this.Radius);
 
             // Rayon central
-            var r0 = Math.Cos(delta_flat)*this.Radius;
+            var r0 = Math.Cos(delta_flat) * this.Radius;
 
             this.AddProfileFlat(angle, r0, length, step, resolution);
         }
@@ -183,24 +197,24 @@ namespace PA.TileList.Circular
         public void AddProfileFlat(double angle, double radius, double length, double step = 1d, double resolution = 1d)
         {
             // Arc de demi-flat
-            var delta_flat = Math.Atan2(length/2d, this.Radius);
+            var delta_flat = Math.Atan2(length / 2d, this.Radius);
 
             // Rayon orthogonal au flat, corrigé selon la bordure
             var r0 = radius;
 
-            var delta = Math.Atan2(step, this.Radius)*resolution;
+            var delta = Math.Atan2(step, this.Radius) * resolution;
 
             double angle_0;
             double rayon_0;
 
             // Nb de points de calcul
-            var steps = (int) Math.Round(delta_flat/delta);
+            var steps = (int)Math.Round(delta_flat / delta);
 
             // Debut du flat: les arcs partent du rayon considéré DANS le flat: OK
             for (var s = -steps; s < 0; s++)
             {
-                angle_0 = angle + s*delta;
-                rayon_0 = r0/Math.Cos(angle_0 - angle);
+                angle_0 = angle + s * delta;
+                rayon_0 = r0 / Math.Cos(angle_0 - angle);
 
                 this.AddProfileStep(angle_0, rayon_0);
             }
@@ -209,8 +223,8 @@ namespace PA.TileList.Circular
             // => il faut considérer le rayon de l'angle suivant pour que l'arc soit DANS le flat
             for (var s = 0; s < steps; s++)
             {
-                angle_0 = angle + s*delta;
-                rayon_0 = r0/Math.Cos(angle_0 - angle + delta);
+                angle_0 = angle + s * delta;
+                rayon_0 = r0 / Math.Cos(angle_0 - angle + delta);
 
                 this.AddProfileStep(angle_0, rayon_0);
             }
@@ -259,10 +273,10 @@ namespace PA.TileList.Circular
                 this.Angle = angle;
 
                 while (this.Angle < -Math.PI)
-                    this.Angle += 2f*Math.PI;
+                    this.Angle += 2f * Math.PI;
 
                 while (this.Angle > Math.PI)
-                    this.Angle -= 2f*Math.PI;
+                    this.Angle -= 2f * Math.PI;
             }
         }
     }
