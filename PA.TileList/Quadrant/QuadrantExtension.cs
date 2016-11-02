@@ -182,7 +182,7 @@ namespace PA.TileList.Quadrant
 
         #region ITile Change
 
-        public static ITile<IContextual<T>> ChangeQuadrant<T>(this ITile<T> c, Quadrant source,
+        public static Tile<IContextual<T>> ChangeQuadrant<T>(this ITile<T> c, Quadrant source,
             Quadrant target = Quadrant.Array)
             where T : class, ICoordinate
         {
@@ -191,7 +191,7 @@ namespace PA.TileList.Quadrant
                 .ToTile(c.IndexOf(c.Reference));
         }
 
-        public static ITile<IContextual<T>> ChangeQuadrant<T>(this ITile<IContextual<T>> c, Quadrant source,
+        public static Tile<IContextual<T>> ChangeQuadrant<T>(this ITile<IContextual<T>> c, Quadrant source,
             Quadrant target = Quadrant.Array)
             where T : class, ICoordinate
         {
@@ -204,7 +204,7 @@ namespace PA.TileList.Quadrant
 
         #region IQuantifiedTile Change
 
-        public static IQuantifiedTile<IContextual<T>> ChangeQuadrant<T>(this IQuantifiedTile<T> c, Quadrant source,
+        public static QuantifiedTile<IContextual<T>> ChangeQuadrant<T>(this IQuantifiedTile<T> c, Quadrant source,
             Quadrant target = Quadrant.Array)
             where T : class, ICoordinate
         {
@@ -257,7 +257,7 @@ namespace PA.TileList.Quadrant
         }
 
 
-        public static IQuantifiedTile<IContextual<T>> ChangeQuadrant<T>(this IQuantifiedTile<IContextual<T>> c,
+        public static QuantifiedTile<IContextual<T>> ChangeQuadrant<T>(this IQuantifiedTile<IContextual<T>> c,
             Quadrant source, Quadrant target = Quadrant.Array)
             where T : class, ICoordinate
         {
