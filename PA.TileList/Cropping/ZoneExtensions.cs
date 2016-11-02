@@ -13,7 +13,7 @@ namespace PA.TileList.Cropping
             return list;
         }
 
-        public static IZone GetZone<T>(this IEnumerable<T> list)
+        public static Zone GetZone<T>(this IEnumerable<T> list)
             where T : ICoordinate
         {
             var zone = new Zone(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
