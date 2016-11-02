@@ -63,7 +63,7 @@ namespace PA.TileList.Selection
             return tile.Where(c => config.SelectionType.HasFlag(c.Position(tile, profile, config, fullSize)));
         }
 
-        public static IEnumerable<ICoordinate> SelectCoordinates<T>(this IQuantifiedTile<T> list,
+        public static IEnumerable<Coordinate> SelectCoordinates<T>(this IQuantifiedTile<T> list,
             ISelectionProfile profile, SelectionConfiguration config, bool fullsize = true)
             where T : ICoordinate
         {
@@ -104,6 +104,31 @@ namespace PA.TileList.Selection
                 fullSize);
 
             return points;
+        }
+
+
+        public static void GetBounds<T>(this T c, IQuantifiedTile tile,
+         Action<double, double, double, double> predicate, bool fullSize = false)
+         where T : ICoordinate
+        {
+            var xMin = double.MaxValue;
+            var yMin = double.MaxValue;
+            var xMax = double.MinValue;
+            var yMax = double.MinValue;
+
+            c.GetPoints(tile, 2, 2, (xc, yc, xc2, yc2) =>
+            {
+                if (xc < xMin)
+                    xMin = xc;
+                if (xc > xMax)
+                    xMax = xc;
+                if (yc < yMin)
+                    yMin = yc;
+                if (yc > yMax)
+                    yMax = yc;
+            }, fullSize);
+
+            predicate(xMin, yMin, xMax, yMax);
         }
 
 

@@ -59,7 +59,7 @@ namespace PA.TileList.Drawing.Quantified
         /// <param name="inner">Inner.</param>
         /// <param name="strict">If set to <c>true</c> strict.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        public static IEnumerable<ICoordinate> GetCoordinatesIn<T>(this IQuantifiedTile<T> list, RectangleF inner,
+        public static IEnumerable<Coordinate> GetCoordinatesIn<T>(this IQuantifiedTile<T> list, RectangleF inner,
             bool strict = false)
             where T : ICoordinate
         {
