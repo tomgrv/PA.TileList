@@ -66,11 +66,23 @@ namespace PA.TileList.Drawing.Graphics2D
 
         #endregion
 
-        #region Renderer
+        public static PointF GetLocationOf<U>(this RectangleD<U> image, PointF imagePoint)
+      where U : Image
+        {
+            using (var i = image.GetGraphicsD())
+            {
+                return new PointF((imagePoint.X - i.OffsetX) / i.ScaleX, (imagePoint.Y - i.OffsetY) / i.ScaleY);
+            }
+        }
 
+        public static RectangleF GetAreaOf<U>(this RectangleD<U> image, RectangleF imageArea)
+        where U : Image
+        {
+            var lt = image.GetLocationOf(imageArea.Location);
+            var rb = image.GetLocationOf(imageArea.Location + imageArea.Size);
 
-
-        #endregion
+            return RectangleF.FromLTRB(lt.X, lt.Y, rb.X, rb.Y);
+        }
 
         public static GraphicsD GetGraphicsD<U>(this RectangleD<U> image)
             where U : Image
