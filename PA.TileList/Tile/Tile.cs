@@ -49,7 +49,7 @@ namespace PA.TileList.Tile
             this.X = 0;
             this.Y = 0;
             this.Reference = base[referenceIndex];
-            this.Zone = zone;
+            this.Zone = new Zone(zone);
         }
 
         public Tile(IZone zone, T reference)
@@ -61,7 +61,7 @@ namespace PA.TileList.Tile
             this.X = 0;
             this.Y = 0;
             this.Reference = base[0];
-            this.Zone = zone;
+            this.Zone = new Zone(zone);
         }
 
         public Tile(int x, int y, IZone zone, IEnumerable<T> t, int referenceIndex = 0)
@@ -76,7 +76,7 @@ namespace PA.TileList.Tile
             this.X = x;
             this.Y = y;
             this.Reference = base[referenceIndex];
-            this.Zone = zone;
+            this.Zone = new Zone(zone);
         }
 
         public Tile(int x, int y, IZone zone, T reference)
@@ -88,7 +88,7 @@ namespace PA.TileList.Tile
             this.X = x;
             this.Y = y;
             this.Reference = base[0];
-            this.Zone = zone;
+            this.Zone = new Zone(zone);
         }
 
         public int X { get; set; }
@@ -110,7 +110,7 @@ namespace PA.TileList.Tile
             }
         }
 
-        public IZone Zone { get; private set; }
+        public Zone Zone { get; private set; }
 
         public void UpdateZone()
         {
@@ -133,11 +133,37 @@ namespace PA.TileList.Tile
             return this.Find(e => (e.X == x) && (e.Y == y));
         }
 
+        public T FindOrCreate(int x, int y, Func<T> creator)
+        {
+            Contract.Requires(creator != null);
+
+            var item = this.Find(x, y);
+
+            if (item == null)
+            {
+                item = creator();
+                item.X = x;
+                item.Y = y;
+                this.Add(item);
+                this.UpdateZone();
+            }
+
+            return item;
+        }
+
         public T Find(ICoordinate c)
         {
             Contract.Requires(c != null);
 
-            return this.Find(e => (e.X == c.X) && (e.Y == c.Y));
+            return this.Find(c.X, c.Y);
+        }
+
+        public T FindOrCreate(ICoordinate c, Func<T> creator)
+        {
+            Contract.Requires(c != null);
+            Contract.Requires(creator != null);
+
+            return this.FindOrCreate(c.X, c.Y, creator);
         }
 
         public List<T> FindAll(IZone zone)

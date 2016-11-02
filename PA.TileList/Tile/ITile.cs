@@ -7,7 +7,7 @@ namespace PA.TileList.Tile
 {
     public interface ITile : IList, ICoordinate
     {
-        IZone Zone { get; }
+        Zone Zone { get; }
         void UpdateZone();
 
         ICoordinate GetReference();

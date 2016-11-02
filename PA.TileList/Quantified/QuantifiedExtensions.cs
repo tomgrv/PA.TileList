@@ -44,7 +44,7 @@ namespace PA.TileList.Quantified
                 c.GetPoints(list, 2, 2,
                     (xc, yc, xc2, yc2) =>
                         points +=
-                            (Math.Abs(xc - x) < list.ElementStepX) && (Math.Abs(yc - y) < list.ElementStepY) ? 1 : 0);
+                            (Math.Abs(xc - x) < list.ElementStepX) && (Math.Abs(yc - y) < list.ElementStepY) ? 1 : 0, true);
                 return points == 4;
             });
         }
