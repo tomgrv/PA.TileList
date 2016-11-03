@@ -4,6 +4,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using PA.TileList.Cropping;
 using PA.TileList.Linear;
+using System.Xml.Linq;
 
 namespace PA.TileList.Tile
 {
@@ -224,6 +225,20 @@ namespace PA.TileList.Tile
         }
 
 
+        public void Fill<U>(bool overwrite = false)
+        where U : T, new()
+        {
+            this.Fill((c) =>
+           {
+               var i = new U();
+               i.X = c.X;
+               i.Y = c.Y;
+               return i;
+           }, overwrite);
+        }
+
+
+
         /// <summary>
         ///     Fill area  with specified filler.
         /// </summary>
@@ -250,6 +265,21 @@ namespace PA.TileList.Tile
             this.UpdateZone();
         }
 
+
+        public void Fill<U>(IZone zone, bool overwrite = false)
+        where U : T, new()
+        {
+            Contract.Requires(zone != null);
+
+            this.Fill(this.Zone, (c) =>
+            {
+                var i = new U();
+                i.X = c.X;
+                i.Y = c.Y;
+                return i;
+            }, overwrite);
+        }
+
         /// <summary>
         ///     Fill zone with specified filler.
         /// </summary>
@@ -271,6 +301,20 @@ namespace PA.TileList.Tile
             var area = new Zone(StartX, StartY, StartX + SizeX - 1, StartY + SizeY - 1);
 
             this.Fill(area, filler, overwrite);
+        }
+
+
+        public void Fill<U>(ushort SizeX, ushort SizeY, decimal ShiftX = 0, decimal ShiftY = 0,
+        bool overwrite = false)
+        where U : T, new()
+        {
+            this.Fill(SizeX, SizeY, (c) =>
+                       {
+                           var i = new U();
+                           i.X = c.X;
+                           i.Y = c.Y;
+                           return i;
+                       }, ShiftX, ShiftY, overwrite);
         }
 
         public IEnumerable<T> Inside(IZone a)
