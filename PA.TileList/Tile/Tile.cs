@@ -151,6 +151,23 @@ namespace PA.TileList.Tile
             return item;
         }
 
+        public T FindOrCreate<U>(int x, int y)
+            where U : T, new()
+        {
+            var item = this.Find(x, y);
+
+            if (item == null)
+            {
+                item = new U();
+                item.X = x;
+                item.Y = y;
+                this.Add(item);
+                this.UpdateZone();
+            }
+
+            return item;
+        }
+
         public T Find(ICoordinate c)
         {
             Contract.Requires(c != null);
@@ -165,6 +182,15 @@ namespace PA.TileList.Tile
 
             return this.FindOrCreate(c.X, c.Y, creator);
         }
+
+        public T FindOrCreate<U>(ICoordinate c)
+            where U : T, new()
+        {
+            Contract.Requires(c != null);
+
+            return this.FindOrCreate<U>(c.X, c.Y);
+        }
+
 
         public List<T> FindAll(IZone zone)
         {
