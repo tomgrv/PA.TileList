@@ -12,6 +12,9 @@ namespace PA.TileList.Circular
 
         private ProfileStep _last;
 
+        private double _minRadius2;
+        private double _maxRadius2;
+
         private List<ProfileStep> _profile;
 
         private ProfileStep[] _ordered;
@@ -29,9 +32,16 @@ namespace PA.TileList.Circular
             get
             {
                 if (this._profile.Count == 0)
+                {
                     this._ordered = new[] { new ProfileStep(0d, this.Radius) };
+                }
+
                 if (this._ordered == null)
+                {
                     this._ordered = this._profile.OrderBy(p => p.Angle).ToArray();
+                    this._maxRadius2 = Math.Pow(this._profile.Max(p => p.Radius), 2);
+                    this._minRadius2 = Math.Pow(this._profile.Min(p => p.Radius), 2);
+                }
 
                 return this._ordered;
             }
@@ -47,7 +57,13 @@ namespace PA.TileList.Circular
             var angle = Math.Atan2(y, x);
             var r2 = x2 + y2;
 
-            var last = this.Profile.LastOrDefault(ps => ps.Angle < angle) ?? this.GetLast();
+            if (r2 < this._minRadius2)
+                return SelectionPosition.Inside;
+
+            if (r2 > this._maxRadius2)
+                return SelectionPosition.Outside;
+
+            var last = this.GetStep(angle);
             var last2 = Math.Pow(last.Radius, 2);
 
             if (r2 < last2)
