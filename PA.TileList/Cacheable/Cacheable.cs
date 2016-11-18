@@ -1,5 +1,5 @@
 ﻿//
-// MainTile.cs
+// Renderable.cs
 //
 // Author:
 //       Thomas GERVAIS <thomas.gervais@gmail.com>
@@ -23,29 +23,28 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
-using System.Drawing;
-using PA.TileList.Linear;
-using PA.TileList.Drawing.Graphics2D;
 using System;
-using PA.TileList.Cacheable;
 using System.Collections.Generic;
-
-namespace PA.TileList.Tests.Utils
+namespace PA.TileList.Cacheable
 {
-    public class Item : Coordinate, ICacheable
+    public class Cacheable : ICacheable
     {
-        public Item(int x, int y, Color c)
-            : base(x, y)
-        {
-            this.Color = c;
-        }
-
-        public Color Color { get; set; }
-        #region Cache
-
         private Dictionary<object, bool> _changed;
         private bool _default;
+
+        public Cacheable()
+        {
+            _changed = new Dictionary<object, bool>();
+            _changed.Add(null, false);
+            _default = false;
+        }
+
+        public Cacheable(bool alwaysCache)
+        {
+            _changed = new Dictionary<object, bool>();
+            _changed.Add(null, alwaysCache);
+            _default = alwaysCache;
+        }
 
         public bool IsCached()
         {
@@ -77,29 +76,6 @@ namespace PA.TileList.Tests.Utils
             {
                 _changed.Add(t, _default);
             }
-        }
-
-        #endregion
-
-        public Bitmap ToBitmap(int w, int h, string s)
-        {
-            var b = new Bitmap(w, h);
-
-            using (var g = Graphics.FromImage(b))
-            {
-                this.Draw(g, s);
-            }
-
-            return b;
-        }
-
-        public void Draw(Graphics g, String s)
-        {
-            var r = g.ClipBounds;
-
-            g.DrawRectangle(Pens.Pink, r.X, r.Y, r.Width - 1, r.Height - 1);
-            g.FillRectangle(new SolidBrush(this.Color), r.X + 1, r.Y + 1, r.Width - 2, r.Height - 2);
-            g.DrawString(s, new Font(FontFamily.GenericSansSerif, r.Width / 3f), Brushes.Gray, r.X, r.Y);
         }
     }
 }

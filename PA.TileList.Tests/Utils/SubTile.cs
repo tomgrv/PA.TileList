@@ -33,10 +33,11 @@ using PA.TileList.Tile;
 using System.Drawing;
 using PA.TileList.Drawing.Quantified;
 using PA.TileList.Drawing.Graphics2D;
+using PA.TileList.Cacheable;
 
 namespace PA.TileList.Tests.Utils
 {
-    public class SubTile : Tile<Item>, IQuadrant<Item>
+    public class SubTile : Tile<Item>, IQuadrant<Item>, ICacheable
     {
         public double ElementSizeX { get; internal set; }
 
@@ -73,7 +74,48 @@ namespace PA.TileList.Tests.Utils
 
         }
 
+        #region Cache
+
+        private Dictionary<object, bool> _changed;
+        private bool _default;
+
+        public bool IsCached()
+        {
+            return IsCachedBy(null);
+        }
+
+        public bool IsCachedBy(object t)
+        {
+            if (!_changed.ContainsKey(t))
+            {
+                _changed.Add(t, _default);
+            }
+
+            return _changed[t];
+        }
+
+        public void NotifyCached()
+        {
+            NotifyCachedBy(null);
+        }
+
+        public void NotifyCachedBy(object t)
+        {
+            if (!_changed.ContainsKey(t))
+            {
+                _changed[t] = _default;
+            }
+            else
+            {
+                _changed.Add(t, _default);
+            }
+        }
+
+        #endregion
+
         public Quadrant.Quadrant Quadrant { get; }
+
+
 
         public void SetQuadrant(Quadrant.Quadrant q)
         {
@@ -94,8 +136,13 @@ namespace PA.TileList.Tests.Utils
         {
             return this.ToQuantified(m.ElementSizeX / this.Zone.SizeX, m.ElementSizeY / this.Zone.SizeY, m.ElementStepX / this.Zone.SizeX, m.ElementStepY / this.Zone.SizeY)
                         .RenderImage(w, h, ScaleMode.STRETCH, new QuantifiedRenderer<Item>(
-                                                                         (z, s) => z.ToBitmap((int)s.Width, (int)s.Height, z.X + "\n" + z.Y), p)
+                                                                         (z, s) => z.ToBitmap((int)s.Width, (int)s.Height, z.X + "\n" + z.Y), p), null
                                                                   ).Item;
+        }
+
+        public void NotifyRendered()
+        {
+
         }
     }
 }

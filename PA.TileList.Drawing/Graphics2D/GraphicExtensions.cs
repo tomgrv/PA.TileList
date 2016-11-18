@@ -40,28 +40,28 @@ namespace PA.TileList.Drawing.Graphics2D
 
         #region Renderer
 
-        public static RectangleD<U> RenderImage<T, U>(this T c, U baseImage, ScaleMode mode, IRenderer<T, U> renderer)
+        public static RectangleD<U> RenderImage<T, U>(this T c, U baseImage, ScaleMode mode, IRenderer<T, U> renderer, RectangleF? visible)
            where U : Image
         {
-            return renderer.Render(c, baseImage, mode);
+            return renderer.Render(c, baseImage, mode, visible);
         }
 
-        public static RectangleD<U> RenderImage<T, U>(this T c, int width, int height, ScaleMode mode, IRenderer<T, U> renderer)
+        public static RectangleD<U> RenderImage<T, U>(this T c, int width, int height, ScaleMode mode, IRenderer<T, U> renderer, RectangleF? visible)
             where U : Image
         {
-            return renderer.Render(c, width, height, mode);
+            return renderer.Render(c, width, height, mode, visible);
         }
 
-        public static RectangleD<U> RenderImage<T, U>(this T c, int width, int height, RectangleF inner, ScaleMode mode, IRenderer<T, U> renderer)
+        public static RectangleD<U> RenderImage<T, U>(this T c, int width, int height, RectangleF inner, ScaleMode mode, IRenderer<T, U> renderer, RectangleF? visible)
             where U : Image
         {
-            return renderer.Render(c, width, height, inner, mode);
+            return renderer.Render(c, width, height, inner, mode, visible);
         }
 
-        public static RectangleD<U> RenderImage<T, U>(this T c, RectangleD<U> image, IRenderer<T, U> renderer)
+        public static RectangleD<U> RenderImage<T, U>(this T c, RectangleD<U> image, IRenderer<T, U> renderer, RectangleF? visible)
             where U : Image
         {
-            return renderer.Render(c, image);
+            return renderer.Render(c, image, visible);
         }
 
         #endregion

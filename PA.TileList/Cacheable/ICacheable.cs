@@ -24,17 +24,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Runtime.Remoting.Messaging;
-using System.Drawing;
 using PA.TileList.Linear;
-namespace PA.TileList.Drawing.Graphics2D
+namespace PA.TileList.Cacheable
 {
-    public interface IRenderer<T, U>
-        where U : Image
+    public interface ICacheable
     {
-        RectangleD<U> Render(T obj, U baseImage, ScaleMode mode, RectangleF? visible);
-        RectangleD<U> Render(T obj, int width, int height, ScaleMode mode, RectangleF? visible);
-        RectangleD<U> Render(T obj, int width, int height, RectangleF inner, ScaleMode mode, RectangleF? visible);
-        RectangleD<U> Render(T obj, RectangleD<U> portion, RectangleF? visible);
+        bool IsCached();
+        bool IsCachedBy(object t);
+        void NotifyCached();
+        void NotifyCachedBy(object t);
     }
 }
