@@ -1,5 +1,5 @@
 ﻿//
-// SelectionProfile.cs
+// LICENSE.cs
 //
 // Author:
 //       Thomas GERVAIS <thomas.gervais@gmail.com>
@@ -23,13 +23,3 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
-namespace PA.TileList.Selection
-{
-    public interface ISelectionProfile
-    {
-        void OptimizeProfile();
-        SelectionPosition Position(double x, double y);
-        SelectionPosition Position(double x, double y, double x2, double y2);
-    }
-}

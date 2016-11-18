@@ -20,6 +20,11 @@ namespace PA.TileList.Quantified
         public double xMax { get; }
         public double yMax { get; }
 
+        public void OptimizeProfile()
+        {
+
+        }
+
         public SelectionPosition Position(double x, double y)
         {
             if ((x > this.xMin) && (x < this.xMax) && (y > this.yMin) && (y < this.yMax))

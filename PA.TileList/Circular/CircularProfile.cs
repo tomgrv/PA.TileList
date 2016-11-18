@@ -31,19 +31,23 @@ namespace PA.TileList.Circular
         {
             get
             {
-                if (this._profile.Count == 0)
-                {
-                    this._ordered = new[] { new ProfileStep(0d, this.Radius) };
-                }
-
-                if (this._ordered == null)
-                {
-                    this._ordered = this._profile.OrderBy(p => p.Angle).ToArray();
-                    this._maxRadius2 = Math.Pow(this._profile.Max(p => p.Radius), 2);
-                    this._minRadius2 = Math.Pow(this._profile.Min(p => p.Radius), 2);
-                }
-
+                this.OptimizeProfile();
                 return this._ordered;
+            }
+        }
+
+        public void OptimizeProfile()
+        {
+            if (this._profile.Count == 0)
+            {
+                this._ordered = new[] { new ProfileStep(0d, this.Radius) };
+            }
+
+            if (this._ordered == null)
+            {
+                this._ordered = this._profile.OrderBy(p => p.Angle).ToArray();
+                this._maxRadius2 = Math.Pow(this._profile.Max(p => p.Radius), 2);
+                this._minRadius2 = Math.Pow(this._profile.Min(p => p.Radius), 2);
             }
         }
 
@@ -57,10 +61,10 @@ namespace PA.TileList.Circular
             var angle = Math.Atan2(y, x);
             var r2 = x2 + y2;
 
-            if (r2 < this._minRadius2)
+            if (0 < this._minRadius2 && r2 < this._minRadius2)
                 return SelectionPosition.Inside;
 
-            if (r2 > this._maxRadius2)
+            if (0 < this._maxRadius2 && r2 > this._maxRadius2)
                 return SelectionPosition.Outside;
 
             var last = this.GetStep(angle);
