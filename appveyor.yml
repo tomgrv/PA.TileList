@@ -9,6 +9,7 @@ branches:
 image: Visual Studio 2015
 configuration: Release
 platform: Any CPU
+skip_tags: true
 
 assembly_info:
   patch: false

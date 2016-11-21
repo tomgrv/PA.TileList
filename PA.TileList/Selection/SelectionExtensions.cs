@@ -35,40 +35,42 @@ namespace PA.TileList.Selection
 {
     public static class SelectionExtensions
     {
-        public static IQuantifiedTile<T> Take<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
-            SelectionConfiguration config, ref bool referenceChange, bool fullSize = false)
-            where T : class, ICoordinate
+        #region Select 
+
+        public static void Selection<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
+                SelectionConfiguration config, bool fullSize = false)
+                where T : class, ICoordinate
         {
-            var l = tile.Take(profile, config, fullSize);
-            referenceChange = !l.Contains(tile.Reference);
-
-            var q = new QuantifiedTile<T>(tile);
-
-            if (referenceChange)
-                q.SetReference(l.First());
-
-            foreach (var e in q.Except(l).ToArray())
-                q.Remove(e);
-
-            q.UpdateZone();
-
-            return q;
-        }
-
-        public static IEnumerable<T> Take<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
-            SelectionConfiguration config, bool fullSize = false)
-            where T : class, ICoordinate
-        {
-            return tile.Where(c => config.SelectionType.HasFlag(c.Position(tile, profile, config, fullSize)));
+            var l = tile.Where(c => config.SelectionType.HasFlag(c.Position(tile, profile, config, fullSize)));
+            tile.RemoveAll(tile.Except(l));
         }
 
         public static IEnumerable<Coordinate> SelectCoordinates<T>(this IQuantifiedTile<T> list,
-            ISelectionProfile profile, SelectionConfiguration config, bool fullsize = true)
-            where T : ICoordinate
+                ISelectionProfile profile, SelectionConfiguration config, bool fullsize = true)
+                where T : ICoordinate
         {
             return list.Zone.Where(c => config.SelectionType.HasFlag(c.Position(list, profile, config, fullsize)));
         }
 
+        #endregion
+
+        #region Take
+
+        public static IQuantifiedTile<T> Take<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
+            SelectionConfiguration config, bool fullSize = false)
+            where T : class, ICoordinate
+        {
+            var q = new QuantifiedTile<T>(tile);
+            q.Selection(profile, config, fullSize);
+            return q;
+        }
+
+        #endregion
+
+
+
+
+        #region Helpers
 
         public static SelectionPosition Position<T>(this T c, IQuantifiedTile tile, ISelectionProfile profile,
             SelectionConfiguration config, bool fullSize = false)
@@ -107,7 +109,7 @@ namespace PA.TileList.Selection
         {
             var points = 0;
 
-            c.GetPoints(tile, pointsInX, pointsInX, (xc, yc, xc2, yc2) => points += predicate(xc, yc, xc2, yc2) ? 1 : 0,
+            c.GetPoints(tile, pointsInX, pointsInY, (xc, yc, xc2, yc2) => points += predicate(xc, yc, xc2, yc2) ? 1 : 0,
                 fullSize);
 
             return points;
@@ -194,4 +196,6 @@ namespace PA.TileList.Selection
             }
         }
     }
+
+    #endregion
 }

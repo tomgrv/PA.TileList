@@ -19,5 +19,7 @@ namespace PA.TileList.Tile
     {
         T Reference { get; }
         void SetReference(T reference);
+
+        void RemoveAll(IEnumerable<T> list);
     }
 }

@@ -118,7 +118,6 @@ namespace PA.TileList.Tile
             this.Zone = this.GetZone();
         }
 
-
         public virtual object Clone()
         {
             return new Tile<T>(this.X, this.Y, this.Zone, this.Select(t => (T)t.Clone()), this.IndexOf(this.Reference));
@@ -127,11 +126,6 @@ namespace PA.TileList.Tile
         public virtual object Clone(int x, int y)
         {
             return new Tile<T>(x, y, this.Zone, this.Select(t => (T)t.Clone()), this.IndexOf(this.Reference));
-        }
-
-        public T Find(int x, int y)
-        {
-            return this.Find(e => (e.X == x) && (e.Y == y));
         }
 
         public T FindOrCreate(int x, int y, Func<T> creator)
@@ -169,11 +163,16 @@ namespace PA.TileList.Tile
             return item;
         }
 
+        public T Find(int x, int y)
+        {
+            return this.Find(e => (e.X == x) && (e.Y == y));
+        }
+
         public T Find(ICoordinate c)
         {
             Contract.Requires(c != null);
 
-            return this.Find(c.X, c.Y);
+            return this.Find(e => (e.X == c.X) && (e.Y == c.Y));
         }
 
         public T FindOrCreate(ICoordinate c, Func<T> creator)
@@ -200,16 +199,51 @@ namespace PA.TileList.Tile
             return base.FindAll(zone.Contains);
         }
 
+
         public void Remove(int x, int y)
         {
-            this.Remove(this.Find(x, y));
+            var f = this.Find(x, y);
+
+            if (this.Reference.Equals(f))
+                this.SetReference(this.First(e => !e.Equals(f)));
+
+            this.Remove(f);
+
+            this.UpdateZone();
         }
+
+        public void Remove(ICoordinate c)
+        {
+            var f = this.Find(c);
+
+            if (this.Reference.Equals(f))
+                this.SetReference(this.First(e => !e.Equals(f)));
+
+            base.Remove(f);
+
+            this.UpdateZone();
+        }
+
 
         public void RemoveAll(IZone zone)
         {
-            Contract.Requires(zone != null);
+            this.RemoveAll(this.Where(e => zone.Contains(e)));
+        }
 
-            this.RemoveAll(zone.Contains);
+        public void RemoveAll(IEnumerable<T> list)
+        {
+            var toRemove = list.ToArray();
+
+            if (toRemove.Contains(this.Reference))
+            {
+                var r = this.Except(toRemove).First();
+                this.SetReference(r);
+            }
+
+            foreach (var e in toRemove)
+                base.Remove(e);
+
+            this.UpdateZone();
         }
 
         /// <summary>

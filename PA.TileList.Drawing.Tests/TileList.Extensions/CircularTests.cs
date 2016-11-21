@@ -10,6 +10,7 @@ using PA.TileList.Drawing.Quantified;
 using PA.TileList.Selection;
 using PA.TileList.Tests.Utils;
 using PA.TileList.Quantified;
+using System.Diagnostics;
 
 namespace PA.TileList.Drawing.Tests.TileList.Extensions
 {
@@ -108,9 +109,9 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             var p = GetTestProfile(1400);
 
-            var change = true;
+            var change = tile.Reference;
 
-            var q = tile.Take(p, new SelectionConfiguration(SelectionPosition.Inside), ref change, true);
+            var q = tile.Take(p, new SelectionConfiguration(SelectionPosition.Inside), true);
 
             q.Reference.Context.Color = Color.Pink;
 
@@ -122,8 +123,8 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             var signature2 = i.Item.GetSignature();
 
             Assert.AreEqual(true, tile.Reference.GetHashCode() == q.Reference.GetHashCode(), "HashCode Changed");
-            Assert.AreEqual(false, change, "Reference Changed");
-            Assert.AreNotEqual(null, q.Reference, "Reference is null");
+            Assert.AreEqual(q.Reference, change, "Reference Changed");
+            Assert.IsNotNull(q.Reference, "Reference is null");
             Assert.AreEqual(1819, q.Count(), "Selected item count");
 
             //      Assert.AreEqual("ADE22DBF99F378AEE20F993BF51705756AFFF2539CA8D6CC5CCA7266C9F2B551", signature, "Image hash");
@@ -142,16 +143,16 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             var p = GetTestProfile(1000);
 
-            var change = true;
+            var change = tile.Reference;
 
-            var q = tile.Take(p, new SelectionConfiguration(SelectionPosition.Inside), ref change, true);
+            var q = tile.Take(p, new SelectionConfiguration(SelectionPosition.Inside), true);
 
             //var i = q.GetImage(5000, 5000, (z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y));
             //var pi = p.GetImage(i);
             //string signature = pi.Item.GetSignature();
 
-            Assert.AreEqual(false, change, "Reference Changed");
-            Assert.AreNotEqual(null, q.Reference, "Reference is null");
+            Assert.AreEqual(q.Reference, change, "Reference Changed");
+            Assert.IsNotNull(q.Reference, "Reference is null");
 
 
             foreach (var tt in tile.Except(q))
@@ -186,16 +187,16 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             var p = GetTestProfile(1400);
 
-            var change = true;
+            var change = tile.Reference;
 
-            var q = tile.Take(p, new SelectionConfiguration(SelectionPosition.Under), ref change, true);
+            var q = tile.Take(p, new SelectionConfiguration(SelectionPosition.Under), true);
 
-            Assert.AreEqual(true, change, "Reference Changed");
-            Assert.AreNotEqual(null, q.Reference, "Reference is null");
+            Assert.AreNotEqual(change, q.Reference, "Reference Changed");
+            Assert.IsNotNull(q.Reference, "Reference is null");
 
             q.Reference.Context.Color = Color.Pink;
 
-            var i = q.RenderImage(5000, 2000, ScaleMode.XYRATIO | ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y), Pens.Red, Pens.Blue), null);
+            var i = q.RenderImage(5000, 2000,, new RectangleF(-2000, -2000, 4000, 4000), ScaleMode.XYRATIO | ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y), Pens.Red, Pens.Blue), null);
             var pi = p.RenderImage(i, new CircularProfileRenderer(Pens.Red, Pens.Aquamarine, Pens.Green), null);
 
             var signature = pi.Item.GetSignature();
@@ -211,21 +212,25 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
         {
             const float factor = 1f;
 
-            var tile = MainTile.GetTile(factor)
-                .Flatten<SubTile, Item>();
+            var tile = MainTile.GetTile(factor).Flatten<SubTile, Item>();
 
             Assert.AreEqual(3025, tile.Count(), "Initial item count");
 
             var p = GetTestProfile(1400);
 
-            var change = true;
+            var change = tile.Reference;
 
-            var q = tile.Take(p, new SelectionConfiguration(SelectionPosition.Outside), ref change, true);
+            var q = tile.Take(p, new SelectionConfiguration(SelectionPosition.Outside), true);
 
-            Assert.AreEqual(true, change, "Reference Changed");
+            Assert.IsNotNull(q.Reference, "Reference is null");
+            Assert.AreNotEqual(q.Reference, change, "Reference Changed");
+
             q.Reference.Context.Color = Color.Pink;
 
-            var pi = p.RenderImage(5000, 5000, ScaleMode.STRETCH, new CircularProfileRenderer(Pens.Red, Pens.Red, Pens.Pink), null);
+            Assert.IsTrue(q.Contains(q.Reference), "Reference is contained");
+            // Assert.AreEqual(change, q.Reference, "test");
+
+            var pi = p.RenderImage(5000, 5000, new RectangleF(-2000, -2000, 4000, 4000), ScaleMode.STRETCH, new CircularProfileRenderer(Pens.Red, Pens.Red, Pens.Pink), null);
             var i = q.RenderImage(pi, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y), Pens.Red), null);
 
 
