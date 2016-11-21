@@ -112,8 +112,8 @@ namespace PA.TileList.Tests.Utils
         public Bitmap ToBitmap(int w, int h, RectangleF inner)
         {
             return this.ToQuantified(this.ElementStepX, this.ElementStepY, this.ElementStepX, this.ElementStepY, this.RefOffsetX, this.RefOffsetY)
-                               .RenderImage(w, h, inner, ScaleMode.NONE, new QuantifiedRenderer<SubTile>(
-                                   (z, s) => z.ToBitmap((int)s.Width, (int)s.Height, this), Pens.Blue)
+                               .RenderImage(w, h, inner, ScaleMode.STRETCH, new QuantifiedRenderer<SubTile>(
+                                   (z, s) => z.ToBitmap((int)s.Width, (int)s.Height, this), Pens.Blue), null
                         ).Item;
         }
     }

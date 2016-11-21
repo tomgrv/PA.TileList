@@ -40,10 +40,9 @@ namespace PA.TileList.Selection
             where T : class, ICoordinate
         {
             var l = tile.Take(profile, config, fullSize);
+            referenceChange = !l.Contains(tile.Reference);
 
             var q = new QuantifiedTile<T>(tile);
-
-            referenceChange = referenceChange && !l.Contains(tile.Reference);
 
             if (referenceChange)
                 q.SetReference(l.First());
@@ -75,6 +74,12 @@ namespace PA.TileList.Selection
             SelectionConfiguration config, bool fullSize = false)
             where T : ICoordinate
         {
+            //// Quick mode / only corners
+            //var quick = c.CountPoints<T>(tile, 2, 2, (xc, yc, xc2, yc2) => profile.Position(xc, yc, xc2, yc2) == SelectionPosition.Inside, fullSize);
+            //if (quick == 4)
+            //    return SelectionPosition.Inside;
+
+            // full mode / follows SelectionConfiguration
             var points = c.CountPoints(tile, profile, config, fullSize);
 
             if (points >= config.MinSurface)
@@ -90,6 +95,8 @@ namespace PA.TileList.Selection
             SelectionConfiguration config, bool fullSize = false)
             where T : ICoordinate
         {
+            profile.OptimizeProfile();
+
             return c.CountPoints(tile, config.ResolutionX, config.ResolutionY,
                 (xc, yc, xc2, yc2) => profile.Position(xc, yc, xc2, yc2) == SelectionPosition.Inside, fullSize);
         }
@@ -150,10 +157,10 @@ namespace PA.TileList.Selection
             Contract.Requires(predicate != null);
 
             if (pointsInX < 2)
-                throw new ArgumentOutOfRangeException(nameof(pointsInX), pointsInX, "must be >= 2");
+                throw new ArgumentOutOfRangeException(nameof(pointsInX), pointsInX, nameof(pointsInX) + " must be >= 2");
 
             if (pointsInY < 2)
-                throw new ArgumentOutOfRangeException(nameof(pointsInY), pointsInY, "must be >= 2");
+                throw new ArgumentOutOfRangeException(nameof(pointsInY), pointsInY, nameof(pointsInY) + " must be >= 2");
 
             var ratioX = fullSize ? 1f : tile.ElementSizeX / tile.ElementStepX;
             var ratioY = fullSize ? 1f : tile.ElementSizeY / tile.ElementStepY;

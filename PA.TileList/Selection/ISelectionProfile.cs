@@ -28,6 +28,7 @@ namespace PA.TileList.Selection
 {
     public interface ISelectionProfile
     {
+        void OptimizeProfile();
         SelectionPosition Position(double x, double y);
         SelectionPosition Position(double x, double y, double x2, double y2);
     }

@@ -45,8 +45,8 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             var ntile = tile.ChangeQuadrant(tile.Quadrant, q);
 
             return ntile.ToQuantified(ntile.ElementStepX, ntile.ElementStepY, ntile.ElementStepX, ntile.ElementStepY, ntile.RefOffsetX, ntile.RefOffsetY)
-                               .RenderImage(5000, 5000, new RectangleF(-2000, -2000, 4000, 4000), ScaleMode.NONE, new QuantifiedRenderer<IContextual<SubTile>>(
-                                   (z, s) => z.Context.ToBitmap((int)s.Width, (int)s.Height, ntile), Pens.Blue, Pens.Red)
+                               .RenderImage(5000, 5000, new RectangleF(-2000, -2000, 4000, 4000), ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<SubTile>>(
+                                   (z, s) => z.Context.ToBitmap((int)s.Width, (int)s.Height, ntile), Pens.Blue, Pens.Red), null
                         ).Item;
         }
 
@@ -69,7 +69,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 
             var signature1 =
-                t1.RenderImage(5000, 5000, ScaleMode.NONE, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.X + "\n" + z.Y)))
+                t1.RenderImage(5000, 5000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.X + "\n" + z.Y)), null)
                     .Item.GetSignature("TopLeft");
             //Assert.AreEqual("055FBADECFE4D727D083968D6D2AEA62A2312E303FF48635474E11E5525CEEC3", signature1, "TopLeft");
 
@@ -78,7 +78,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
                 .Take(p, new SelectionConfiguration(SelectionPosition.Inside), ref change, true);
 
             var signature2 =
-                t2.RenderImage(5000, 5000, ScaleMode.NONE, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.Context.X + "\n" + z.Context.Y)))
+                t2.RenderImage(5000, 5000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.Context.X + "\n" + z.Context.Y)), null)
                     .Item.GetSignature("BottomLeft");
             //Assert.AreEqual("4B02E3B3619367AB0CCE9AB8648B508FE5611B1D1B46BD225AB62A90F014BA0D", signature2, "BottomLeft");
 
@@ -87,7 +87,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
                 .Take(p, new SelectionConfiguration(SelectionPosition.Inside), ref change, true);
 
             var signature3 =
-                t3.RenderImage(5000, 5000, ScaleMode.NONE, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.Context.X + "\n" + z.Context.Y)))
+                t3.RenderImage(5000, 5000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.Context.X + "\n" + z.Context.Y)), null)
                     .Item.GetSignature("BottomRight");
 
             // Assert.AreEqual("0ED609DCF12112DCFDDAEC61C32DBEB9874B347C3E5305CA545A5D6795F8DA31", signature3, "BottomRight");
@@ -97,7 +97,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
                 .Take(p, new SelectionConfiguration(SelectionPosition.Inside), ref change, true);
 
             var signature4 =
-                t4.RenderImage(5000, 5000, ScaleMode.NONE, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.Context.X + "\n" + z.Context.Y)))
+                t4.RenderImage(5000, 5000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.Context.X + "\n" + z.Context.Y)), null)
                     .Item.GetSignature("TopRight");
 
             // Assert.AreEqual("70CEDF7E06EE71F13DC5844E3ECC5F897501BD8356B3FF6EE60430B23781ECA6", signature4, "TopRight");

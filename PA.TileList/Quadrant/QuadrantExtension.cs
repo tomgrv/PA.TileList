@@ -66,62 +66,6 @@ namespace PA.TileList.Quadrant
 
         #endregion
 
-        #region Fill
-        [Obsolete]
-        public static void Fill<T, U>(this IQuadrant<T> zl, ushort SizeX, ushort SizeY, Func<Coordinate, T> filler,
-                    Quadrant q, double ShiftX = 0, double ShiftY = 0, bool overwrite = false)
-                    where T : class, ICoordinate
-                    where U : T
-        {
-            int StartX;
-            int StartY;
-
-            switch (q)
-            {
-                case Quadrant.Array:
-                    StartX = 0;
-                    StartY = 0;
-                    break;
-
-                case Quadrant.TopRight:
-                    StartX = Convert.ToInt32(ShiftX - SizeX / 2d - 0.1d);
-                    StartY = Convert.ToInt32(ShiftY - SizeY / 2d - 0.1d);
-                    throw new NotImplementedException("Quadrant not VERIFIED");
-
-                case Quadrant.TopLeft:
-                    StartX = Convert.ToInt32(ShiftX - SizeX / 2d - 0.1d);
-                    StartY = Convert.ToInt32(ShiftY - SizeY / 2d + 0.1d);
-                    throw new NotImplementedException("Quadrant not VERIFIED");
-
-                case Quadrant.BottomLeft:
-                    StartX = Convert.ToInt32(ShiftX - SizeX / 2d + 0.1d);
-                    StartY = Convert.ToInt32(ShiftY - SizeY / 2d + 0.1d);
-                    break;
-
-                case Quadrant.BottomRight:
-                    StartX = Convert.ToInt32(ShiftX - SizeX / 2d + 0.1d);
-                    StartY = Convert.ToInt32(ShiftY - SizeY / 2d - 0.1d);
-                    throw new NotImplementedException("Quadrant not VERIFIED");
-
-                default:
-                    throw new NotSupportedException("Quadrant not supported");
-            }
-
-            for (var i = StartX; i < StartX + SizeX; i++)
-                for (var j = StartY; j < StartY + SizeY; j++)
-                {
-                    var item = zl.FirstOrDefault<IQuadrant<T>, T>(i, j);
-
-                    if ((item != null) && overwrite)
-                        zl.Remove(item);
-
-                    if ((item == null) || overwrite)
-                        zl.Add(filler(new Coordinate(i, j)));
-                }
-        }
-
-        #endregion
-
         public static string ToString<R, T>(this R zl)
             where R : IQuadrant<T>
             where T : ICoordinate

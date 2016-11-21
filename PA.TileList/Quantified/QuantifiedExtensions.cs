@@ -54,13 +54,8 @@ namespace PA.TileList.Quantified
         ///     Groups the elements by comptuting points satisfying predicate
         ///     Each element is divided into pointsInX*pointsInY points, each of them submitted to predicate
         /// </summary>
-        /// <returns>Elements grouped by comptuting points satisfying preicate</returns>
-        /// <param name="tile">Tile.</param>
-        /// <param name="resolution">Resolution per element <P> on X. Must be >1</param>
-        /// <param name="predicate">Predicate.</param>
-        /// <typeparam name="P">The 1st type parameter.</typeparam>
         public static IEnumerable<IGrouping<float, P>> GroupByPercent<P>(this IQuantifiedTile<P> tile, ISelectionProfile profile,
- SelectionConfiguration config, bool fullSize = false)
+                    SelectionConfiguration config, bool fullSize = false)
             where P : ICoordinate
         {
 
@@ -78,24 +73,14 @@ namespace PA.TileList.Quantified
         /// </summary>
         /// <returns>Elements grouped by comptuting points satisfying predicate</returns>
         /// <param name="tile">Tile.</param>
-        /// <param name="pointsInY">Number of computing points per element <P> on X. Must be >1</param>
-        /// <param name="pointsInY">Number of computing points per element <P> in Y. Must be >1</param>
-        /// <param name="predicate">Predicate.</param>
-        /// <typeparam name="P">The 1st type parameter.</typeparam>
-        public static IEnumerable<IGrouping<int, P>> GroupByPoints<P>(this IQuantifiedTile<P> tile, int pointsInX,
-            int pointsInY, Func<double, double, bool> predicate, bool polarCoordinates = false)
+        public static IEnumerable<IGrouping<int, P>> GroupByPoints<P>(this IQuantifiedTile<P> tile, ISelectionProfile profile,
+                    SelectionConfiguration config, bool fullSize = false)
             where P : ICoordinate
         {
-            Contract.Requires(pointsInX > 1);
-            Contract.Requires(pointsInY > 1);
-            Contract.Requires(predicate != null);
+            Contract.Requires(profile != null);
+            Contract.Requires(config != null);
 
-            var stepSizeX = 1d / (pointsInX - 1);
-            var stepSizeY = 1d / (pointsInY - 1);
-
-            return
-                tile.GroupBy(
-                    c => c.CountPoints(tile, pointsInX, pointsInY, stepSizeX, stepSizeY, predicate, polarCoordinates));
+            return tile.GroupBy(c => c.CountPoints(tile, profile, config, fullSize));
         }
 
 
