@@ -52,35 +52,35 @@ namespace PA.TileList.Drawing.Graphics2D
 
     public class RectangleD<T> : RectangleD
     {
-        public RectangleD(T item, float x, float y, float width, float height, ScaleMode mode = ScaleMode.NONE)
+        public RectangleD(T item, float x, float y, float width, float height, ScaleMode mode = ScaleMode.STRETCH)
             : base(x, y, width, height)
         {
             this.Item = item;
             this.Mode = mode;
         }
 
-        public RectangleD(T item, PointF p, SizeF s, ScaleMode mode = ScaleMode.NONE)
+        public RectangleD(T item, PointF p, SizeF s, ScaleMode mode = ScaleMode.STRETCH)
             : base(p, s)
         {
             this.Item = item;
             this.Mode = mode;
         }
 
-        public RectangleD(T item, RectangleD portion, ScaleMode mode = ScaleMode.NONE)
+        public RectangleD(T item, RectangleD portion, ScaleMode mode = ScaleMode.STRETCH)
             : base(portion.Outer, portion.Inner)
         {
             this.Item = item;
             this.Mode = mode;
         }
 
-        public RectangleD(T item, RectangleF inner, ScaleMode mode = ScaleMode.NONE)
+        public RectangleD(T item, RectangleF inner, ScaleMode mode = ScaleMode.STRETCH)
             : base(inner)
         {
             this.Item = item;
             this.Mode = mode;
         }
 
-        public RectangleD(T item, RectangleF outer, RectangleF inner, ScaleMode mode = ScaleMode.NONE)
+        public RectangleD(T item, RectangleF outer, RectangleF inner, ScaleMode mode = ScaleMode.STRETCH)
             : base(outer, inner)
         {
             this.Item = item;
