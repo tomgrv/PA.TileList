@@ -39,6 +39,8 @@ namespace PA.TileList.Tests.Utils
             : base(x, y)
         {
             this.Color = c;
+            this._changed = new Dictionary<object, bool>();
+            this._default = false;
         }
 
         public Color Color { get; set; }

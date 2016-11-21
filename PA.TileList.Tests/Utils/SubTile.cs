@@ -54,24 +54,24 @@ namespace PA.TileList.Tests.Utils
         public SubTile(IZone a, Item t)
             : base(a, t)
         {
-
-
-
+            this._changed = new Dictionary<object, bool>();
+            this._default = false;
         }
 
         public SubTile(Tile<Item> t, Quadrant.Quadrant q)
             : base(t)
         {
 
-
+            this._changed = new Dictionary<object, bool>();
+            this._default = false;
             this.Quadrant = q;
         }
 
         public SubTile(IEnumerable<Item> t, int referenceIndex = 0)
             : base(t, referenceIndex)
         {
-
-
+            this._changed = new Dictionary<object, bool>();
+            this._default = false;
         }
 
         #region Cache
