@@ -1,6 +1,8 @@
 
 # PA.TileList
 
+[![Build status](https://ci.appveyor.com/api/projects/status/v9eb4cx999xne88h?svg=true)](https://ci.appveyor.com/project/perspicapps/pa-tilelist)
+
 Handle 2-dimensionnal arrays, with extensions for:
 
 - Imbrication (array of arrays)
