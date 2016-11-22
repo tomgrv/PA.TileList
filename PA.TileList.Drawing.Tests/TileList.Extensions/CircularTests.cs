@@ -196,7 +196,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             q.Reference.Context.Color = Color.Pink;
 
-            var i = q.RenderImage(5000, 2000,, new RectangleF(-2000, -2000, 4000, 4000), ScaleMode.XYRATIO | ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y), Pens.Red, Pens.Blue), null);
+            var i = q.RenderImage(5000, 2000, new RectangleF(-2000, -2000, 4000, 4000), ScaleMode.XYRATIO | ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y), Pens.Red, Pens.Blue), null);
             var pi = p.RenderImage(i, new CircularProfileRenderer(Pens.Red, Pens.Aquamarine, Pens.Green), null);
 
             var signature = pi.Item.GetSignature();
