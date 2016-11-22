@@ -89,6 +89,7 @@ namespace PA.TileList.Tests.Utils
 
             using (var g = Graphics.FromImage(b))
             {
+                g.Clip = new Region(new RectangleF(0, 0, w, h));
                 this.Draw(g, s);
             }
 
