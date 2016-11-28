@@ -30,6 +30,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using PA.TileList.Linear;
 using PA.TileList.Quantified;
+using PA.TileList.Tile;
 
 namespace PA.TileList.Selection
 {
@@ -41,22 +42,21 @@ namespace PA.TileList.Selection
                 SelectionConfiguration config, bool fullSize = false)
                 where T : class, ICoordinate
         {
-            var l = tile.Where(c => config.SelectionType.HasFlag(c.Position(tile, profile, config, fullSize)));
+            var l = tile.Take(profile, config, fullSize);
             tile.RemoveAll(tile.Except(l));
         }
 
-        public static IEnumerable<Coordinate> SelectCoordinates<T>(this IQuantifiedTile<T> list,
+        public static IEnumerable<Coordinate> SelectCoordinates(this IQuantifiedTile list,
                 ISelectionProfile profile, SelectionConfiguration config, bool fullsize = true)
-                where T : ICoordinate
         {
             return list.Zone.Where(c => config.SelectionType.HasFlag(c.Position(list, profile, config, fullsize)));
         }
 
         #endregion
 
-        #region Take
+        #region IQuantifiedTile
 
-        public static IQuantifiedTile<T> Take<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
+        public static QuantifiedTile<T> Filter<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
             SelectionConfiguration config, bool fullSize = false)
             where T : class, ICoordinate
         {
@@ -65,9 +65,35 @@ namespace PA.TileList.Selection
             return q;
         }
 
+        public static IEnumerable<T> Take<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
+            SelectionConfiguration config, bool fullSize = false)
+            where T : class, ICoordinate
+        {
+            return tile.Where(c => config.SelectionType.HasFlag(c.Position(tile, profile, config, fullSize))); ;
+        }
+
         #endregion
 
+        #region ITile
 
+        public static Tile<T> Filter<T>(this ITile<T> tile, ISelectionProfile profile,
+            SelectionConfiguration config, bool fullSize = false)
+            where T : class, ICoordinate
+        {
+            var q = new QuantifiedTile<T>(tile);
+            q.Selection(profile, config, fullSize);
+            return q.ToTile(q.IndexOf(q.Reference));
+        }
+
+        public static IEnumerable<T> Take<T>(this ITile<T> tile, ISelectionProfile profile,
+            SelectionConfiguration config, bool fullSize = false)
+            where T : class, ICoordinate
+        {
+            var q = new QuantifiedTile<T>(tile);
+            return q.Where(c => config.SelectionType.HasFlag(c.Position(q, profile, config, fullSize))); ;
+        }
+
+        #endregion
 
 
         #region Helpers

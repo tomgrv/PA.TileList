@@ -142,7 +142,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             var r2 = new Rectangle(-525, -525, 500, 10);
             var r3 = new Rectangle(-450, -450, 20, 20);
 
-            var q = tile.Take(p, new SelectionConfiguration(SelectionPosition.Inside), true);
+            var q = tile.Filter(p, new SelectionConfiguration(SelectionPosition.Inside), true);
 
             var i = q.RenderImage(5000, 5000, ScaleMode.ALL, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y),
                 Pens.Crimson), null);

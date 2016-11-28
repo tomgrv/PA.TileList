@@ -111,7 +111,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             var change = tile.Reference;
 
-            var q = tile.Take(p, new SelectionConfiguration(SelectionPosition.Inside), true);
+            var q = tile.Filter(p, new SelectionConfiguration(SelectionPosition.Inside), true);
 
             q.Reference.Context.Color = Color.Pink;
 
@@ -145,7 +145,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             var change = tile.Reference;
 
-            var q = tile.Take(p, new SelectionConfiguration(SelectionPosition.Inside), true);
+            var q = tile.Filter(p, new SelectionConfiguration(SelectionPosition.Inside), true);
 
             //var i = q.GetImage(5000, 5000, (z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y));
             //var pi = p.GetImage(i);
@@ -189,7 +189,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             var change = tile.Reference;
 
-            var q = tile.Take(p, new SelectionConfiguration(SelectionPosition.Under), true);
+            var q = tile.Filter(p, new SelectionConfiguration(SelectionPosition.Under), true);
 
             Assert.AreNotEqual(change, q.Reference, "Reference Changed");
             Assert.IsNotNull(q.Reference, "Reference is null");
@@ -220,7 +220,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             var change = tile.Reference;
 
-            var q = tile.Take(p, new SelectionConfiguration(SelectionPosition.Outside), true);
+            var q = tile.Filter(p, new SelectionConfiguration(SelectionPosition.Outside), true);
 
             Assert.IsNotNull(q.Reference, "Reference is null");
             Assert.AreNotEqual(q.Reference, change, "Reference Changed");

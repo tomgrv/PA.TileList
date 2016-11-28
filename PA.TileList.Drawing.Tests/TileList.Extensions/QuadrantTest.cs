@@ -64,7 +64,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             var p = CircularTests.GetTestProfile(1400);
 
 
-            var t1 = t.Take(p, new SelectionConfiguration(SelectionPosition.Inside), true);
+            var t1 = t.Filter(p, new SelectionConfiguration(SelectionPosition.Inside), true);
 
 
             var signature1 =
@@ -74,7 +74,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             var t2 = t
                 .ChangeQuadrant(Quadrant.Quadrant.TopLeft, Quadrant.Quadrant.BottomLeft)
-                .Take(p, new SelectionConfiguration(SelectionPosition.Inside), true);
+                .Filter(p, new SelectionConfiguration(SelectionPosition.Inside), true);
 
             var signature2 =
                 t2.RenderImage(5000, 5000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.Context.X + "\n" + z.Context.Y)), null)
@@ -83,7 +83,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             var t3 = t
                 .ChangeQuadrant(Quadrant.Quadrant.TopLeft, Quadrant.Quadrant.BottomRight)
-                .Take(p, new SelectionConfiguration(SelectionPosition.Inside), true);
+                .Filter(p, new SelectionConfiguration(SelectionPosition.Inside), true);
 
             var signature3 =
                 t3.RenderImage(5000, 5000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.Context.X + "\n" + z.Context.Y)), null)
@@ -93,7 +93,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             var t4 = t
                 .ChangeQuadrant(Quadrant.Quadrant.TopLeft, Quadrant.Quadrant.TopRight)
-                .Take(p, new SelectionConfiguration(SelectionPosition.Inside), true);
+                .Filter(p, new SelectionConfiguration(SelectionPosition.Inside), true);
 
             var signature4 =
                 t4.RenderImage(5000, 5000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.Context.X + "\n" + z.Context.Y)), null)
