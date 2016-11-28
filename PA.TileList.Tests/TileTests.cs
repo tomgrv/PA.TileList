@@ -44,7 +44,7 @@ namespace PA.TileList.Tests
             Assert.AreEqual("25,30;75,60", t1.GetZone().ToString(), "Area");
 
 
-            var crop2 = t0.Take(t => t.Color != Color.Yellow);
+            var crop2 = t0.TakeWhile(t => t.Color != Color.Yellow);
             var t2 = new Tile<Item>(crop2);
 
             //string signature2 = t2.AsQuantified().GetImage(1000, 1000, (z, s) =>

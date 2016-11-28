@@ -81,15 +81,20 @@ namespace PA.TileList.Cropping
         public static void Crop<T>(this ITile<T> tile, IZone a)
             where T : class, ICoordinate
         {
-            var l = tile.Where(e => a.Contains(e));
+            var l = tile.Take(a);
             tile.RemoveAll(tile.Except(l));
+        }
+
+        public static IEnumerable<Coordinate> SelectCoordinates(this ITile list, IZone a)
+        {
+            return list.Zone.Where(e => a.Contains(e));
         }
 
         #endregion
 
         #region Take IQuantifiedTile
 
-        public static QuantifiedTile<T> Take<T>(this IQuantifiedTile<T> tile, IZone a)
+        public static QuantifiedTile<T> Filter<T>(this IQuantifiedTile<T> tile, IZone a)
            where T : class, ICoordinate
         {
             var q = new QuantifiedTile<T>(tile);
@@ -97,7 +102,7 @@ namespace PA.TileList.Cropping
             return q;
         }
 
-        public static QuantifiedTile<T> Take<T>(this IQuantifiedTile<T> list, Func<T, bool> predicate)
+        public static IEnumerable<T> TakeWhile<T>(this IQuantifiedTile<T> list, Func<T, bool> predicate)
             where T : class, ICoordinate
         {
             return list.Take(list.GetCroppingZone(predicate));
@@ -108,7 +113,7 @@ namespace PA.TileList.Cropping
         #region Take ITile
 
 
-        public static Tile<T> Take<T>(this ITile<T> tile, IZone a)
+        public static Tile<T> Filter<T>(this ITile<T> tile, IZone a)
             where T : class, ICoordinate
         {
             var q = new Tile<T>(tile);
@@ -116,7 +121,7 @@ namespace PA.TileList.Cropping
             return q;
         }
 
-        public static Tile<T> Take<T>(this ITile<T> list, Func<T, bool> predicate)
+        public static IEnumerable<T> TakeWhile<T>(this ITile<T> list, Func<T, bool> predicate)
             where T : class, ICoordinate
         {
             return list.Take(list.GetCroppingZone(predicate));
@@ -132,7 +137,7 @@ namespace PA.TileList.Cropping
             return list.Where(e => a.Contains(e));
         }
 
-        public static IEnumerable<T> Take<T>(this IEnumerable<T> list, Func<T, bool> predicate)
+        public static IEnumerable<T> TakeWhile<T>(this IEnumerable<T> list, Func<T, bool> predicate)
             where T : ICoordinate
         {
             return list.Take(list.GetCroppingZone(predicate));

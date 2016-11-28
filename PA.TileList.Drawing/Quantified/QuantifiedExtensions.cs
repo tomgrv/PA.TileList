@@ -59,17 +59,15 @@ namespace PA.TileList.Drawing.Quantified
         /// <param name="inner">Inner.</param>
         /// <param name="strict">If set to <c>true</c> strict.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        public static IEnumerable<Coordinate> GetCoordinatesIn<T>(this IQuantifiedTile<T> list, RectangleF inner,
+        public static IEnumerable<Coordinate> GetCoordinatesIn(this IQuantifiedTile list, RectangleF inner,
             bool strict = false)
-            where T : ICoordinate
         {
             var sc =
                 new SelectionConfiguration(strict
                     ? SelectionPosition.Inside
                     : SelectionPosition.Inside | SelectionPosition.Under);
 
-            return list.SelectCoordinates(new RectangularProfile(inner.Left, inner.Top, inner.Right, inner.Bottom), sc,
-                true);
+            return list.SelectCoordinates(new RectangularProfile(inner.Left, inner.Top, inner.Right, inner.Bottom), sc, true);
         }
 
         #endregion

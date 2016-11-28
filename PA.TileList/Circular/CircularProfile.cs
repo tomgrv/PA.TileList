@@ -46,8 +46,8 @@ namespace PA.TileList.Circular
             if (this._ordered == null)
             {
                 this._ordered = this._profile.OrderBy(p => p.Angle).ToArray();
-                this._maxRadius2 = Math.Pow(this._profile.Max(p => p.Radius), 2);
-                this._minRadius2 = Math.Pow(this._profile.Min(p => p.Radius), 2);
+                this._maxRadius2 = Math.Pow(this._ordered.Max(p => p.Radius), 2);
+                this._minRadius2 = Math.Pow(this._ordered.Min(p => p.Radius), 2);
             }
         }
 
