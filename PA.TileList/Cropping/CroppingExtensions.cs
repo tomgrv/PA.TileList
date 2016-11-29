@@ -102,10 +102,12 @@ namespace PA.TileList.Cropping
             return q;
         }
 
-        public static IEnumerable<T> TakeWhile<T>(this IQuantifiedTile<T> list, Func<T, bool> predicate)
-            where T : class, ICoordinate
+        public static QuantifiedTile<T> Filter<T>(this IQuantifiedTile<T> tile, Func<T, bool> predicate)
+         where T : class, ICoordinate
         {
-            return list.Take(list.GetCroppingZone(predicate));
+            var q = new QuantifiedTile<T>(tile);
+            q.Crop(tile.GetCroppingZone(predicate));
+            return q;
         }
 
         #endregion
@@ -121,10 +123,12 @@ namespace PA.TileList.Cropping
             return q;
         }
 
-        public static IEnumerable<T> TakeWhile<T>(this ITile<T> list, Func<T, bool> predicate)
-            where T : class, ICoordinate
+        public static Tile<T> Filter<T>(this ITile<T> tile, Func<T, bool> predicate)
+           where T : class, ICoordinate
         {
-            return list.Take(list.GetCroppingZone(predicate));
+            var q = new Tile<T>(tile);
+            q.Crop(tile.GetCroppingZone(predicate));
+            return q;
         }
 
         #endregion
