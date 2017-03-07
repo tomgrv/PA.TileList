@@ -150,10 +150,10 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PA.Utilities">
-      <HintPath>..\packages\PA.Utilities.5.0.1\lib\portable45-net45+win8+wpa81\PA.Utilities.dll</HintPath>
+      <HintPath>..\packages\PA.Utilities.5.2.1\lib\portable45-net45+win8+wpa81\PA.Utilities.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Import Project="..\packages\GitVersionTask.3.6.4\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets" Condition="Exists('..\packages\GitVersionTask.3.6.4\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets')" />
+  <Import Project="..\packages\GitVersionTask.3.6.5\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets" Condition="Exists('..\packages\GitVersionTask.3.6.5\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets')" />
 </Project>
