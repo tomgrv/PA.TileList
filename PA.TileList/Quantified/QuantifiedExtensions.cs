@@ -84,6 +84,24 @@ namespace PA.TileList.Quantified
         }
 
 
+		/// <summary>
+		/// Gets the center coordinate
+		/// </summary>
+		/// <returns>The center coordinate</returns>
+		/// <param name="tile">IQuantifiedTile</param>
+		/// <typeparam name="T">The 1st type parameter.</typeparam>
+		public static Coordinate GetCenter<T>(this IQuantifiedTile<T> tile)
+			where T : ICoordinate
+		{
+			Coordinate center = tile.Reference.ToCoordinate();
+
+			center.X -= (int)Math.Round(tile.RefOffsetX / tile.ElementStepX, 0);
+			center.Y -= (int)Math.Round(tile.RefOffsetY / tile.ElementStepY, 0);
+
+			return center;
+		}
+
+
         /// <summary>
         ///     Count points of element c that specifies predicate within tile
         /// </summary>
