@@ -376,17 +376,20 @@ namespace PA.TileList.Tile
         public void SetReference(ICoordinate reference)
         {
             Contract.Requires(reference != null);
-            Contract.Requires(!this.Contains(reference));
+            Contract.Requires(this.Contains(reference));
 
-            this.Reference = this.Find(reference);
+			this.SetReference(this.Find(reference));
         }
 
         public virtual void SetReference(T reference)
         {
             Contract.Requires(reference != null);
-            Contract.Requires(!this.Contains(reference));
+            Contract.Requires(this.Contains(reference));
 
-            this.Reference = reference;
+			if (this.Contains(reference))
+			{
+				this.Reference = reference;
+			}
         }
 
         #endregion
