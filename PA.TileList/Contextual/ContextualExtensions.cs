@@ -58,18 +58,22 @@ namespace PA.TileList.Contextual
 			double distX = t.Reference.Reference.X - t.Reference.Zone.Min.X - (t.Reference.Zone.SizeX - 1) / 2f;
 			double distY = t.Reference.Reference.Y - t.Reference.Zone.Min.Y - (t.Reference.Zone.SizeY - 1) / 2f;
 
-			var list =
-				new QuantifiedTile<IContextual<T>>((t as ITile<U>).Flatten<U, T>(predicateU, predicateT),
-					sizeX, sizeY, stepX, stepY, distX * stepX + t.RefOffsetX, distY * stepY + t.RefOffsetY
-				);
+			// Flatten Tile
+			var flatten =  (t as ITile<U>).Flatten<U, T>(predicateU, predicateT);
 
-			list.SetReference(list.Find(reference.X, reference.Y));
+			// Reference correction if needed
+			distX += flatten.Reference.X - reference.X;
+			distY += flatten.Reference.Y - reference.Y;
 
-			return list;
+			// Converted to iquantified
+			return new QuantifiedTile<IContextual<T>>(flatten, sizeX, sizeY, stepX, stepY, 
+												      distX * stepX + t.RefOffsetX,
+			                                          distY * stepY + t.RefOffsetY);
 		}
 
 
-		public static Tile<IContextual<T>> Flatten<U, T>(this ITile<U> t, Func<U, bool> predicateU = null, Func<T, bool> predicateT = null)
+		public static Tile<IContextual<T>> Flatten<U, T>(this ITile<U> t,
+			Func<U, bool> predicateU = null, Func<T, bool> predicateT = null)
 			where U : ITile<T>
 			where T : ICoordinate
 		{
