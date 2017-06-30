@@ -69,7 +69,7 @@ namespace PA.TileList.Geometrics.Extensions
 		}
 
 
-		public static IEnumerable<P> GetHull<P>(IEnumerable<P> list)
+		public static IEnumerable<P> GetHull<P>(this IEnumerable<P> list)
 			where P : ICoordinate
 		{
 			var p = list.OrderBy(t => t.X).GroupBy(t => t.X, (k, g) => g.OrderBy(t => t.Y)).SelectMany(t => t).ToArray();
@@ -82,10 +82,16 @@ namespace PA.TileList.Geometrics.Extensions
 
 			// Get the indices of points with min x-coord and min|max y-coord
 			int minmin = 0, minmax;
-			var xmin = p[0].X;
+
+			var xMin = p[0].X;
+
 			for (i = 1; i < n; i++)
-				if (p[i].X != xmin)
+			{
+				if (p[i].X != xMin)
+				{
 					break;
+				}
+			}
 
 			minmax = i - 1;
 
@@ -94,7 +100,9 @@ namespace PA.TileList.Geometrics.Extensions
 				// degenerate case: all x-coords == xmin
 				h[++top] = p[minmin];
 				if (p[minmax].Y != p[minmin].Y) // a  nontrivial segment
+				{
 					h[++top] = p[minmax];
+				}
 				h[++top] = p[minmin]; // add polygon endpoint
 
 				return h.OfType<P>();
@@ -104,8 +112,12 @@ namespace PA.TileList.Geometrics.Extensions
 			int maxmin, maxmax = n - 1;
 			var xmax = p[n - 1].X;
 			for (i = n - 2; i >= 0; i--)
+			{
 				if (p[i].X != xmax)
+				{
 					break;
+				}
+			}
 			maxmin = i + 1;
 
 			// Compute the lower hull on the stack H
@@ -123,7 +135,9 @@ namespace PA.TileList.Geometrics.Extensions
 					// test if  p[i] is left of the line at the stack top
 					var ot = h[top - 1].GetOrientation(h[top], p[i]);
 					if (ot == Orientation.CounterClockWise)
+					{
 						break; // p[i] is a new hull  vertex
+					}
 					top--; // pop top point off  stack
 				}
 				h[++top] = p[i]; // push p[i] onto stack
@@ -131,7 +145,9 @@ namespace PA.TileList.Geometrics.Extensions
 
 			// Next, compute the upper hull on the stack H above  the bottom hull
 			if (maxmax != maxmin) // if  distinct xmax points
+			{
 				h[++top] = p[maxmax]; // push maxmax point onto stack
+			}
 
 			bot = top; // the bottom point of the upper hull stack
 			i = maxmin;
@@ -169,13 +185,13 @@ namespace PA.TileList.Geometrics.Extensions
 			foreach (var t0 in GetHull(list))
 			{
 				var t1 = list.Where(t => t.X == t0.X).OrderBy(t => Math.Abs(t.DistanceTo(t0))).LastOrDefault();
-				if (t1 == null) continue;
+				if (t1.Equals(default(P))) continue;
 
 				var t2 = list.Where(t => t.Y == t1.Y).OrderBy(t => Math.Abs(t.DistanceTo(t1))).LastOrDefault();
-				if (t2 == null) continue;
+				if (t2.Equals(default(P))) continue;
 
 				var t3 = list.Where(t => (t.X == t2.X) && (t.Y == t0.Y)).FirstOrDefault();
-				if (t3 == null) continue;
+				if (t3.Equals(default(P))) continue;
 
 				var tmp_square = new[] { t0, t1, t2, t3 };
 
@@ -194,10 +210,9 @@ namespace PA.TileList.Geometrics.Extensions
 		public static Coordinate GetCenter<T>(this IEnumerable<T> list, Func<T, bool> predicate)
 			where T : ICoordinate
 		{
-
 			var cX = 0f;
 			var cY = 0f;
-			float count = list.Count();
+			var count = list.Count();
 
 			foreach (var p in list)
 			{
@@ -206,10 +221,16 @@ namespace PA.TileList.Geometrics.Extensions
 			}
 
 			return new Coordinate((int)Math.Round(cX / count, 0), (int)Math.Round(cY / count, 0));
-
 		}
 
 
+		/// <summary>
+		/// Gets the center (barycenter) of ĉoordinates list
+		/// </summary>
+		/// <returns>The center.</returns>
+		/// <param name="list">List.</param>
+		/// <param name="predicate">Predicate.</param>
+		/// <typeparam name="T">ICoordinate</typeparam>
 		public static Coordinate GetCenter<T>(this IEnumerable<KeyValuePair<T, float>> list, Func<T, bool> predicate)
 			where T : ICoordinate
 		{
@@ -224,45 +245,6 @@ namespace PA.TileList.Geometrics.Extensions
 			}
 
 			return new Coordinate((int)Math.Round(cX / count, 0), (int)Math.Round(cY / count, 0));
-		}
-
-		public static IEnumerable<T> GetPerimeter<T>(this IEnumerable<T> list, Func<T, bool> predicate)
-			where T : ICoordinate
-		{
-			T[] data = list.Where(predicate).ToArray();
-
-			Dictionary<T, double> DistanceToCenter = new Dictionary<T, double>();
-
-			Coordinate center = list.GetCenter(predicate);
-
-			for (int i = 0; i < data.Length; i++)
-			{
-				DistanceToCenter.Add(data[i], data[i].DistanceTo(center));
-			}
-
-			T[] OrderedDistanceToCenter = DistanceToCenter.OrderByDescending(c => c.Value).Select(c => c.Key).ToArray();
-
-
-			int current = 0;
-			bool first = true;
-
-			while (first || !OrderedDistanceToCenter[0].Equals(OrderedDistanceToCenter[current]))
-			{
-				yield return OrderedDistanceToCenter[current];
-
-				int next = OrderedDistanceToCenter.Length - 1;
-
-				for (int i = 0; i < OrderedDistanceToCenter.Length; i++)
-				{
-					if (OrderedDistanceToCenter[current].GetOrientation(OrderedDistanceToCenter[next], OrderedDistanceToCenter[i]) == Orientation.ClockWise)
-					{
-						next = i;
-					}
-				}
-
-				current = next;
-				first = false;
-			}
 		}
 	}
 }

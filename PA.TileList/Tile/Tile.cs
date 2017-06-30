@@ -376,7 +376,6 @@ namespace PA.TileList.Tile
         public void SetReference(ICoordinate reference)
         {
             Contract.Requires(reference != null);
-            Contract.Requires(this.Contains(reference));
 
 			this.SetReference(this.Find(reference));
         }
