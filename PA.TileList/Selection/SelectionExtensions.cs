@@ -1,4 +1,4 @@
-﻿//
+//
 // SelectionExtensions.cs
 //
 // Author:
@@ -34,194 +34,257 @@ using PA.TileList.Tile;
 
 namespace PA.TileList.Selection
 {
-    public static class SelectionExtensions
-    {
-        #region Select 
+	public static class SelectionExtensions
+	{
+		#region Select 
 
-        public static void Selection<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
-                SelectionConfiguration config, bool fullSize = false)
-                where T : class, ICoordinate
-        {
-            var l = tile.Take(profile, config, fullSize);
-            tile.RemoveAll(tile.Except(l));
-        }
+		/// <summary>
+		/// Selects the coordinates.
+		/// </summary>
+		/// <returns>The coordinates.</returns>
+		/// <param name="tile">List.</param>
+		/// <param name="profile">Profile.</param>
+		/// <param name="config">Config.</param>
+		/// <param name="fullsize">If set to <c>true</c> fullsize.</param>
+		public static IEnumerable<Coordinate> SelectCoordinates(this IQuantifiedTile tile,
+				ISelectionProfile profile, SelectionConfiguration config, bool fullsize = true)
+		{
+			Contract.Requires(tile != null, nameof(tile));
+			Contract.Requires(profile != null, nameof(profile));
+			Contract.Requires(config != null, nameof(config));
 
-        public static IEnumerable<Coordinate> SelectCoordinates(this IQuantifiedTile list,
-                ISelectionProfile profile, SelectionConfiguration config, bool fullsize = true)
-        {
-            return list.Zone.Where(c => config.SelectionType.HasFlag(c.Position(list, profile, config, fullsize)));
-        }
+			return tile.Zone.Where(c => config.SelectionType.HasFlag(c.Position(tile, profile, config, fullsize)));
+		}
 
-        #endregion
+		#endregion
 
-        #region IQuantifiedTile
+		#region IQuantifiedTile
 
-        public static QuantifiedTile<T> Filter<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
-            SelectionConfiguration config, bool fullSize = false)
-            where T : class, ICoordinate
-        {
-            var q = new QuantifiedTile<T>(tile);
-            q.Selection(profile, config, fullSize);
-            return q;
-        }
+		/// <summary>
+		/// Filter from tile according to profile, config and fullSize.
+		/// </summary>
+		/// <returns>The filter.</returns>
+		/// <param name="tile">Tile.</param>
+		/// <param name="profile">Profile.</param>
+		/// <param name="config">Config.</param>
+		/// <param name="fullSize">If set to <c>true</c> full size.</param>
+		/// <typeparam name="T">The 1st type parameter.</typeparam>
+		public static QuantifiedTile<T> Filter<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
+			SelectionConfiguration config, bool fullSize = false)
+			where T : class, ICoordinate
+		{
+			Contract.Requires(tile != null, nameof(tile));
+			Contract.Requires(profile != null, nameof(profile));
+			Contract.Requires(config != null, nameof(config));
 
-        public static IEnumerable<T> Take<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
-            SelectionConfiguration config, bool fullSize = false)
-            where T : class, ICoordinate
-        {
-            return tile.Where(c => config.SelectionType.HasFlag(c.Position(tile, profile, config, fullSize))); ;
-        }
+			return tile.Except(profile, config, fullSize).ToTile().ToQuantified();
+		}
 
-        #endregion
+		/// <summary>
+		/// Take from tile according to profile, config and fullSize.
+		/// </summary>
+		/// <returns>The take.</returns>
+		/// <param name="tile">Tile.</param>
+		/// <param name="profile">Profile.</param>
+		/// <param name="config">Config.</param>
+		/// <param name="fullSize">If set to <c>true</c> full size.</param>
+		/// <typeparam name="T">The 1st type parameter.</typeparam>
+		public static IEnumerable<T> Take<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
+			SelectionConfiguration config, bool fullSize = false)
+			where T : class, ICoordinate
+		{
+			Contract.Requires(tile != null, nameof(tile));
+			Contract.Requires(profile != null, nameof(profile));
+			Contract.Requires(config != null, nameof(config));
 
-        #region ITile
+			return tile.Where(c => config.SelectionType.HasFlag(c.Position(tile, profile, config, fullSize))); ;
+		}
 
-        public static Tile<T> Filter<T>(this ITile<T> tile, ISelectionProfile profile,
-            SelectionConfiguration config, bool fullSize = false)
-            where T : class, ICoordinate
-        {
-            var q = new QuantifiedTile<T>(tile);
-            q.Selection(profile, config, fullSize);
-            return q.ToTile(q.IndexOf(q.Reference));
-        }
+		public static IEnumerable<T> Except<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
+			SelectionConfiguration config, bool fullSize = false)
+			where T : class, ICoordinate
+		{
+			Contract.Requires(tile != null, nameof(tile));
+			Contract.Requires(profile != null, nameof(profile));
+			Contract.Requires(config != null, nameof(config));
 
-        public static IEnumerable<T> Take<T>(this ITile<T> tile, ISelectionProfile profile,
-            SelectionConfiguration config, bool fullSize = false)
-            where T : class, ICoordinate
-        {
-            var q = new QuantifiedTile<T>(tile);
-            return q.Where(c => config.SelectionType.HasFlag(c.Position(q, profile, config, fullSize))); ;
-        }
+			return tile.Where(c => !config.SelectionType.HasFlag(c.Position(tile, profile, config, fullSize))); 
+		}
 
-        #endregion
-
-
-        #region Helpers
-
-        public static SelectionPosition Position<T>(this T c, IQuantifiedTile tile, ISelectionProfile profile,
-            SelectionConfiguration config, bool fullSize = false)
-            where T : ICoordinate
-        {
-            //// Quick mode / only corners
-            //var quick = c.CountPoints<T>(tile, 2, 2, (xc, yc, xc2, yc2) => profile.Position(xc, yc, xc2, yc2) == SelectionPosition.Inside, fullSize);
-            //if (quick == 4)
-            //    return SelectionPosition.Inside;
-
-            // full mode / follows SelectionConfiguration
-            var points = c.CountPoints(tile, profile, config, fullSize);
-
-            if (points >= config.MinSurface)
-                return SelectionPosition.Inside;
-
-            if (points <= 0)
-                return SelectionPosition.Outside;
-
-            return SelectionPosition.Under;
-        }
-
-        public static int CountPoints<T>(this T c, IQuantifiedTile tile, ISelectionProfile profile,
-            SelectionConfiguration config, bool fullSize = false)
-            where T : ICoordinate
-        {
-            profile.OptimizeProfile();
-
-            return c.CountPoints(tile, config.ResolutionX, config.ResolutionY,
-                (xc, yc, xc2, yc2) => profile.Position(xc, yc, xc2, yc2) == SelectionPosition.Inside, fullSize);
-        }
-
-        public static int CountPoints<T>(this T c, IQuantifiedTile tile, int pointsInX, int pointsInY,
-            Func<double, double, double, double, bool> predicate, bool fullSize = false)
-            where T : ICoordinate
-        {
-            var points = 0;
-
-            c.GetPoints(tile, pointsInX, pointsInY, (xc, yc, xc2, yc2) => points += predicate(xc, yc, xc2, yc2) ? 1 : 0,
-                fullSize);
-
-            return points;
-        }
+		#endregion
 
 
-        public static void GetBounds<T>(this T c, IQuantifiedTile tile,
-         Action<double, double, double, double> predicate, bool fullSize = false)
-         where T : ICoordinate
-        {
-            var xMin = double.MaxValue;
-            var yMin = double.MaxValue;
-            var xMax = double.MinValue;
-            var yMax = double.MinValue;
+		#region Helpers
 
-            c.GetPoints(tile, 2, 2, (xc, yc, xc2, yc2) =>
-            {
-                if (xc < xMin)
-                    xMin = xc;
-                if (xc > xMax)
-                    xMax = xc;
-                if (yc < yMin)
-                    yMin = yc;
-                if (yc > yMax)
-                    yMax = yc;
-            }, fullSize);
+		/// <summary>
+		/// Position the specified c within tile according to profile, config and fullSize.
+		/// </summary>
+		/// <returns>The position.</returns>
+		/// <param name="c">C.</param>
+		/// <param name="tile">Tile.</param>
+		/// <param name="profile">Profile.</param>
+		/// <param name="config">Config.</param>
+		/// <param name="fullSize">If set to <c>true</c> full size.</param>
+		/// <typeparam name="T">The 1st type parameter.</typeparam>
+		public static SelectionPosition Position<T>(this T c, IQuantifiedTile tile, ISelectionProfile profile,
+			SelectionConfiguration config, bool fullSize = false)
+			where T : ICoordinate
+		{
+			Contract.Requires(tile != null, nameof(tile));
+			Contract.Requires(profile != null, nameof(profile));
+			Contract.Requires(config != null, nameof(config));
 
-            predicate(xMin, yMin, xMax, yMax);
-        }
+			// full mode / follows SelectionConfiguration
+			var points = c.CountPoints(tile, profile, config, fullSize);
+
+			if (points >= config.MinSurface)
+				return SelectionPosition.Inside;
+
+			if (points <= 0)
+				return SelectionPosition.Outside;
+
+			return SelectionPosition.Under;
+		}
+
+		/// <summary>
+		/// Counts the points.
+		/// </summary>
+		/// <returns>The points.</returns>
+		/// <param name="c">C.</param>
+		/// <param name="tile">Tile.</param>
+		/// <param name="profile">Profile.</param>
+		/// <param name="config">Config.</param>
+		/// <param name="fullSize">If set to <c>true</c> full size.</param>
+		/// <typeparam name="T">The 1st type parameter.</typeparam>
+		public static uint CountPoints<T>(this T c, IQuantifiedTile tile, ISelectionProfile profile,
+			SelectionConfiguration config, bool fullSize = false)
+			where T : ICoordinate
+		{
+			Contract.Requires(tile != null, nameof(tile));
+			Contract.Requires(profile != null, nameof(profile));
+			Contract.Requires(config != null, nameof(config));
+
+			profile.OptimizeProfile();
+
+			return c.CountPoints(tile, config.ResolutionX, config.ResolutionY,
+				(xc, yc, xc2, yc2) => profile.Position(xc, yc, xc2, yc2) == SelectionPosition.Inside, fullSize);
+		}
+
+		/// <summary>
+		/// Counts the points.
+		/// </summary>
+		/// <returns>The points.</returns>
+		/// <param name="c">C.</param>
+		/// <param name="tile">Tile.</param>
+		/// <param name="pointsInX">Points in x.</param>
+		/// <param name="pointsInY">Points in y.</param>
+		/// <param name="predicate">Predicate.</param>
+		/// <param name="fullSize">If set to <c>true</c> full size.</param>
+		/// <typeparam name="T">The 1st type parameter.</typeparam>
+		public static uint CountPoints<T>(this T c, IQuantifiedTile tile, int pointsInX, int pointsInY,
+			Func<double, double, double, double, bool> predicate, bool fullSize = false)
+			where T : ICoordinate
+		{
+			Contract.Requires(tile != null);
+			Contract.Requires(predicate != null);
+			Contract.Requires(pointsInX >= 2, nameof(pointsInX));
+			Contract.Requires(pointsInY >= 2, nameof(pointsInY));
+
+			var points = 0u;
+
+			c.GetPoints(tile, pointsInX, pointsInY, (xc, yc, xc2, yc2) => points += predicate(xc, yc, xc2, yc2) ? 1u : 0u,
+				fullSize);
+
+			return points;
+		}
+
+		/// <summary>
+		/// Gets the bounds.
+		/// </summary>
+		/// <param name="c">C.</param>
+		/// <param name="tile">Tile.</param>
+		/// <param name="predicate">Predicate.</param>
+		/// <param name="fullSize">If set to <c>true</c> full size.</param>
+		/// <typeparam name="T">The 1st type parameter.</typeparam>
+		public static void GetBounds<T>(this T c, IQuantifiedTile tile,
+		 Action<double, double, double, double> predicate, bool fullSize = false)
+		 where T : ICoordinate
+		{
+			Contract.Requires(tile != null, nameof(tile));
+			Contract.Requires(predicate != null, nameof(predicate));
+
+			var xMin = double.MaxValue;
+			var yMin = double.MaxValue;
+			var xMax = double.MinValue;
+			var yMax = double.MinValue;
+
+			c.GetPoints(tile, 2, 2, (xc, yc, xc2, yc2) =>
+			{
+				if (xc < xMin)
+					xMin = xc;
+				if (xc > xMax)
+					xMax = xc;
+				if (yc < yMin)
+					yMin = yc;
+				if (yc > yMax)
+					yMax = yc;
+			}, fullSize);
+
+			predicate(xMin, yMin, xMax, yMax);
+		}
 
 
-        /// <summary>
-        ///     Gets the points.
-        /// </summary>
-        /// <param name="c">C.</param>
-        /// <param name="tile">Tile.</param>
-        /// <param name="pointsInX">Points in x.</param>
-        /// <param name="pointsInY">Points in y.</param>
-        /// <param name="predicate">Predicate.</param>
-        /// <param name="fullSize">If set to <c>true</c> full size.</param>
-        /// <typeparam name="T">ICoordinate</typeparam>
-        public static void GetPoints<T>(this T c, IQuantifiedTile tile, int pointsInX, int pointsInY,
-            Action<double, double, double, double> predicate, bool fullSize = false)
-            where T : ICoordinate
-        {
-            Contract.Requires(tile != null);
-            Contract.Requires(predicate != null);
+		/// <summary>
+		///     Gets the points.
+		/// </summary>
+		/// <param name="c">C.</param>
+		/// <param name="tile">Tile.</param>
+		/// <param name="pointsInX">Points in x.</param>
+		/// <param name="pointsInY">Points in y.</param>
+		/// <param name="predicate">Predicate.</param>
+		/// <param name="fullSize">If set to <c>true</c> full size.</param>
+		/// <typeparam name="T">ICoordinate</typeparam>
+		public static void GetPoints<T>(this T c, IQuantifiedTile tile, int pointsInX, int pointsInY,
+			Action<double, double, double, double> predicate, bool fullSize = false)
+			where T : ICoordinate
+		{
+			Contract.Requires(tile != null, nameof(tile));
+			Contract.Requires(predicate != null, nameof(predicate));
+			Contract.Requires(pointsInX >= 2, nameof(pointsInX));
+			Contract.Requires(pointsInY >= 2, nameof(pointsInY));
 
-            if (pointsInX < 2)
-                throw new ArgumentOutOfRangeException(nameof(pointsInX), pointsInX, nameof(pointsInX) + " must be >= 2");
+			var ratioX = fullSize ? 1f : tile.ElementSizeX / tile.ElementStepX;
+			var ratioY = fullSize ? 1f : tile.ElementSizeY / tile.ElementStepY;
 
-            if (pointsInY < 2)
-                throw new ArgumentOutOfRangeException(nameof(pointsInY), pointsInY, nameof(pointsInY) + " must be >= 2");
+			var stepSizeX = ratioX / (pointsInX - 1);
+			var stepSizeY = ratioY / (pointsInY - 1);
 
-            var ratioX = fullSize ? 1f : tile.ElementSizeX / tile.ElementStepX;
-            var ratioY = fullSize ? 1f : tile.ElementSizeY / tile.ElementStepY;
+			var offsetX = ratioX / 2f;
+			var offsetY = ratioY / 2f;
 
-            var stepSizeX = ratioX / (pointsInX - 1);
-            var stepSizeY = ratioY / (pointsInY - 1);
+			var testY = new double[pointsInY];
+			var testY2 = new double[pointsInY];
 
-            var offsetX = ratioX / 2f;
-            var offsetY = ratioY / 2f;
+			var reference = tile.GetReference();
 
-            var testY = new double[pointsInY];
-            var testY2 = new double[pointsInY];
+			for (var i = 0; i < pointsInX; i++)
+			{
+				var testX = (c.X - reference.X - offsetX + i * stepSizeX) * tile.ElementStepX + tile.RefOffsetX;
+				var testX2 = Math.Pow(testX, 2d);
 
-            var reference = tile.GetReference();
+				for (var j = 0; j < pointsInY; j++)
+				{
+					if (i == 0)
+					{
+						testY[j] = (c.Y - reference.Y - offsetY + j * stepSizeY) * tile.ElementStepY + tile.RefOffsetY;
+						testY2[j] = Math.Pow(testY[j], 2);
+					}
 
-            for (var i = 0; i < pointsInX; i++)
-            {
-                var testX = (c.X - reference.X - offsetX + i * stepSizeX) * tile.ElementStepX + tile.RefOffsetX;
-                var testX2 = Math.Pow(testX, 2d);
+					predicate(testX, testY[j], testX2, testY2[j]);
+				}
+			}
+		}
+	}
 
-                for (var j = 0; j < pointsInY; j++)
-                {
-                    if (i == 0)
-                    {
-                        testY[j] = (c.Y - reference.Y - offsetY + j * stepSizeY) * tile.ElementStepY + tile.RefOffsetY;
-                        testY2[j] = Math.Pow(testY[j], 2);
-                    }
-
-                    predicate(testX, testY[j], testX2, testY2[j]);
-                }
-            }
-        }
-    }
-
-    #endregion
+	#endregion
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
@@ -101,86 +101,65 @@ namespace PA.TileList.Quantified
 			return center;
 		}
 
+		#region ToQuantified
 
-        /// <summary>
-        ///     Count points of element c that specifies predicate within tile
-        /// </summary>
-        /// <returns>The points.</returns>
-        /// <param name="c">C.</param>
-        /// <param name="tile">Tile.</param>
-        /// <param name="pointsInX">Points in x.</param>
-        /// <param name="pointsInY">Points in y.</param>
-        /// <param name="stepSizeX">Step size x.</param>
-        /// <param name="stepSizeY">Step size y.</param>
-        /// <param name="predicate">Predicate in cartesian coordinates (x,y)</param>
-        /// <param name="polarCoordinates">Predicate is expressed in polar coordinates (angle, radius²)</param>
-        /// <typeparam name="T">The 1st type parameter.</typeparam>
-        [Obsolete]
-        private static int CountPoints<T>(this ICoordinate c, IQuantifiedTile<T> tile, int pointsInX, int pointsInY,
-            double stepSizeX, double stepSizeY, Func<double, double, bool> predicate, bool polarCoordinates = false)
-            where T : ICoordinate
-        {
-            Contract.Requires(pointsInX > 1);
-            Contract.Requires(pointsInY > 1);
-            Contract.Requires((0d < stepSizeX) && (stepSizeX <= 1d));
-            Contract.Requires((0d < stepSizeY) && (stepSizeY <= 1d));
-            Contract.Requires(predicate != null);
+		public static QuantifiedTile<T> ToQuantified<T>(this IEnumerable<T> list, int referenceIndex = 0)
+			where T : class, ICoordinate
+		{
+			Contract.Requires(list != null, nameof(list));
+			Contract.Requires(referenceIndex >= 0, nameof(referenceIndex));
 
-            var points = 0;
+			return new QuantifiedTile<T>(list, referenceIndex);
+		}
 
-            var testY = new double[pointsInY];
-            var testY2 = new double[pointsInY];
+		public static QuantifiedTile<T> ToQuantified<T>(this ITile<T> list)
+			where T : class, ICoordinate
+		{
+			Contract.Requires(list != null, nameof(list));
+			return new QuantifiedTile<T>(list);
+		}
 
-            for (var i = 0; i < pointsInX; i++)
-            {
-                var testX = (c.X - tile.Reference.X - 0.5f + i * stepSizeX) * tile.ElementStepX + tile.RefOffsetX;
-                var testX2 = Math.Pow(testX, 2d);
+		public static QuantifiedTile<T> ToQuantified<T>(this ITile<T> list, double sizeX, double sizeY)
+			where T : class, ICoordinate
+		{
+			Contract.Requires(list != null, nameof(list));
+			Contract.Requires(sizeX > 0, nameof(sizeX));
+			Contract.Requires(sizeY > 0, nameof(sizeY));
 
-                for (var j = 0; j < pointsInY; j++)
-                {
-                    if (i == 0)
-                    {
-                        testY[j] = (c.Y - tile.Reference.Y - 0.5f + j * stepSizeY) * tile.ElementStepY + tile.RefOffsetY;
-                        testY2[j] = Math.Pow(testY[j], 2);
-                    }
 
-                    if (polarCoordinates)
-                        points += predicate(Math.Atan2(testY[j], testX), testX2 + testY2[j]) ? 1 : 0;
-                    else
-                        points += predicate(testX, testY[j]) ? 1 : 0;
-                }
-            }
+			return new QuantifiedTile<T>(list, sizeX, sizeY);
+		}
 
-            return points;
-        }
+		public static QuantifiedTile<T> ToQuantified<T>(this ITile<T> list, double sizeX, double sizeY, double stepX,
+			double stepY)
+			where T : class, ICoordinate
+		{
+			Contract.Requires(list != null, nameof(list));
+			Contract.Requires(sizeX > 0, nameof(sizeX));
+			Contract.Requires(sizeY > 0, nameof(sizeY));
+			Contract.Requires(stepX > 0, nameof(stepX));
+			Contract.Requires(stepY > 0, nameof(stepY));
+			Contract.Requires(stepX < sizeX, nameof(stepX) + " must be greater than " + nameof(sizeX));
+			Contract.Requires(stepY < sizeY, nameof(stepY) + " must be greater than " + nameof(sizeY));
 
-        #region ToQuantified
+			return new QuantifiedTile<T>(list, sizeX, sizeY, stepX, stepY);
+		}
 
-        public static QuantifiedTile<T> ToQuantified<T>(this ITile<T> l)
-            where T : class, ICoordinate
-        {
-            return new QuantifiedTile<T>(l);
-        }
+		public static QuantifiedTile<T> ToQuantified<T>(this ITile<T> list, double sizeX, double sizeY, double stepX,
+			double stepY, double refOffsetX, double refOffsetY)
+			where T : class, ICoordinate
+		{
+			Contract.Requires(list != null, nameof(list));
+			Contract.Requires(sizeX > 0, nameof(sizeX));
+			Contract.Requires(sizeY > 0, nameof(sizeY));
+			Contract.Requires(stepX > 0, nameof(stepX));
+			Contract.Requires(stepY > 0, nameof(stepY));
+			Contract.Requires(stepX < sizeX, nameof(stepX) + " must be greater than " + nameof(sizeX));
+			Contract.Requires(stepY < sizeY, nameof(stepY) + " must be greater than " + nameof(sizeY));
 
-        public static QuantifiedTile<T> ToQuantified<T>(this ITile<T> l, double sizeX, double sizeY)
-            where T : class, ICoordinate
-        {
-            return new QuantifiedTile<T>(l, sizeX, sizeY);
-        }
 
-        public static QuantifiedTile<T> ToQuantified<T>(this ITile<T> l, double sizeX, double sizeY, double stepX,
-            double stepY)
-            where T : class, ICoordinate
-        {
-            return new QuantifiedTile<T>(l, sizeX, sizeY, stepX, stepY);
-        }
-
-        public static QuantifiedTile<T> ToQuantified<T>(this ITile<T> l, double sizeX, double sizeY, double stepX,
-            double stepY, double refOffsetX, double refOffsetY)
-            where T : class, ICoordinate
-        {
-            return new QuantifiedTile<T>(l, sizeX, sizeY, stepX, stepY, refOffsetX, refOffsetY);
-        }
+			return new QuantifiedTile<T>(list, sizeX, sizeY, stepX, stepY, refOffsetX, refOffsetY);
+		}
 
 		#endregion
 

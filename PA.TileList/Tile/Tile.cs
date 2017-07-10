@@ -22,62 +22,60 @@ namespace PA.TileList.Tile
 			this.Zone = t.Zone;
 		}
 
-        public Tile(IEnumerable<T> t, int referenceIndex = 0)
-            : base(t)
-        {
-            Contract.Requires(t != null);
-            Contract.Requires(this.Count != 0);
-            Contract.Requires(referenceIndex >= 0);
-            Contract.Requires(referenceIndex < this.Count);
-
-            this.X = 0;
-            this.Y = 0;
-            this.Reference = base[referenceIndex];
-            this.UpdateZone();
-        }
+		public Tile(IEnumerable<T> t, int referenceIndex = 0)
+			: base(t)
+		{
+			Contract.Requires(t != null, nameof(t));
+			Contract.Requires(referenceIndex >= 0, nameof(referenceIndex));
+			Contract.Requires(referenceIndex< this.Count, nameof(referenceIndex));
 
 
-        public Tile(IZone zone, IEnumerable<T> t, int referenceIndex = 0)
-            : base(t)
-        {
-            Contract.Requires(t != null);
-            Contract.Requires(zone != null);
-            Contract.Requires(this.Count != 0);
-            Contract.Requires(referenceIndex >= 0);
-            Contract.Requires(referenceIndex < this.Count);
+			this.X = 0;
+			this.Y = 0;
+			this.Reference = base[referenceIndex];
+			this.UpdateZone();
+		}
 
-            this.X = 0;
-            this.Y = 0;
-            this.Reference = base[referenceIndex];
-            this.Zone = new Zone(zone);
-        }
 
-        public Tile(IZone zone, T reference)
-            : base(new[] { reference })
-        {
-            Contract.Requires(reference != null);
-            Contract.Requires(zone != null);
+		public Tile(IZone zone, IEnumerable<T> t, int referenceIndex = 0)
+			: base(t)
+		{
+			Contract.Requires(t != null, nameof(t));
+			Contract.Requires(zone != null, nameof(zone));
+			Contract.Requires(referenceIndex >= 0, nameof(referenceIndex));
+			Contract.Requires(referenceIndex< this.Count, nameof(referenceIndex));
 
-            this.X = 0;
-            this.Y = 0;
-            this.Reference = base[0];
-            this.Zone = new Zone(zone);
-        }
+			this.X = 0;
+			this.Y = 0;
+			this.Reference = base[referenceIndex];
+			this.Zone = new Zone(zone);
+		}
 
-        public Tile(int x, int y, IZone zone, IEnumerable<T> t, int referenceIndex = 0)
-            : base(t)
-        {
-            Contract.Requires(t != null);
-            Contract.Requires(zone != null);
-            Contract.Requires(this.Count != 0);
-            Contract.Requires(referenceIndex >= 0);
-            Contract.Requires(referenceIndex < this.Count);
+		public Tile(IZone zone, T reference)
+			: base(new[] { reference })
+		{
+			Contract.Requires(zone != null, nameof(zone));
+			Contract.Requires(reference != null, nameof(reference));
 
-            this.X = x;
-            this.Y = y;
-            this.Reference = base[referenceIndex];
-            this.Zone = new Zone(zone);
-        }
+			this.X = 0;
+			this.Y = 0;
+			this.Reference = base[0];
+			this.Zone = new Zone(zone);
+		}
+
+		public Tile(int x, int y, IZone zone, IEnumerable<T> t, int referenceIndex = 0)
+			: base(t)
+		{
+			Contract.Requires(t != null, nameof(t));
+			Contract.Requires(zone != null, nameof(zone));
+			Contract.Requires(referenceIndex >= 0, nameof(referenceIndex));
+			Contract.Requires(referenceIndex < this.Count, nameof(referenceIndex));
+
+			this.X = x;
+			this.Y = y;
+			this.Reference = base[referenceIndex];
+			this.Zone = new Zone(zone);
+		}
 
 		public Tile(int x, int y, IZone zone, T reference)
 			: base(new[] { reference })
