@@ -8,80 +8,80 @@ using PA.TileList.Tile;
 
 namespace PA.TileList.Quantified
 {
-    public static class QuantifiedExtensions
-    {
-        public static double GetScaleFactor(this IQuantifiedTile list, double sizeX, double sizeY)
-        {
-            var ratioX = sizeX / (list.Zone.SizeX * list.ElementStepX);
-            var ratioY = sizeY / (list.Zone.SizeY * list.ElementStepY);
+	public static class QuantifiedExtensions
+	{
+		public static double GetScaleFactor(this IQuantifiedTile list, double sizeX, double sizeY)
+		{
+			var ratioX = sizeX / (list.Zone.SizeX * list.ElementStepX);
+			var ratioY = sizeY / (list.Zone.SizeY * list.ElementStepY);
 
-            return Math.Round(Math.Min(ratioX, ratioY), 4);
-        }
+			return Math.Round(Math.Min(ratioX, ratioY), 4);
+		}
 
-        public static IQuantifiedTile<T> Scale<T>(this IQuantifiedTile<T> list, double scaleFactor)
-            where T : class, ICoordinate
-        {
-            return new QuantifiedTile<T>(list, list.ElementSizeX * scaleFactor, list.ElementSizeY * scaleFactor,
-                list.ElementStepX * scaleFactor, list.ElementStepY * scaleFactor, list.RefOffsetX * scaleFactor,
-                list.RefOffsetY * scaleFactor);
-        }
-
-
-        /// <summary>
-        ///     Get coordinate at specified location.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="list"></param>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
-        public static ICoordinate GetCoordinateAt<T>(this IQuantifiedTile<T> list, double x, double y)
-            where T : ICoordinate
-        {
-            return list.Zone.FirstOrDefault(c =>
-            {
-                var points = 0;
-                c.GetPoints(list, 2, 2,
-                    (xc, yc, xc2, yc2) =>
-                        points +=
-                            (Math.Abs(xc - x) < list.ElementStepX) && (Math.Abs(yc - y) < list.ElementStepY) ? 1 : 0, true);
-                return points == 4;
-            });
-        }
+		public static IQuantifiedTile<T> Scale<T>(this IQuantifiedTile<T> list, double scaleFactor)
+			where T : class, ICoordinate
+		{
+			return new QuantifiedTile<T>(list, list.ElementSizeX * scaleFactor, list.ElementSizeY * scaleFactor,
+				list.ElementStepX * scaleFactor, list.ElementStepY * scaleFactor, list.RefOffsetX * scaleFactor,
+				list.RefOffsetY * scaleFactor);
+		}
 
 
-        /// <summary>
-        ///     Groups the elements by comptuting points satisfying predicate
-        ///     Each element is divided into pointsInX*pointsInY points, each of them submitted to predicate
-        /// </summary>
-        public static IEnumerable<IGrouping<float, P>> GroupByPercent<P>(this IQuantifiedTile<P> tile, ISelectionProfile profile,
-                    SelectionConfiguration config, bool fullSize = false)
-            where P : ICoordinate
-        {
+		/// <summary>
+		///     Get coordinate at specified location.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="list"></param>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <returns></returns>
+		public static ICoordinate GetCoordinateAt<T>(this IQuantifiedTile<T> list, double x, double y)
+			where T : ICoordinate
+		{
+			return list.Zone.FirstOrDefault(c =>
+			{
+				var points = 0;
+				c.GetPoints(list, 2, 2,
+					(xc, yc, xc2, yc2) =>
+						points +=
+							(Math.Abs(xc - x) < list.ElementStepX) && (Math.Abs(yc - y) < list.ElementStepY) ? 1 : 0, true);
+				return points == 4;
+			});
+		}
 
-            return tile.GroupBy(c =>
-            {
-                var p = c.CountPoints(tile, profile, config, fullSize);
-                if ((p == 0) || (p == config.MaxSurface)) return p;
-                return (float)p / config.MaxSurface;
-            });
-        }
 
-        /// <summary>
-        ///     Groups the elements by comptuting points satisfying predicate
-        ///     Each element is divided into pointsInX*pointsInY points, each of them submitted to predicate
-        /// </summary>
-        /// <returns>Elements grouped by comptuting points satisfying predicate</returns>
-        /// <param name="tile">Tile.</param>
-        public static IEnumerable<IGrouping<int, P>> GroupByPoints<P>(this IQuantifiedTile<P> tile, ISelectionProfile profile,
-                    SelectionConfiguration config, bool fullSize = false)
-            where P : ICoordinate
-        {
-            Contract.Requires(profile != null);
-            Contract.Requires(config != null);
+		/// <summary>
+		///     Groups the elements by comptuting points satisfying predicate
+		///     Each element is divided into pointsInX*pointsInY points, each of them submitted to predicate
+		/// </summary>
+		public static IEnumerable<IGrouping<float, P>> GroupByPercent<P>(this IQuantifiedTile<P> tile, ISelectionProfile profile,
+					SelectionConfiguration config, bool fullSize = false)
+			where P : ICoordinate
+		{
 
-            return tile.GroupBy(c => c.CountPoints(tile, profile, config, fullSize));
-        }
+			return tile.GroupBy(c =>
+			{
+				var p = c.CountPoints(tile, profile, config, fullSize);
+				if ((p == 0) || (p == config.MaxSurface)) return p;
+				return (float)p / config.MaxSurface;
+			});
+		}
+
+		/// <summary>
+		///     Groups the elements by comptuting points satisfying predicate
+		///     Each element is divided into pointsInX*pointsInY points, each of them submitted to predicate
+		/// </summary>
+		/// <returns>Elements grouped by comptuting points satisfying predicate</returns>
+		/// <param name="tile">Tile.</param>
+		public static IEnumerable<IGrouping<uint, P>> GroupByPoints<P>(this IQuantifiedTile<P> tile, ISelectionProfile profile,
+					SelectionConfiguration config, bool fullSize = false)
+			where P : ICoordinate
+		{
+			Contract.Requires(profile != null);
+			Contract.Requires(config != null);
+
+			return tile.GroupBy(c => c.CountPoints(tile, profile, config, fullSize));
+		}
 
 
 		/// <summary>
@@ -182,22 +182,22 @@ namespace PA.TileList.Quantified
             return new QuantifiedTile<T>(l, sizeX, sizeY, stepX, stepY, refOffsetX, refOffsetY);
         }
 
-        #endregion
+		#endregion
 
-        #region AsQuantified
+		#region AsQuantified
 
-        public static IQuantifiedTile<T> AsQuantified<T>(this ITile<T> l)
-            where T : class, ICoordinate
-        {
-            Contract.Requires(l is IQuantifiedTile<T>);
+		public static IQuantifiedTile<T> AsQuantified<T>(this ITile<T> l)
+			where T : class, ICoordinate
+		{
+			Contract.Requires(l is IQuantifiedTile<T>);
 
-            return l as IQuantifiedTile<T> ?? l.ToQuantified();
-        }
+			return l as IQuantifiedTile<T> ?? l.ToQuantified();
+		}
 
-        #endregion
+		#endregion
 
-        #region Crop
+		#region Crop
 
-        #endregion
-    }
+		#endregion
+	}
 }

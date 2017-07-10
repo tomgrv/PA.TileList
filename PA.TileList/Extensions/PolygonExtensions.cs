@@ -207,7 +207,7 @@ namespace PA.TileList.Geometrics.Extensions
 			return square;
 		}
 
-		public static Coordinate GetCenter<T>(this IEnumerable<T> list, Func<T, bool> predicate)
+		public static Coordinate GetCenter<T>(this IEnumerable<T> list)
 			where T : ICoordinate
 		{
 			var cX = 0f;
@@ -229,9 +229,8 @@ namespace PA.TileList.Geometrics.Extensions
 		/// </summary>
 		/// <returns>The center.</returns>
 		/// <param name="list">List.</param>
-		/// <param name="predicate">Predicate.</param>
 		/// <typeparam name="T">ICoordinate</typeparam>
-		public static Coordinate GetCenter<T>(this IEnumerable<KeyValuePair<T, float>> list, Func<T, bool> predicate)
+		public static Coordinate GetCenter<T>(this IEnumerable<KeyValuePair<T, float>> list)
 			where T : ICoordinate
 		{
 			var cX = 0f;
