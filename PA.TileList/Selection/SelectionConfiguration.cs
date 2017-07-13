@@ -22,7 +22,7 @@ namespace PA.TileList.Selection
 
 
         /// <summary>
-        ///     Define CircularConfiguration with automatic resolution based on tolerance
+        ///     Define SelectionConfiguration with automatic resolution based on tolerance
         /// </summary>
         /// <param name="selectionType"></param>
         public SelectionConfiguration(SelectionPosition selectionType)
@@ -31,7 +31,7 @@ namespace PA.TileList.Selection
         }
 
 
-        [Obsolete("Please use CircularConfiguration(float tolerance, SelectionFlag selectionType) as constructor")]
+        [Obsolete("Please use SelectionConfiguration( SelectionFlag selectionType,float tolerance) as constructor")]
         public SelectionConfiguration(float tolerance, float resolution, SelectionPosition selectionType)
         {
             if ((tolerance < 0f) || (tolerance > 1f))
