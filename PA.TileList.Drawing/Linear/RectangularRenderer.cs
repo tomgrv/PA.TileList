@@ -34,8 +34,7 @@ using PA.Utilities;
 
 namespace PA.TileList.Drawing.Linear
 {
-    public class RectangularRenderer<T> : IRenderer<RectangularProfile, Bitmap>
-    where T : ICoordinate
+    public class RectangularRenderer: IRenderer<RectangularProfile, Bitmap>
     {
         private Pen _rectPen;
 
