@@ -34,38 +34,38 @@ using PA.Utilities;
 
 namespace PA.TileList.Drawing.Linear
 {
-    public class RectangleRenderer<T> : IRenderer<IQuantifiedTile<T>, Bitmap>
+    public class RectangularRenderer<T> : IRenderer<RectangularProfile, Bitmap>
     where T : ICoordinate
     {
         private Pen _rectPen;
-        private RectangleF _rectangle;
 
-        public RectangleRenderer(RectangleF rect, Color c, float width = 1f)
+        public RectangularRenderer(Color c, float width = 1f)
         {
             var p = new Pen(c, width);
             this._rectPen = p;
-            this._rectangle = rect;
         }
 
-        public RectangleRenderer(RectangleF rect, Pen rectPen = null)
+        public RectangularRenderer(Pen rectPen = null)
         {
             this._rectPen = rectPen;
-            this._rectangle = rect;
         }
 
-        public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, RectangleD<Bitmap> portion, RectangleF? visible)
+        public RectangleD<Bitmap> Render(RectangularProfile obj, RectangleD<Bitmap> portion, RectangleF? visible)
         {
             return this.Render(obj, new Bitmap(portion.Item), portion as RectangleD, portion.Mode, visible);
         }
 
-        public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, int width, int height, ScaleMode mode, RectangleF? visible)
+        public RectangleD<Bitmap> Render(RectangularProfile obj, int width, int height, ScaleMode mode, RectangleF? visible)
         {
             return this.Render(obj, new Bitmap(width, height), mode, visible);
         }
 
-        public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, Bitmap baseImage, ScaleMode mode, RectangleF? visible)
+        public RectangleD<Bitmap> Render(RectangularProfile obj, Bitmap baseImage, ScaleMode mode, RectangleF? visible)
         {
-            var m = Math.Max(this._rectangle.Width, this._rectangle.Height);
+            var w = Math.Abs(obj.xMax - obj.xMin);
+            var h = Math.Abs(obj.yMax - obj.yMin);
+
+            var m = Math.Max(w, h);
 
             var s = mode == ScaleMode.STRETCH ? new SizeF((float)m, (float)m) : new SizeF(baseImage.Width, baseImage.Height);
             var p = new PointF(-s.Width / 2f, -s.Height / 2f);
@@ -75,12 +75,12 @@ namespace PA.TileList.Drawing.Linear
 
         }
 
-        public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, int width, int height, RectangleF inner, ScaleMode mode, RectangleF? visible)
+        public RectangleD<Bitmap> Render(RectangularProfile obj, int width, int height, RectangleF inner, ScaleMode mode, RectangleF? visible)
         {
             return this.Render(obj, new RectangleD<Bitmap>(new Bitmap(width, height), inner, mode), visible);
         }
 
-        private RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, Bitmap image, RectangleD portion, ScaleMode mode, RectangleF? visible)
+        private RectangleD<Bitmap> Render(RectangularProfile obj, Bitmap image, RectangleD portion, ScaleMode mode, RectangleF? visible)
         {
             var rendered = new RectangleD<Bitmap>(image, portion, mode);
 
@@ -89,8 +89,8 @@ namespace PA.TileList.Drawing.Linear
                 var min = g.Portion.Inner.Left;
                 var max = g.Portion.Inner.Right;
 
-                g.Graphics.DrawRectangle(this._rectPen ?? Pens.Blue, g.OffsetX + this._rectangle.Left * g.ScaleX, g.OffsetY + this._rectangle.Top * g.ScaleY,
-                                                this._rectangle.Width * g.ScaleX,this._rectangle.Height * g.ScaleY);
+                g.Graphics.DrawRectangle(this._rectPen ?? Pens.Blue, g.OffsetX + (float)obj.xMin * g.ScaleX, g.OffsetY + (float)obj.yMin * g.ScaleY,
+                                                                    (float)(obj.xMax-obj.xMin) * g.ScaleX, (float)(obj.yMax - obj.yMin) * g.ScaleY);
             }
 
             return rendered;
