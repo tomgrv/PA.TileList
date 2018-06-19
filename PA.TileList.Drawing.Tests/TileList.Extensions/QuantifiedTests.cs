@@ -237,7 +237,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             var r = new RectangularProfile(-500, 1000, 500,1100);
 
-            var signature = r.RenderImage(i2, new RectangularRenderer<IContextual<Item>>(), null).Item.GetSignature();
+            var signature = r.RenderImage(i2, new RectangularRenderer(), null).Item.GetSignature();
             Assert.AreEqual("9272D2C42A039C2122B649DAD516B390A3A2A3C51BA861B6E615F27BA0F1BDA3", signature, "Image hash");
         }
 
