@@ -38,7 +38,7 @@ namespace PA.TileList.Drawing.Graphics2D
     public static class GraphicExtensions
     {
 
-        #region Renderer
+        #region RenderImage
 
         public static RectangleD<U> RenderImage<T, U>(this T c, U baseImage, ScaleMode mode, IRenderer<T, U> renderer, RectangleF? visible)
            where U : Image
@@ -62,6 +62,34 @@ namespace PA.TileList.Drawing.Graphics2D
             where U : Image
         {
             return renderer.Render(c, image, visible);
+        }
+
+        #endregion
+
+        #region Render
+
+        public static RectangleD<U> Render<T, U>(this RectangleD<U> c, T baseObject, ScaleMode mode, IRenderer<T, U> renderer, RectangleF? visible)
+           where U : Image
+        {
+            return renderer.Render(baseObject,c.Item, mode, visible);
+        }
+
+        public static RectangleD<U> Render<T, U>(this RectangleD<U> c, T baseObject, int width, int height, ScaleMode mode, IRenderer<T, U> renderer, RectangleF? visible)
+            where U : Image
+        {
+            return renderer.Render(baseObject, width, height, mode, visible);
+        }
+
+        public static RectangleD<U> Render<T, U>(this RectangleD<U> c, T baseObject, int width, int height, RectangleF inner, ScaleMode mode, IRenderer<T, U> renderer, RectangleF? visible)
+          where U : Image
+        {
+            return renderer.Render(baseObject, width, height, inner, mode, visible);
+        }
+
+        public static RectangleD<U> Render<T, U>(this RectangleD<U> c, T baseObject, IRenderer<T, U> renderer, RectangleF? visible)
+            where U : Image
+        {
+            return renderer.Render(baseObject, c, visible);
         }
 
         #endregion
