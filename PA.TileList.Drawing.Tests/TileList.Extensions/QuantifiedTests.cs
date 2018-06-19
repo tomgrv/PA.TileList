@@ -6,6 +6,7 @@ using PA.TileList.Contextual;
 using PA.TileList.Cropping;
 using PA.TileList.Drawing.Circular;
 using PA.TileList.Drawing.Graphics2D;
+using PA.TileList.Drawing.Linear;
 using PA.TileList.Drawing.Quantified;
 using PA.TileList.Linear;
 using PA.TileList.Quantified;
@@ -165,7 +166,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             var signature = pj.Item.GetSignature();
         }
 
-        [Test]
+        [Test]        
         [Category("Image hash")]
         public void FirstOrDefault()
         {
@@ -209,6 +210,34 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             var i2 = p.RenderImage(i1, new CircularProfileRenderer(null, null, Pens.DarkViolet), null);
 
             var signature = t1.RenderImage(i2, new RulersRenderer<IContextual<Item>>(new[] { 100f, 500f }), null).Item.GetSignature();
+            Assert.AreEqual("9272D2C42A039C2122B649DAD516B390A3A2A3C51BA861B6E615F27BA0F1BDA3", signature, "Image hash");
+        }
+
+
+        [Test]
+        [Category("Image hash")]
+        public void Rectangle()
+        {
+            var tile = MainTile.GetTile(1);
+
+            var t1 = tile
+                .Flatten<SubTile, Item>();
+
+            t1.Reference.Context.Color = Color.Lavender;
+
+            var item = t1.GetCoordinateAt(502, 1000);
+
+            t1.Find(item).Context.Color = Color.Pink;
+
+            var i1 = t1.RenderImage(2000, 2000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.X + "\n" + z.Y)), null);
+
+            var p = new CircularProfile(1000);
+
+            var i2 = p.RenderImage(i1, new CircularProfileRenderer(null, null, Pens.DarkViolet), null);
+
+            var r = new RectangleF(500, 1000, 500,100);
+
+            var signature = t1.RenderImage(i2, new RectangleRenderer<IContextual<Item>>(r), null).Item.GetSignature();
             Assert.AreEqual("9272D2C42A039C2122B649DAD516B390A3A2A3C51BA861B6E615F27BA0F1BDA3", signature, "Image hash");
         }
 
