@@ -31,10 +31,10 @@ artifacts:
 
 deploy:
 - provider: Environment
-  name: nuget.org
+  name: https://www.nuget.org/profiles/tomgrv
   on:
     branch: master
 - provider: Environment
-  name: github.com
+  name: https://github.com/tomgrv
   on:
     branch: master
