@@ -137,12 +137,11 @@ namespace PA.TileList.Drawing.Quantified
 
             if (this._portionPen != null)
             {
-                var p = this._portionPen.Clone() as Pen;
-                p.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
-                p.Width = this._portionPen.Width * 2f;
+                var dot = this._portionPen.Clone() as Pen;
+                dot.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
 
                 g.Graphics.DrawRectangle(this._portionPen, Rectangle.Round(subportion.Outer));
-                g.Graphics.DrawRectangle(p, Rectangle.Round(subportion.Inner));
+                g.Graphics.DrawRectangle(dot, Rectangle.Round(subportion.Inner));
             }
         }
     }
