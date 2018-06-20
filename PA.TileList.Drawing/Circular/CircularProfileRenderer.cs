@@ -56,17 +56,17 @@ namespace PA.TileList.Drawing.Circular
             this._extraPen = extraPen;
         }
 
-        public RectangleD<Bitmap> Render(CircularProfile obj, RectangleD<Bitmap> portion, RectangleF? visible)
+        public RectangleD<Bitmap> Render(CircularProfile obj, RectangleD<Bitmap> portion)
         {
-            return this.Render(obj, new Bitmap(portion.Item), portion as RectangleD, portion.Mode, visible);
+            return this.Render(obj, new Bitmap(portion.Item), portion as RectangleD, portion.Mode);
         }
 
-        public RectangleD<Bitmap> Render(CircularProfile obj, int width, int height, ScaleMode mode, RectangleF? visible)
+        public RectangleD<Bitmap> Render(CircularProfile obj, int width, int height, ScaleMode mode)
         {
-            return this.Render(obj, new Bitmap(width, height), mode, visible);
+            return this.Render(obj, new Bitmap(width, height), mode);
         }
 
-        public RectangleD<Bitmap> Render(CircularProfile obj, Bitmap baseImage, ScaleMode mode, RectangleF? visible)
+        public RectangleD<Bitmap> Render(CircularProfile obj, Bitmap baseImage, ScaleMode mode)
         {
             var m = 2 * obj.GetMaxRadius();
 
@@ -74,16 +74,16 @@ namespace PA.TileList.Drawing.Circular
             var p = new PointF(-s.Width / 2f, -s.Height / 2f);
             var r = new RectangleD<Bitmap>(baseImage, p, s, mode);
 
-            return this.Render(obj, r, visible);
+            return this.Render(obj, r);
 
         }
 
-        public RectangleD<Bitmap> Render(CircularProfile obj, int width, int height, RectangleF inner, ScaleMode mode, RectangleF? visible)
+        public RectangleD<Bitmap> Render(CircularProfile obj, int width, int height, RectangleF inner, ScaleMode mode)
         {
-            return this.Render(obj, new RectangleD<Bitmap>(new Bitmap(width, height), inner, mode), visible);
+            return this.Render(obj, new RectangleD<Bitmap>(new Bitmap(width, height), inner, mode));
         }
 
-        private RectangleD<Bitmap> Render(CircularProfile obj, Bitmap image, RectangleD portion, ScaleMode mode, RectangleF? visible)
+        private RectangleD<Bitmap> Render(CircularProfile obj, Bitmap image, RectangleD portion, ScaleMode mode)
         {
             var rendered = new RectangleD<Bitmap>(image, portion, mode);
 

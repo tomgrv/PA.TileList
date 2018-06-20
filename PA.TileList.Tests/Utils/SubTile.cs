@@ -136,7 +136,7 @@ namespace PA.TileList.Tests.Utils
         {
             return this.ToQuantified(m.ElementSizeX / this.Zone.SizeX, m.ElementSizeY / this.Zone.SizeY, m.ElementStepX / this.Zone.SizeX, m.ElementStepY / this.Zone.SizeY)
                         .RenderImage(w, h, ScaleMode.STRETCH, new QuantifiedRenderer<Item>(
-                                                                         (z, s) => z.ToBitmap((int)s.Width, (int)s.Height, z.X + "\n" + z.Y), p), null
+                                                                         (z, s) => z.ToBitmap((int)s.Width, (int)s.Height, z.X + "\n" + z.Y), p)
                                                                   ).Item;
         }
 
