@@ -32,9 +32,9 @@ namespace PA.TileList.Drawing.Graphics2D
     public interface IRenderer<T, U>
         where U : Image
     {
-        RectangleD<U> Render(T obj, U baseImage, ScaleMode mode, RectangleF? visible);
-        RectangleD<U> Render(T obj, int width, int height, ScaleMode mode, RectangleF? visible);
-        RectangleD<U> Render(T obj, int width, int height, RectangleF inner, ScaleMode mode, RectangleF? visible);
-        RectangleD<U> Render(T obj, RectangleD<U> portion, RectangleF? visible);
+        RectangleD<U> Render(T obj, U baseImage, ScaleMode mode);
+        RectangleD<U> Render(T obj, int width, int height, ScaleMode mode);
+        RectangleD<U> Render(T obj, int width, int height, RectangleF inner, ScaleMode mode);
+        RectangleD<U> Render(T obj, RectangleD<U> portion);
     }
 }

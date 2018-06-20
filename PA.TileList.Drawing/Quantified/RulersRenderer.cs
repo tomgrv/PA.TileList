@@ -48,27 +48,27 @@ namespace PA.TileList.Drawing.Quantified
 			this._steps = steps;
 		}
 
-		public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, int width, int height, ScaleMode mode, RectangleF? visible)
+		public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, int width, int height, ScaleMode mode)
 		{
-			return this.Render(obj, new Bitmap(width, height), mode, visible);
+			return this.Render(obj, new Bitmap(width, height), mode);
 		}
 
-		public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, Bitmap baseImage, ScaleMode mode, RectangleF? visible)
+		public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, Bitmap baseImage, ScaleMode mode)
 		{
-			return this.Render(obj, baseImage, new RectangleD(obj.GetOrigin(), obj.GetSize()), mode, visible);
+			return this.Render(obj, baseImage, new RectangleD(obj.GetOrigin(), obj.GetSize()), mode);
 		}
 
-		public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, int width, int height, RectangleF inner, ScaleMode mode, RectangleF? visible)
+		public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, int width, int height, RectangleF inner, ScaleMode mode)
 		{
-			return this.Render(obj, new RectangleD<Bitmap>(new Bitmap(width, height), inner, mode), visible);
+			return this.Render(obj, new RectangleD<Bitmap>(new Bitmap(width, height), inner, mode));
 		}
 
-		public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, RectangleD<Bitmap> portion, RectangleF? visible)
+		public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, RectangleD<Bitmap> portion)
 		{
-			return this.Render(obj, new Bitmap(portion.Item), portion as RectangleD, portion.Mode, visible);
+			return this.Render(obj, new Bitmap(portion.Item), portion as RectangleD, portion.Mode);
 		}
 
-		private RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, Bitmap image, RectangleD portion, ScaleMode mode, RectangleF? visible)
+		private RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, Bitmap image, RectangleD portion, ScaleMode mode)
 		{
 			var rendered = new RectangleD<Bitmap>(image, portion, mode);
 

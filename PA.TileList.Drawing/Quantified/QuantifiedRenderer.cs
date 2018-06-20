@@ -55,30 +55,30 @@ namespace PA.TileList.Drawing.Quantified
             this._extraPen = extraPen;
         }
 
-        public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, Bitmap baseImage, ScaleMode mode, RectangleF? visible)
+        public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, Bitmap baseImage, ScaleMode mode)
         {
             var s = mode.HasFlag(ScaleMode.STRETCH) ? obj.GetSize() : new SizeF(baseImage.Width, baseImage.Height);
             var p = mode.HasFlag(ScaleMode.STRETCH) ? obj.GetOrigin() : new PointF(-baseImage.Width / 2f, -baseImage.Height / 2f);
 
-            return this.Render(obj, baseImage, new RectangleD(p, s), mode, visible);
+            return this.Render(obj, baseImage, new RectangleD(p, s), mode);
         }
 
-        public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, int width, int height, ScaleMode mode, RectangleF? visible)
+        public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, int width, int height, ScaleMode mode)
         {
-            return this.Render(obj, new Bitmap(width, height), mode, visible);
+            return this.Render(obj, new Bitmap(width, height), mode);
         }
 
-        public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, int width, int height, RectangleF inner, ScaleMode mode, RectangleF? visible)
+        public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, int width, int height, RectangleF inner, ScaleMode mode)
         {
-            return this.Render(obj, new Bitmap(width, height), new RectangleD(inner), mode, visible);
+            return this.Render(obj, new Bitmap(width, height), new RectangleD(inner), mode);
         }
 
-        public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, RectangleD<Bitmap> portion, RectangleF? visible)
+        public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, RectangleD<Bitmap> portion)
         {
-            return this.Render(obj, new Bitmap(portion.Item), portion as RectangleD, portion.Mode, visible);
+            return this.Render(obj, new Bitmap(portion.Item), portion as RectangleD, portion.Mode);
         }
 
-        private RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, Bitmap image, RectangleD portion, ScaleMode mode, RectangleF? visible)
+        private RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, Bitmap image, RectangleD portion, ScaleMode mode)
         {
             var rendered = new RectangleD<Bitmap>(image, portion, mode);
 
@@ -137,12 +137,11 @@ namespace PA.TileList.Drawing.Quantified
 
             if (this._portionPen != null)
             {
-                var p = this._portionPen.Clone() as Pen;
-                p.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
-                p.Width = this._portionPen.Width * 2f;
+                var dot = this._portionPen.Clone() as Pen;
+                dot.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
 
                 g.Graphics.DrawRectangle(this._portionPen, Rectangle.Round(subportion.Outer));
-                g.Graphics.DrawRectangle(p, Rectangle.Round(subportion.Inner));
+                g.Graphics.DrawRectangle(dot, Rectangle.Round(subportion.Inner));
             }
         }
     }

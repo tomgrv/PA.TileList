@@ -49,17 +49,17 @@ namespace PA.TileList.Drawing.Linear
             this._rectPen = rectPen;
         }
 
-        public RectangleD<Bitmap> Render(RectangularProfile obj, RectangleD<Bitmap> portion, RectangleF? visible)
+        public RectangleD<Bitmap> Render(RectangularProfile obj, RectangleD<Bitmap> portion)
         {
-            return this.Render(obj, new Bitmap(portion.Item), portion as RectangleD, portion.Mode, visible);
+            return this.Render(obj, new Bitmap(portion.Item), portion as RectangleD, portion.Mode);
         }
 
-        public RectangleD<Bitmap> Render(RectangularProfile obj, int width, int height, ScaleMode mode, RectangleF? visible)
+        public RectangleD<Bitmap> Render(RectangularProfile obj, int width, int height, ScaleMode mode)
         {
-            return this.Render(obj, new Bitmap(width, height), mode, visible);
+            return this.Render(obj, new Bitmap(width, height), mode);
         }
 
-        public RectangleD<Bitmap> Render(RectangularProfile obj, Bitmap baseImage, ScaleMode mode, RectangleF? visible)
+        public RectangleD<Bitmap> Render(RectangularProfile obj, Bitmap baseImage, ScaleMode mode)
         {
             var w = Math.Abs(obj.xMax - obj.xMin);
             var h = Math.Abs(obj.yMax - obj.yMin);
@@ -70,16 +70,16 @@ namespace PA.TileList.Drawing.Linear
             var p = new PointF(-s.Width / 2f, -s.Height / 2f);
             var r = new RectangleD<Bitmap>(baseImage, p, s, mode);
 
-            return this.Render(obj, r, visible);
+            return this.Render(obj, r);
 
         }
 
-        public RectangleD<Bitmap> Render(RectangularProfile obj, int width, int height, RectangleF inner, ScaleMode mode, RectangleF? visible)
+        public RectangleD<Bitmap> Render(RectangularProfile obj, int width, int height, RectangleF inner, ScaleMode mode)
         {
-            return this.Render(obj, new RectangleD<Bitmap>(new Bitmap(width, height), inner, mode), visible);
+            return this.Render(obj, new RectangleD<Bitmap>(new Bitmap(width, height), inner, mode));
         }
 
-        private RectangleD<Bitmap> Render(RectangularProfile obj, Bitmap image, RectangleD portion, ScaleMode mode, RectangleF? visible)
+        private RectangleD<Bitmap> Render(RectangularProfile obj, Bitmap image, RectangleD portion, ScaleMode mode)
         {
             var rendered = new RectangleD<Bitmap>(image, portion, mode);
 

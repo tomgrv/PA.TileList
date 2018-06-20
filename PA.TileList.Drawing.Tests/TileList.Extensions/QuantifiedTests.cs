@@ -101,7 +101,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             var q0 = t0.ToQuantified(10, 10);
 
             var signature0 = q0.RenderImage(1000, 1000, ScaleMode.STRETCH, new QuantifiedRenderer<Item>((z, s) =>
-                  z.ToBitmap(100, 50, z.X + "\n" + z.Y)), null).Item.GetSignature();
+                  z.ToBitmap(100, 50, z.X + "\n" + z.Y))).Item.GetSignature();
 
 
             foreach (
@@ -111,7 +111,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
                 t0.Find(c).Color = Color.Chocolate;
 
             var signature1 = q0.RenderImage(1000, 1000, ScaleMode.STRETCH, new QuantifiedRenderer<Item>((z, s) =>
-                   z.ToBitmap(100, 50, z.X + "\n" + z.Y)), null).Item.GetSignature();
+                   z.ToBitmap(100, 50, z.X + "\n" + z.Y))).Item.GetSignature();
 
             foreach (
                 var c in
@@ -120,7 +120,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
                 t0.Find(c).Color = Color.White;
 
             var signature2 = q0.RenderImage(1000, 1000, ScaleMode.STRETCH, new QuantifiedRenderer<Item>((z, s) =>
-                  z.ToBitmap(100, 50, z.X + "\n" + z.Y)), null).Item.GetSignature();
+                  z.ToBitmap(100, 50, z.X + "\n" + z.Y))).Item.GetSignature();
 
             foreach (
                 var c in
@@ -129,7 +129,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
                 t0.Find(c).Color = Color.Black;
 
             var signature3 = q0.RenderImage(1000, 1000, ScaleMode.STRETCH, new QuantifiedRenderer<Item>((z, s) =>
-                  z.ToBitmap(100, 50, z.X + "\n" + z.Y)), null).Item.GetSignature();
+                  z.ToBitmap(100, 50, z.X + "\n" + z.Y))).Item.GetSignature();
         }
 
 
@@ -151,17 +151,17 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             var q = tile.Filter(p, new SelectionConfiguration(SelectionPosition.Inside), true);
 
             var i = q.RenderImage(5000, 5000, ScaleMode.ALL, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y),
-                Pens.Crimson), null);
+                Pens.Crimson));
 
             this.TestCoordinates(tile, r1, i, z => z.Context.Color = Color.Violet, Color.Aqua);
             this.TestCoordinates(tile, r2, i, z => z.Context.Color = Color.Violet, Color.OrangeRed);
             this.TestCoordinates(tile, r3, i, z => z.Context.Color = Color.Violet, Color.Blue);
 
-            var ii = q.RenderImage(i, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y)), null);
+            var ii = q.RenderImage(i, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y)));
 
-            var pi = p.RenderImage(ii, new CircularProfileRenderer(), null);
+            var pi = p.RenderImage(ii, new CircularProfileRenderer());
 
-            var pj = q.RenderImage(pi, new RulersRenderer<IContextual<Item>>(new[] { 100f, 500f }), null);
+            var pj = q.RenderImage(pi, new RulersRenderer<IContextual<Item>>(new[] { 100f, 500f }));
 
             var signature = pj.Item.GetSignature();
         }
@@ -184,8 +184,8 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 			var coord2 = t1.GetCoordinateAt(0, 0);
 			Assert.IsNull(coord2);
 
-            var i1 = t1.RenderImage(2000, 2000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 50, z.X + "\n" + z.Y)), null);
-            var signature = t1.RenderImage(i1, new RulersRenderer<IContextual<Item>>(new[] { 100f, 500f }), null).Item.GetSignature();
+            var i1 = t1.RenderImage(2000, 2000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 50, z.X + "\n" + z.Y)));
+            var signature = t1.RenderImage(i1, new RulersRenderer<IContextual<Item>>(new[] { 100f, 500f })).Item.GetSignature();
            // Assert.AreEqual("A56EBC8E87772EA73D38342AF45FF00B5489A22DB73E7ED5996C6AF7EEE3DE0A", signature, "Image hash");
         }
 
@@ -203,13 +203,13 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             var item = t1.GetCoordinateAt(500, 1000);
             //item.Context.Color = Color.Red;
 
-            var i1 = t1.RenderImage(2000, 2000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.X + "\n" + z.Y)), null);
+            var i1 = t1.RenderImage(2000, 2000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.X + "\n" + z.Y)));
 
             var p = new CircularProfile(1000);
 
-            var i2 = p.RenderImage(i1, new CircularProfileRenderer(null, null, Pens.DarkViolet), null);
+            var i2 = p.RenderImage(i1, new CircularProfileRenderer(null, null, Pens.DarkViolet));
 
-            var signature = t1.RenderImage(i2, new RulersRenderer<IContextual<Item>>(new[] { 100f, 500f }), null).Item.GetSignature();
+            var signature = t1.RenderImage(i2, new RulersRenderer<IContextual<Item>>(new[] { 100f, 500f })).Item.GetSignature();
             Assert.AreEqual("9272D2C42A039C2122B649DAD516B390A3A2A3C51BA861B6E615F27BA0F1BDA3", signature, "Image hash");
         }
 
@@ -229,15 +229,15 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             t1.Find(item).Context.Color = Color.Pink;
 
-            var i1 = t1.RenderImage(2000, 2000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.X + "\n" + z.Y)), null);
+            var i1 = t1.RenderImage(2000, 2000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.X + "\n" + z.Y)));
 
             var p = new CircularProfile(1000);
 
-            var i2 = p.RenderImage(i1, new CircularProfileRenderer(null, null, Pens.DarkViolet), null);
+            var i2 = p.RenderImage(i1, new CircularProfileRenderer(null, null, Pens.DarkViolet) );
 
             var r = new RectangularProfile(-500, 1000, 500,1100);
 
-            var signature = r.RenderImage(i2, new RectangularRenderer(), null).Item.GetSignature();
+            var signature = r.RenderImage(i2, new RectangularRenderer()).Item.GetSignature();
             Assert.AreEqual("9272D2C42A039C2122B649DAD516B390A3A2A3C51BA861B6E615F27BA0F1BDA3", signature, "Image hash");
         }
 
@@ -255,13 +255,13 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             var item = t1.GetCoordinateAt(500, 1000);
             //item.Context.Color = Color.Red;
 
-            var r1 = t1.RenderImage(2000, 2000, ScaleMode.STRETCH, new RulersRenderer<IContextual<Item>>(new[] { 100f, 500f }), null);
+            var r1 = t1.RenderImage(2000, 2000, ScaleMode.STRETCH, new RulersRenderer<IContextual<Item>>(new[] { 100f, 500f }));
 
             //            var i1 = t1.RenderImage(r1, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.X + "\n" + z.Y)));
 
             var p = new CircularProfile(1000);
 
-            var i2 = p.RenderImage(r1, new CircularProfileRenderer(null, null, Pens.DarkViolet), null);
+            var i2 = p.RenderImage(r1, new CircularProfileRenderer(null, null, Pens.DarkViolet));
 
             var signature = i2.Item.GetSignature();
 
@@ -286,7 +286,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
                                 (z2, s2) =>
                                 {
                                     return z2.Context.ToBitmap((int)s2.Width, (int)s2.Height, z2.X + "\n" + z2.Y);
-                                }), null
+                                })
                         ).Item.GetSignature("flattened");
 
         }
