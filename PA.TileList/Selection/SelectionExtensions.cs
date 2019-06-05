@@ -259,8 +259,8 @@ namespace PA.TileList.Selection
 			var stepSizeX = pointsInX > 1 ? ratioX / (pointsInX - 1) : 0f;
 			var stepSizeY = pointsInY > 1 ? ratioY / (pointsInY - 1) : 0f;
 
-			var offsetX = pointsInX > 1 ? ratioX / 2f : 0f;
-			var offsetY = pointsInY > 1 ? ratioY / 2f : 0f;
+			var offsetX = ratioX / 2f ;
+			var offsetY = ratioY / 2f ;
 
 			var testY = new double[pointsInY];
 			var testY2 = new double[pointsInY];
