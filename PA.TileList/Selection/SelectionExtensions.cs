@@ -250,17 +250,17 @@ namespace PA.TileList.Selection
 		{
 			Contract.Requires(tile != null, nameof(tile));
 			Contract.Requires(predicate != null, nameof(predicate));
-			Contract.Requires(pointsInX >= 2, nameof(pointsInX));
-			Contract.Requires(pointsInY >= 2, nameof(pointsInY));
+			Contract.Requires(pointsInX >= 1, nameof(pointsInX));
+			Contract.Requires(pointsInY >= 1, nameof(pointsInY));
 
 			var ratioX = fullSize ? 1f : tile.ElementSizeX / tile.ElementStepX;
 			var ratioY = fullSize ? 1f : tile.ElementSizeY / tile.ElementStepY;
 
-			var stepSizeX = ratioX / (pointsInX - 1);
-			var stepSizeY = ratioY / (pointsInY - 1);
+			var stepSizeX = pointsInX > 1 ? ratioX / (pointsInX - 1) : 0f;
+			var stepSizeY = pointsInY > 1 ? ratioY / (pointsInY - 1) : 0f;
 
-			var offsetX = ratioX / 2f;
-			var offsetY = ratioY / 2f;
+			var offsetX = pointsInX > 1 ? ratioX / 2f : 0f;
+			var offsetY = pointsInY > 1 ? ratioY / 2f : 0f;
 
 			var testY = new double[pointsInY];
 			var testY2 = new double[pointsInY];
