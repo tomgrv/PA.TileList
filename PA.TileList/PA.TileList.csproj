@@ -155,6 +155,7 @@
   <ItemGroup>
     <None Include="PA.TileList.nuspec" />
     <None Include="PA.Toolbox.snk" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
