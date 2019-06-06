@@ -1,5 +1,4 @@
 ﻿using System;
-using PA.Utilities;
 
 namespace PA.TileList.Selection
 {
@@ -88,7 +87,7 @@ namespace PA.TileList.Selection
 
             // Automatic resolution            
             var factor = this.Tolerance/10;
-            while (!Math.Floor(factor).NearlyEquals(factor))
+			while (!(Math.Abs(Math.Floor(factor) - factor) <= float.Epsilon))
                 factor = factor*10f;
 
             // Members

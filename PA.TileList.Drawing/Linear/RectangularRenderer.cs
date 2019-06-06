@@ -30,7 +30,6 @@ using System.Drawing;
 using PA.TileList.Circular;
 using PA.TileList.Linear;
 using System.Linq;
-using PA.Utilities;
 
 namespace PA.TileList.Drawing.Linear
 {

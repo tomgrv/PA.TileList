@@ -30,7 +30,6 @@ using System.Drawing;
 using PA.TileList.Circular;
 using PA.TileList.Linear;
 using System.Linq;
-using PA.Utilities;
 
 namespace PA.TileList.Drawing.Circular
 {
@@ -130,7 +129,7 @@ namespace PA.TileList.Drawing.Circular
                 g.Graphics.DrawArc(this._arcPen ?? Pens.Black, (float)x, (float)y, (float)w, (float)h, (float)ad, (float)sw);
             }
 
-            if (!current.Radius.NearlyEquals(last.Radius))
+			if (!(Math.Abs(current.Radius - last.Radius) < float.Epsilon))
             {
                 var x1 = g.OffsetX + g.ScaleX * last.Radius * Math.Cos(current.Angle);
                 var y1 = g.OffsetY + g.ScaleY * last.Radius * Math.Sin(current.Angle);
