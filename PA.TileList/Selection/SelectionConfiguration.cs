@@ -85,12 +85,9 @@ namespace PA.TileList.Selection
             this.Tolerance = tolerance;
             this.SelectionType = selectionType;
 
-            // Automatic resolution            
-			float factor = 2 / tolerance;
-
             // Members
-            this.ResolutionX = (int) Math.Round(factor*10 + 1f, 0);
-            this.ResolutionY = (int) Math.Round(factor*10 + 1f, 0);
+            this.ResolutionX = (int) Math.Round( 2 / tolerance + 1f, 0);
+            this.ResolutionY = (int) Math.Round( 2 / tolerance + 1f, 0);
             this.MaxSurface = this.ResolutionX*this.ResolutionY;
             this.MinSurface = this.Tolerance*this.MaxSurface;
         }
