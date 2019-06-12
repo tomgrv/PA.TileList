@@ -85,9 +85,12 @@ namespace PA.TileList.Selection
             this.Tolerance = tolerance;
             this.SelectionType = selectionType;
 
+			var power = BitConverter.GetBytes(decimal.GetBits((decimal)tolerance)[3])[2];
+			var resolution = Math.Pow(10, power);
+
             // Members
-            this.ResolutionX = (int) Math.Round( 2 / tolerance + 1f, 0);
-            this.ResolutionY = (int) Math.Round( 2 / tolerance + 1f, 0);
+            this.ResolutionX = (int) Math.Round( resolution + 1f, 0);
+            this.ResolutionY = (int) Math.Round( resolution + 1f, 0);
             this.MaxSurface = this.ResolutionX*this.ResolutionY;
             this.MinSurface = this.Tolerance*this.MaxSurface;
         }
