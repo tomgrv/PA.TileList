@@ -47,13 +47,13 @@ namespace PA.TileList.Selection
 		/// <param name="config">Config.</param>
 		/// <param name="fullsize">If set to <c>true</c> fullsize.</param>
 		public static IEnumerable<Coordinate> SelectCoordinates(this IQuantifiedTile tile,
-				ISelectionProfile profile, SelectionConfiguration config, bool fullsize = true)
+				ISelectionProfile profile, SelectionConfiguration config, bool fullSize = true)
 		{
 			Contract.Requires(tile != null, nameof(tile));
 			Contract.Requires(profile != null, nameof(profile));
 			Contract.Requires(config != null, nameof(config));
 
-			return tile.Zone.Where(c => config.SelectionType.HasFlag(c.Position(tile, profile, config, fullsize)));
+			return tile.Zone.Where(c => c.Selected(tile, profile, config, fullSize));
 		}
 
 		#endregion
@@ -87,7 +87,7 @@ namespace PA.TileList.Selection
 		/// <param name="tile">Tile.</param>
 		/// <param name="profile">Profile.</param>
 		/// <param name="config">Config.</param>
-		/// <param name="fullSize">If set to <c>true</c> full size.</param>
+		/// <param name="fullsize">If set to <c>true</c> full size.</param>
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
 		public static IEnumerable<T> Take<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
 			SelectionConfiguration config, bool fullSize = false)
@@ -97,7 +97,7 @@ namespace PA.TileList.Selection
 			Contract.Requires(profile != null, nameof(profile));
 			Contract.Requires(config != null, nameof(config));
 
-			return tile.Where(c => config.SelectionType.HasFlag(c.Position(tile, profile, config, fullSize))); ;
+			return tile.Where(c =>  c.Selected(tile, profile, config, fullSize)); ;
 		}
 
 		public static IEnumerable<T> Except<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
@@ -108,7 +108,7 @@ namespace PA.TileList.Selection
 			Contract.Requires(profile != null, nameof(profile));
 			Contract.Requires(config != null, nameof(config));
 
-			return tile.Where(c => !config.SelectionType.HasFlag(c.Position(tile, profile, config, fullSize))); 
+			return tile.Where(c => ! c.Selected(tile, profile, config, fullSize));
 		}
 
 		#endregion
@@ -126,6 +126,7 @@ namespace PA.TileList.Selection
 		/// <param name="config">Config.</param>
 		/// <param name="fullSize">If set to <c>true</c> full size.</param>
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
+		[Obsolete("Should use Selected() instead")]
 		public static SelectionPosition Position<T>(this T c, IQuantifiedTile tile, ISelectionProfile profile,
 			SelectionConfiguration config, bool fullSize = false)
 			where T : ICoordinate
@@ -144,6 +145,30 @@ namespace PA.TileList.Selection
 				return SelectionPosition.Outside;
 
 			return SelectionPosition.Under;
+		}
+
+		/// <summary>
+		/// Position the specified c within tile according to profile, config and fullSize.
+		/// </summary>
+		/// <returns>The position.</returns>
+		/// <param name="c">C.</param>
+		/// <param name="tile">Tile.</param>
+		/// <param name="profile">Profile.</param>
+		/// <param name="config">Config.</param>
+		/// <param name="fullSize">If set to <c>true</c> full size.</param>
+		/// <typeparam name="T">The 1st type parameter.</typeparam>
+		public static bool Selected<T>(this T c, IQuantifiedTile tile, ISelectionProfile profile,
+			SelectionConfiguration config, bool fullSize = false)
+			where T : ICoordinate
+		{
+			Contract.Requires(tile != null, nameof(tile));
+			Contract.Requires(profile != null, nameof(profile));
+			Contract.Requires(config != null, nameof(config));
+
+			// full mode / follows SelectionConfiguration
+			var points = c.CountPoints(tile, profile, config, fullSize);
+
+			return (points > 0 && points >= config.MinSurface);
 		}
 
 		/// <summary>
@@ -167,7 +192,7 @@ namespace PA.TileList.Selection
 			profile.OptimizeProfile();
 
 			return c.CountPoints(tile, config.ResolutionX, config.ResolutionY,
-				(xc, yc, xc2, yc2) => profile.Position(xc, yc, xc2, yc2) == SelectionPosition.Inside, fullSize);
+					 (xc, yc, xc2, yc2) => profile.Position(xc, yc, xc2, yc2).HasFlag(config.SelectionType), fullSize);
 		}
 
 		/// <summary>
@@ -259,8 +284,8 @@ namespace PA.TileList.Selection
 			var stepSizeX = pointsInX > 1 ? ratioX / (pointsInX - 1) : 0f;
 			var stepSizeY = pointsInY > 1 ? ratioY / (pointsInY - 1) : 0f;
 
-			var offsetX = ratioX / 2f ;
-			var offsetY = ratioY / 2f ;
+			var offsetX = ratioX / 2f;
+			var offsetY = ratioY / 2f;
 
 			var testY = new double[pointsInY];
 			var testY2 = new double[pointsInY];

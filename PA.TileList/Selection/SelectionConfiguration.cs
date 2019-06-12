@@ -14,7 +14,7 @@ namespace PA.TileList.Selection
         /// <param name="tolerance">Surface of "on profile items", in %, to be inside to be considered "inside profile"  </param>
         public SelectionConfiguration(SelectionPosition selectionType, float tolerance)
         {
-            if ((tolerance < 0f) || (tolerance > 1f))
+            if ((tolerance <= 0f) || (tolerance > 1f))
                 throw new ArgumentOutOfRangeException(nameof(tolerance), tolerance, "Must be a percentage");
             this.Init(selectionType, tolerance);
         }
@@ -33,10 +33,10 @@ namespace PA.TileList.Selection
         [Obsolete("Please use SelectionConfiguration( SelectionFlag selectionType,float tolerance) as constructor")]
         public SelectionConfiguration(float tolerance, float resolution, SelectionPosition selectionType)
         {
-            if ((tolerance < 0f) || (tolerance > 1f))
+            if ((tolerance <= 0f) || (tolerance > 1f))
                 throw new ArgumentOutOfRangeException(nameof(tolerance), tolerance, "Should be a percentage");
 
-            if ((resolution < 0f) || (resolution > 1f))
+            if ((resolution <= 0f) || (resolution > 1f))
                 throw new ArgumentOutOfRangeException(nameof(resolution), resolution, "Should be a percentage");
 
             this.Tolerance = tolerance;
