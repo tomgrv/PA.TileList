@@ -86,9 +86,7 @@ namespace PA.TileList.Selection
             this.SelectionType = selectionType;
 
             // Automatic resolution            
-            var factor = this.Tolerance/10;
-			while (!(Math.Abs(Math.Floor(factor) - factor) <= float.Epsilon))
-                factor = factor*10f;
+			float factor = 2 / tolerance;
 
             // Members
             this.ResolutionX = (int) Math.Round(factor*10 + 1f, 0);
