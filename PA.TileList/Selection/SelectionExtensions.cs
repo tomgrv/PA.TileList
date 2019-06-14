@@ -194,8 +194,10 @@ namespace PA.TileList.Selection
 
 			profile.OptimizeProfile();
 
+			SelectionPosition position = 0x00;
+
 			return c.CountPoints(tile, config.ResolutionX, config.ResolutionY,
-					 (xc, yc, xc2, yc2) => profile.Position(xc, yc, xc2, yc2).HasFlag(config.SelectionType), fullSize);
+			                     (xc, yc, xc2, yc2) => (position |= profile.Position(xc, yc, xc2, yc2)).HasFlag(config.SelectionType), fullSize);
 		}
 
 		/// <summary>
