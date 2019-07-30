@@ -58,10 +58,11 @@ namespace PA.TileList.Drawing.Graphics2D
             return renderer.Render(c, width, height, inner, mode);
         }
 
-        public static RectangleD<U> RenderImage<T, U>(this T c, RectangleD<U> image, IRenderer<T, U> renderer)
+        public static void DrawImage<T, U>(this T c, RectangleD<U> image, IRenderer<T, U> renderer)
             where U : Image
         {
-            return renderer.Render(c, image);
+			
+			renderer.Draw(c, image);
         }
 
         #endregion
@@ -86,10 +87,10 @@ namespace PA.TileList.Drawing.Graphics2D
             return renderer.Render(baseObject, width, height, inner, mode);
         }
 
-        public static RectangleD<U> Render<T, U>(this RectangleD<U> c, T baseObject, IRenderer<T, U> renderer)
+        public static void Draw<T, U>(this RectangleD<U> c, T baseObject, IRenderer<T, U> renderer)
             where U : Image
         {
-            return renderer.Render(baseObject, c);
+            renderer.Draw(baseObject, c);
         }
 
         #endregion
@@ -118,12 +119,13 @@ namespace PA.TileList.Drawing.Graphics2D
             var scaleX = image.Item.Width / image.Outer.Width;
             var scaleY = image.Item.Height / image.Outer.Height;
 
-            if (image.Mode.HasFlag(ScaleMode.XYRATIO))
-            {
-                var scale = Math.Min(scaleX, scaleY);
-                scaleX = scale;
-                scaleY = scale;
-            }
+			if (image.Mode.HasFlag(ScaleMode.XYRATIO))
+			{
+			    var scale = Math.Min(scaleX, scaleY);
+			    scaleX = scale;
+			    scaleY = scale;
+			}
+
 
             // Zone definition
             var outerZone = new RectangleF(image.Outer.X * scaleX, image.Outer.Y * scaleY, image.Outer.Width * scaleX, image.Outer.Height * scaleY);

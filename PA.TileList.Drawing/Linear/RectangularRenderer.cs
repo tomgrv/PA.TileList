@@ -33,66 +33,49 @@ using System.Linq;
 
 namespace PA.TileList.Drawing.Linear
 {
-    public class RectangularRenderer: IRenderer<RectangularProfile, Bitmap>
-    {
-        private Pen _rectPen;
+	public class RectangularRenderer : AbstractBitmapRenderer<RectangularProfile>, IRenderer<RectangularProfile, Bitmap>
+	{
+		private Pen _rectPen;
 
-        public RectangularRenderer(Color c, float width = 1f)
-        {
-            var p = new Pen(c, width);
-            this._rectPen = p;
-        }
+		public RectangularRenderer(Color c, float width = 1f)
+		{
+			var p = new Pen(c, width);
+			this._rectPen = p;
+		}
 
-        public RectangularRenderer(Pen rectPen = null)
-        {
-            this._rectPen = rectPen;
-        }
+		public RectangularRenderer(Pen rectPen = null)
+		{
+			this._rectPen = rectPen;
+		}
 
-        public RectangleD<Bitmap> Render(RectangularProfile obj, RectangleD<Bitmap> portion)
-        {
-            return this.Render(obj, new Bitmap(portion.Item), portion as RectangleD, portion.Mode);
-        }
+		public override void Draw(RectangularProfile obj, RectangleD<Bitmap> portion)
+		{
+			using (var g = portion.GetGraphicsD())
+			{
+				var min = g.Portion.Inner.Left;
+				var max = g.Portion.Inner.Right;
 
-        public RectangleD<Bitmap> Render(RectangularProfile obj, int width, int height, ScaleMode mode)
-        {
-            return this.Render(obj, new Bitmap(width, height), mode);
-        }
+				g.Graphics.DrawRectangle(this._rectPen ?? Pens.Blue, g.OffsetX + (float)obj.xMin * g.ScaleX, g.OffsetY + (float)obj.yMin * g.ScaleY,
+										 (float)(obj.xMax - obj.xMin) * g.ScaleX, (float)(obj.yMax - obj.yMin) * g.ScaleY);
+			}
+		}
 
-        public RectangleD<Bitmap> Render(RectangularProfile obj, Bitmap baseImage, ScaleMode mode)
-        {
-            var w = Math.Abs(obj.xMax - obj.xMin);
-            var h = Math.Abs(obj.yMax - obj.yMin);
+	
+		public override RectangleD<Bitmap> Render(RectangularProfile obj, Bitmap baseImage, ScaleMode mode)
+		{
+			var w = Math.Abs(obj.xMax - obj.xMin);
+			var h = Math.Abs(obj.yMax - obj.yMin);
 
-            var m = Math.Max(w, h);
+			var m = Math.Max(w, h);
 
-            var s = mode == ScaleMode.STRETCH ? new SizeF((float)m, (float)m) : new SizeF(baseImage.Width, baseImage.Height);
-            var p = new PointF(-s.Width / 2f, -s.Height / 2f);
-            var r = new RectangleD<Bitmap>(baseImage, p, s, mode);
+			var s = mode == ScaleMode.STRETCH ? new SizeF((float)m, (float)m) : new SizeF(baseImage.Width, baseImage.Height);
+			var p = new PointF(-s.Width / 2f, -s.Height / 2f);
+			var r = new RectangleD<Bitmap>(baseImage, p, s, mode);
+			this.Draw(obj, r);
+			return r;
 
-            return this.Render(obj, r);
+		}
 
-        }
 
-        public RectangleD<Bitmap> Render(RectangularProfile obj, int width, int height, RectangleF inner, ScaleMode mode)
-        {
-            return this.Render(obj, new RectangleD<Bitmap>(new Bitmap(width, height), inner, mode));
-        }
-
-        private RectangleD<Bitmap> Render(RectangularProfile obj, Bitmap image, RectangleD portion, ScaleMode mode)
-        {
-            var rendered = new RectangleD<Bitmap>(image, portion, mode);
-
-            using (var g = rendered.GetGraphicsD())
-            {
-                var min = g.Portion.Inner.Left;
-                var max = g.Portion.Inner.Right;
-
-                g.Graphics.DrawRectangle(this._rectPen ?? Pens.Blue, g.OffsetX + (float)obj.xMin * g.ScaleX, g.OffsetY + (float)obj.yMin * g.ScaleY,
-                                                                    (float)(obj.xMax-obj.xMin) * g.ScaleX, (float)(obj.yMax - obj.yMin) * g.ScaleY);
-            }
-
-            return rendered;
-        }
-
-    }
+	}
 }

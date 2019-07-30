@@ -80,6 +80,7 @@
     <Compile Include="Quantified\QuantifiedRenderer.cs" />
     <Compile Include="Quantified\RulersRenderer.cs" />
     <Compile Include="Circular\CircularProfileRenderer.cs" />
+    <Compile Include="Graphics2D\AbstractRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PA.TileList.Drawing.nuspec" />

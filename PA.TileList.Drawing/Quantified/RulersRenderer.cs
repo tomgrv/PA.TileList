@@ -32,7 +32,7 @@ using System.Linq;
 
 namespace PA.TileList.Drawing.Quantified
 {
-	public class RulersRenderer<T> : IRenderer<IQuantifiedTile<T>, Bitmap>
+	public class RulersRenderer<T> : AbstractBitmapRenderer<IQuantifiedTile<T>>, IRenderer<IQuantifiedTile<T>, Bitmap>
 	where T : ICoordinate
 	{
 		private float[] _steps;
@@ -48,38 +48,28 @@ namespace PA.TileList.Drawing.Quantified
 			this._steps = steps;
 		}
 
-		public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, int width, int height, ScaleMode mode)
-		{
-			return this.Render(obj, new Bitmap(width, height), mode);
-		}
-
-		public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, Bitmap baseImage, ScaleMode mode)
+		public override RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, Bitmap baseImage, ScaleMode mode)
 		{
 			return this.Render(obj, baseImage, new RectangleD(obj.GetOrigin(), obj.GetSize()), mode);
 		}
 
-		public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, int width, int height, RectangleF inner, ScaleMode mode)
+		public override void Draw(IQuantifiedTile<T> obj, RectangleD<Bitmap> portion)
 		{
-			return this.Render(obj, new RectangleD<Bitmap>(new Bitmap(width, height), inner, mode));
-		}
-
-		public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, RectangleD<Bitmap> portion)
-		{
-			return this.Render(obj, new Bitmap(portion.Item), portion as RectangleD, portion.Mode);
-		}
-
-		private RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, Bitmap image, RectangleD portion, ScaleMode mode)
-		{
-			var rendered = new RectangleD<Bitmap>(image, portion, mode);
-
-			using (var g = rendered.GetGraphicsD())
+			using (var g = portion.GetGraphicsD())
 			{
 				DrawSteps(g, this._steps, Direction.Vertical);
 				DrawSteps(g, this._steps, Direction.Horizontal);
 
 			}
+		}
 
-			return rendered;
+		private RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, Bitmap image, RectangleD portion, ScaleMode mode)
+		{
+			var r = new RectangleD<Bitmap>(image, portion, mode);
+
+			Draw(obj, r);
+
+			return r;
 		}
 
 		private static void DrawSteps(GraphicsD g, float[] steps, Direction d)

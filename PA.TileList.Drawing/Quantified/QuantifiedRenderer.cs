@@ -33,116 +33,99 @@ using PA.TileList.Cacheable;
 
 namespace PA.TileList.Drawing.Quantified
 {
-    public class QuantifiedRenderer<T> : IRenderer<IQuantifiedTile<T>, Bitmap>
-    where T : ICoordinate
-    {
-        private Pen _portionPen;
-        private Pen _extraPen;
-        private Func<T, SizeF, Bitmap> _getImagePortion;
-        private Action<T, Graphics, ScaleMode> _drawImagePortion;
+	public class QuantifiedRenderer<T> :AbstractBitmapRenderer<IQuantifiedTile<T>>, IRenderer<IQuantifiedTile<T>, Bitmap>
+	where T : ICoordinate
+	{
+		private Pen _portionPen;
+		private Pen _extraPen;
+		private Func<T, SizeF, Bitmap> _getImagePortion;
+		private Action<T, Graphics, ScaleMode> _drawImagePortion;
 
-        public QuantifiedRenderer(Func<T, SizeF, Bitmap> getImagePortion, Pen portionPen = null, Pen extraPen = null)
-        {
-            this._getImagePortion = getImagePortion;
-            this._portionPen = portionPen;
-            this._extraPen = extraPen;
-        }
+		public QuantifiedRenderer(Func<T, SizeF, Bitmap> getImagePortion, Pen portionPen = null, Pen extraPen = null)
+		{
+			this._getImagePortion = getImagePortion;
+			this._portionPen = portionPen;
+			this._extraPen = extraPen;
+		}
 
-        public QuantifiedRenderer(Action<T, Graphics, ScaleMode> drawImagePortion, Pen portionPen = null, Pen extraPen = null)
-        {
-            this._drawImagePortion = drawImagePortion;
-            this._portionPen = portionPen;
-            this._extraPen = extraPen;
-        }
+		public QuantifiedRenderer(Action<T, Graphics, ScaleMode> drawImagePortion, Pen portionPen = null, Pen extraPen = null)
+		{
+			this._drawImagePortion = drawImagePortion;
+			this._portionPen = portionPen;
+			this._extraPen = extraPen;
+		}
 
-        public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, Bitmap baseImage, ScaleMode mode)
-        {
-            var s = mode.HasFlag(ScaleMode.STRETCH) ? obj.GetSize() : new SizeF(baseImage.Width, baseImage.Height);
-            var p = mode.HasFlag(ScaleMode.STRETCH) ? obj.GetOrigin() : new PointF(-baseImage.Width / 2f, -baseImage.Height / 2f);
 
-            return this.Render(obj, baseImage, new RectangleD(p, s), mode);
-        }
+		public override void Draw(IQuantifiedTile<T> obj, RectangleD<Bitmap> portion)
+		{
+			using (var g = portion.GetGraphicsD())
+			{
+				if (this._extraPen != null)
+				{
+					g.Draw(this._extraPen);
+				}
 
-        public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, int width, int height, ScaleMode mode)
-        {
-            return this.Render(obj, new Bitmap(width, height), mode);
-        }
+				foreach (var subportion in obj.GetPortions(g, portion.Mode).Where(p => (p.Outer.Height >= 1f) && (p.Outer.Width >= 1f)))// && (visible?.IntersectsWith(p.Outer) ?? true)))
 
-        public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, int width, int height, RectangleF inner, ScaleMode mode)
-        {
-            return this.Render(obj, new Bitmap(width, height), new RectangleD(inner), mode);
-        }
+				{
+					if (typeof(ICacheable).IsAssignableFrom(typeof(T)))
+					{
+						var item = subportion.Item as ICacheable;
 
-        public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, RectangleD<Bitmap> portion)
-        {
-            return this.Render(obj, new Bitmap(portion.Item), portion as RectangleD, portion.Mode);
-        }
+						if (item.IsCachedBy(this))
+						{
+							this.RenderPortion(subportion, g, portion.Mode);
+							item.NotifyCachedBy(this);
+						}
+					}
+					else
+					{
+						this.RenderPortion(subportion, g, portion.Mode);
+					}
+				}
+			}
+		}
 
-        private RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, Bitmap image, RectangleD portion, ScaleMode mode)
-        {
-            var rendered = new RectangleD<Bitmap>(image, portion, mode);
 
-            using (var g = rendered.GetGraphicsD())
-            {
-                if (this._extraPen != null)
-                {
-                    g.Draw(this._extraPen);
-                }
+		public override RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, Bitmap baseImage, ScaleMode mode)
+		{
+			//	var s = mode.HasFlag(ScaleMode.STRETCH) ? obj.GetSize() : new SizeF(baseImage.Width, baseImage.Height);
+			//	var p = mode.HasFlag(ScaleMode.STRETCH) ? obj.GetOrigin() : new PointF(-baseImage.Width / 2f, -baseImage.Height / 2f);
 
-                foreach (var subportion in obj.GetPortions(g, mode).Where(p => (p.Outer.Height >= 1f) && (p.Outer.Width >= 1f)))// && (visible?.IntersectsWith(p.Outer) ?? true)))
-                {
-                    if (typeof(ICacheable).IsAssignableFrom(typeof(T)))
-                    {
-                        var item = subportion.Item as ICacheable;
+			var i = obj.GetBounds();
+			var s = new RectangleD<Bitmap>(baseImage, new RectangleD(i), mode);
+			this.Draw(obj, s);
+			return s;
+		}
 
-                        if (item.IsCachedBy(this))
-                        {
-                            this.RenderPortion(subportion, g, mode);
-                            item.NotifyCachedBy(this);
-                        }
-                    }
-                    else
-                    {
-                        this.RenderPortion(subportion, g, mode);
-                    }
-                }
-            }
+		private void RenderPortion(RectangleD<T> subportion, GraphicsD g, ScaleMode mode)
+		{
+			if (mode.HasFlag(ScaleMode.PXLSNAP))
+			{
+				//subportion.Round();
+			}
 
-            return rendered;
-        }
+			if (this._getImagePortion != null)
+			{
+				using (var subportionBitmap = this._getImagePortion(subportion.Item, subportion.Inner.Size))
+				{
+					if (subportionBitmap != null)
+					{
+						g.Graphics.DrawImage(subportionBitmap, subportion.Inner);
+					}
+				}
+			}
 
-        private void RenderPortion(RectangleD<T> subportion, GraphicsD g, ScaleMode mode)
-        {
-            if (mode.HasFlag(ScaleMode.PXLSNAP))
-            {
-                subportion.Round();
-            }
+			if (this._drawImagePortion != null)
+			{
+				g.Graphics.Clip = new Region(subportion.Inner);
+				this._drawImagePortion(subportion.Item, g.Graphics, mode);
+			}
 
-            if (this._getImagePortion != null)
-            {
-                using (var subportionBitmap = this._getImagePortion(subportion.Item, subportion.Inner.Size))
-                {
-                    if (subportionBitmap != null)
-                    {
-                        g.Graphics.DrawImage(subportionBitmap, subportion.Inner);
-                    }
-                }
-            }
-
-            if (this._drawImagePortion != null)
-            {
-                g.Graphics.Clip = new Region(subportion.Inner);
-                this._drawImagePortion(subportion.Item, g.Graphics, mode);
-            }
-
-            if (this._portionPen != null)
-            {
-                var dot = this._portionPen.Clone() as Pen;
-                dot.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
-
-                g.Graphics.DrawRectangle(this._portionPen, Rectangle.Round(subportion.Outer));
-                g.Graphics.DrawRectangle(dot, Rectangle.Round(subportion.Inner));
-            }
-        }
-    }
+			if (this._portionPen != null)
+			{
+				g.DrawPortion(subportion, this._portionPen);
+			}
+		}
+	}
 }
