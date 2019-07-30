@@ -48,27 +48,31 @@ namespace PA.TileList.Contextual
 		{
 			var reference = t.Reference.Contextualize(t.Reference.Reference);
 
-			// Sizes in flattened output Tile
-			var sizeX = t.ElementSizeX / t.Reference.Zone.SizeX;
-			var sizeY = t.ElementSizeY / t.Reference.Zone.SizeY;
+			// Steps in flattened output Tile
 			var stepX = t.ElementStepX / t.Reference.Zone.SizeX;
 			var stepY = t.ElementStepY / t.Reference.Zone.SizeY;
+
+			// Sizes in flattened output Tile
+			var nX = t.Reference.Zone.SizeX - 1;
+			var nY = t.Reference.Zone.SizeY - 1;
+			var sizeX = (t.ElementSizeX - nX * (t.ElementStepX - t.ElementSizeX)) / t.Reference.Zone.SizeX;
+			var sizeY = (t.ElementSizeY - nY * (t.ElementStepY - t.ElementSizeY)) / t.Reference.Zone.SizeY;
 
 			// Convert offset<U> (relative to <U> center) to Offset<T> (relative to  <T> center), expressed in {number of <T>} 
 			double distX = t.Reference.Reference.X - t.Reference.Zone.Min.X - (t.Reference.Zone.SizeX - 1) / 2f;
 			double distY = t.Reference.Reference.Y - t.Reference.Zone.Min.Y - (t.Reference.Zone.SizeY - 1) / 2f;
 
 			// Flatten Tile
-			var flatten =  (t as ITile<U>).Flatten<U, T>(predicateU, predicateT);
+			var flatten = (t as ITile<U>).Flatten<U, T>(predicateU, predicateT);
 
 			// Reference correction if needed
 			distX += flatten.Reference.X - reference.X;
 			distY += flatten.Reference.Y - reference.Y;
 
 			// Converted to iquantified
-			return new QuantifiedTile<IContextual<T>>(flatten, sizeX, sizeY, stepX, stepY, 
-												      distX * stepX + t.RefOffsetX,
-			                                          distY * stepY + t.RefOffsetY);
+			return new QuantifiedTile<IContextual<T>>(flatten, sizeX, sizeY, stepX, stepY,
+													  distX * stepX + t.RefOffsetX,
+													  distY * stepY + t.RefOffsetY);
 		}
 
 

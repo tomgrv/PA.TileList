@@ -38,8 +38,8 @@ namespace PA.TileList.Quantified
 		public QuantifiedTile(ITile<T> t, double sizeX, double sizeY, double stepX, double stepY, double offsetX, double offsetY)
 			: base(t)
 		{
-			Contract.Requires(stepX < sizeX, nameof(stepX) + " must be greater than " + nameof(sizeX));
-			Contract.Requires(stepY < sizeY, nameof(stepY) + " must be greater than " + nameof(sizeY));
+			Contract.Requires(stepX > sizeX, nameof(stepX) + " must be greater than " + nameof(sizeX));
+			Contract.Requires(stepY > sizeY, nameof(stepY) + " must be greater than " + nameof(sizeY));
 			Contract.Requires(sizeX > 0, nameof(sizeX) + " must be positive");
 			Contract.Requires(sizeY > 0, nameof(sizeY) + " must be positive");
 			Contract.Requires(stepX > 0, nameof(stepX) + " must be positive");

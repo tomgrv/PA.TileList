@@ -77,7 +77,7 @@ namespace PA.TileList.Selection
 			Contract.Requires(profile != null, nameof(profile));
 			Contract.Requires(config != null, nameof(config));
 
-			return tile.Except(profile, config, fullSize).ToTile().ToQuantified();
+			return tile.Except(profile, config, fullSize).ToTile().ToQuantified(tile.ElementSizeX, tile.ElementSizeY, tile.ElementStepX, tile.ElementStepY, tile.RefOffsetX, tile.RefOffsetY);
 		}
 
 		/// <summary>
@@ -139,10 +139,10 @@ namespace PA.TileList.Selection
 			var points = c.CountPoints(tile, profile, config, fullSize);
 
 			if (points >= config.MinSurface)
-				return SelectionPosition.Inside;
+				return config.SelectionType;
 
 			if (points <= 0)
-				return SelectionPosition.Outside;
+				return config.SelectionType ^ SelectionPosition.Under;
 
 			return SelectionPosition.Under;
 		}
