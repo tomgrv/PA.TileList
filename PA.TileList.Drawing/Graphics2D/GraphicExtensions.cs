@@ -71,13 +71,13 @@ namespace PA.TileList.Drawing.Graphics2D
 		public static RectangleD<U> Render<T, U>(this RectangleD<U> c, T baseObject, IRenderer<T, U> renderer)
 		  where U : Image
 		{
-			return renderer.Render(baseObject, c.Item, c.Mode);
+			return renderer.Render(baseObject, c.Item, c.Inner, c.Mode);
 		}
 
 		public static RectangleD<U> Render<T, U>(this RectangleD<U> c, T baseObject, ScaleMode mode, IRenderer<T, U> renderer)
 		   where U : Image
 		{
-			return renderer.Render(baseObject, c.Item, mode);
+			return renderer.Render(baseObject, c.Item, c.Inner, mode);
 		}
 
 		public static RectangleD<U> Render<T, U>(this RectangleD<U> c, T baseObject, int width, int height, ScaleMode mode, IRenderer<T, U> renderer)
