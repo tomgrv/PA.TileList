@@ -100,7 +100,7 @@ namespace PA.TileList.Tests.Utils
         {
             var r = g.ClipBounds;
 
-            g.DrawRectangle(Pens.Pink, r.X, r.Y, r.Width - 1, r.Height - 1);
+			g.FillRectangle(new SolidBrush(Color.Pink), r.X, r.Y, r.Width , r.Height );
             g.FillRectangle(new SolidBrush(this.Color), r.X + 1, r.Y + 1, r.Width - 2, r.Height - 2);
             g.DrawString(s, new Font(FontFamily.GenericSansSerif, r.Width / 3f), Brushes.Gray, r.X, r.Y);
         }

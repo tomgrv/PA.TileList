@@ -117,10 +117,10 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             var pi = p.RenderImage(5000, 5000, ScaleMode.STRETCH, new CircularProfileRenderer(Pens.Red, Pens.Red, Pens.Pink));
             //var i = q.RenderImage(pi, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(s.Width, s.Height, z.X + "\n" + z.Y), Pens.Blue));
-            var i = q.RenderImage(pi, new QuantifiedRenderer<IContextual<Item>>((z, g, m) => z.Context.Draw(g, z.X + "\n" + z.Y), Pens.Blue));
+            q.DrawImage(pi, new QuantifiedRenderer<IContextual<Item>>((z, g, m) => z.Context.Draw(g, z.X + "\n" + z.Y), Pens.Blue));
 
             // var signature1 = pi.Item.GetSignature();
-            var signature2 = i.Item.GetSignature();
+            var signature2 = pi.Item.GetSignature();
 
             Assert.AreEqual(true, tile.Reference.GetHashCode() == q.Reference.GetHashCode(), "HashCode Changed");
             Assert.AreEqual(q.Reference, change, "Reference Changed");
@@ -162,8 +162,8 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             var pi = p.RenderImage(5000, 5000, tile.GetBounds(), ScaleMode.STRETCH, new CircularProfileRenderer(Pens.Red, Pens.Red, Pens.Pink));
             //var i = tile.RenderImage(pi, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y), Pens.Blue));
-            var i = tile.RenderImage(pi, new QuantifiedRenderer<IContextual<Item>>((z, g, m) => z.Context.Draw(g, z.X + "\n" + z.Y), Pens.Blue));
-            var signature_1 = i.Item.GetSignature();
+           tile.DrawImage(pi, new QuantifiedRenderer<IContextual<Item>>((z, g, m) => z.Context.Draw(g, z.X + "\n" + z.Y), Pens.Blue));
+            var signature_1 = pi.Item.GetSignature();
             //    Assert.AreEqual("E63318A4278EED31907E0374B728F045285D43B6FBE0955A1622BFCFBB7AF5B8", signature_1, "Image hash");
 
             //var j = tile.GetImage(5000, 5000, (z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y));
@@ -197,9 +197,9 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             q.Reference.Context.Color = Color.Pink;
 
             var i = q.RenderImage(5000, 2000, new RectangleF(-2000, -2000, 4000, 4000), ScaleMode.XYRATIO | ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y), Pens.Red, Pens.Blue));
-            var pi = p.RenderImage(i, new CircularProfileRenderer(Pens.Red, Pens.Aquamarine, Pens.Green));
+             p.DrawImage(i, new CircularProfileRenderer(Pens.Red, Pens.Aquamarine, Pens.Green));
 
-            var signature = pi.Item.GetSignature();
+            var signature = i.Item.GetSignature();
             //
             Assert.AreEqual(246, q.Count(), "Selected item count");
 
@@ -231,10 +231,10 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             // Assert.AreEqual(change, q.Reference, "test");
 
             var pi = p.RenderImage(5000, 5000, new RectangleF(-2000, -2000, 4000, 4000), ScaleMode.STRETCH, new CircularProfileRenderer(Pens.Red, Pens.Red, Pens.Pink));
-            var i = q.RenderImage(pi, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y), Pens.Red));
+           q.DrawImage(pi, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(50, 50, z.X + "\n" + z.Y), Pens.Red));
 
 
-            var signature = i.Item.GetSignature();
+            var signature = pi.Item.GetSignature();
             //
             Assert.AreEqual(960, q.Count(), "Selected item count");
 
