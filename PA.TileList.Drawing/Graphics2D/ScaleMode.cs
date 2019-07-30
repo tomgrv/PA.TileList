@@ -9,6 +9,6 @@ namespace PA.TileList.Drawing.Graphics2D
         CENTER = 0x02,
         STRETCH = 0x04,
         PXLSNAP = 0x08,
-        ALL = 0xFF
+		FILL = 0x0B
     }
 }
