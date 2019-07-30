@@ -28,8 +28,8 @@ using System.Drawing;
 
 namespace PA.TileList.Drawing.Graphics2D
 {
-		public abstract class AbstractBitmapRenderer<T> :  IRenderer<T, Bitmap>
-      
+	public abstract class AbstractBitmapRenderer<T> : IRenderer<T, Bitmap>
+
 	{
 		public AbstractBitmapRenderer()
 		{
@@ -39,10 +39,18 @@ namespace PA.TileList.Drawing.Graphics2D
 
 		public abstract RectangleD<Bitmap> Render(T obj, Bitmap baseImage, ScaleMode mode);
 
+		public virtual RectangleD<Bitmap> Render(T obj, Bitmap baseImage,RectangleF inner, ScaleMode mode)
+		{
+			var r = new RectangleD<Bitmap>(baseImage, inner, mode);
+			this.Draw(obj, r);
+			return r;
+		}
+
 		public virtual RectangleD<Bitmap> Render(T obj, int width, int height, ScaleMode mode)
 		{
 			return this.Render(obj, new Bitmap(width, height), mode);
 		}
+
 
 		public virtual RectangleD<Bitmap> Render(T obj, int width, int height, RectangleF inner, ScaleMode mode)
 		{

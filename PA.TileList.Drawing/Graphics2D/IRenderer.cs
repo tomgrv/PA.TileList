@@ -33,6 +33,7 @@ namespace PA.TileList.Drawing.Graphics2D
         where U : Image
     {
         RectangleD<U> Render(T obj, U baseImage, ScaleMode mode);
+		RectangleD<U> Render(T obj, U baseImage, RectangleF inner, ScaleMode mode);
         RectangleD<U> Render(T obj, int width, int height, ScaleMode mode);
         RectangleD<U> Render(T obj, int width, int height, RectangleF inner, ScaleMode mode);
         void Draw(T obj, RectangleD<U> portion);
