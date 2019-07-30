@@ -86,7 +86,7 @@ namespace PA.TileList.Drawing.Quantified
 
 				var ratio = 100 * points / config.MaxSurface;
 
-				g.Graphics.DrawString(ratio.ToString(), new Font(FontFamily.GenericSansSerif, 20f), points > config.MinSurface ? bs:bn , portions.Inner.X, portions.Inner.Y);
+				g.Graphics.DrawString(ratio.ToString(), new Font(FontFamily.GenericSansSerif, portions.Inner.Height / 4), points > config.MinSurface ? bs : bn, portions.Inner.X, portions.Inner.Y);
 			}
 		}
 

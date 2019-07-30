@@ -90,7 +90,7 @@ namespace PA.TileList.Drawing.Circular
 		{
 			var m = 2 * obj.GetMaxRadius();
 
-			var s = mode == ScaleMode.STRETCH ? new SizeF((float)m, (float)m) : new SizeF(baseImage.Width, baseImage.Height);
+			var s = (mode == ScaleMode.STRETCH) ? new SizeF((float)m, (float)m) : new SizeF(baseImage.Width, baseImage.Height);
 			var p = new PointF(-s.Width / 2f, -s.Height / 2f);
 			var r = new RectangleD<Bitmap>(baseImage, p, s, mode);
 			this.Draw(obj, r);
