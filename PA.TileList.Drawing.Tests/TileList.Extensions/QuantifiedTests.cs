@@ -68,31 +68,42 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 			var rr = new RulersRenderer<IContextual<Item>>(new[] { 100f, 500f });
 			var rrr = new RectangularRenderer(Color.Black, 1);
-			var p = new RectangularProfile(-2000, -1990, -1000, -1000);
 
-			var r = new SelectionConfiguration[4]{
-				new SelectionConfiguration(SelectionPosition.Inside , false),
-				new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under, false),
-				new SelectionConfiguration(SelectionPosition.Inside , true),
-				new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under, true)
+			var pro = new RectangularProfile[2]{
+				new RectangularProfile(-2000, -1990, -1000, -1000),
+				new RectangularProfile(0, 0, 2000, 100)
 			};
 
-			for (int i = 0; i < r.Length; i++)
+			for (int k = 0; k < pro.Length; k++)
 			{
-				var tile = MainTile.GetTile(1).Flatten<SubTile, Item>();
 
-				foreach (var c in tile.SelectCoordinates(p, r[i]))
+				var scs = new SelectionConfiguration[6]{
+						new SelectionConfiguration(SelectionPosition.Inside , false),
+						new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under, false),
+						new SelectionConfiguration(SelectionPosition.Inside , true),
+						new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under, true),
+						new SelectionConfiguration(SelectionPosition.Inside , 0.25f, false, true),
+						new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under , 0.25f, false, true),
+						
+					};
+
+				for (int i = 0; i < scs.Length; i++)
 				{
-					tile.Find(c).Context.Color = Color.Chocolate;
+					var tile = MainTile.GetTile(1).Flatten<SubTile, Item>();
+
+					foreach (var c in tile.SelectCoordinates(pro[k], scs[i]))
+					{
+						tile.Find(c).Context.Color = Color.Chocolate;
+					}
+
+					var img = tile.RenderImage(5000, 5000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(s, z)))
+								 .Render(tile, rr)
+								 .Render(pro[k], rrr);
+
+					tile.DrawSelectionPoints<IContextual<Item>, Bitmap>(pro[k], scs[i], img, Color.Green, Color.Red, true);
+
+					img.Item.GetSignature(k.ToString()+"-"+i.ToString());
 				}
-
-				var img = tile.RenderImage(5000, 5000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(s, z)))
-							 .Render(tile, rr)
-							 .Render(p, rrr);
-
-				tile.DrawSelectionPoints<IContextual<Item>, Bitmap>(p, r[i], img, Color.Green, Color.Red,true);
-
-				img.Item.GetSignature(i.ToString());
 			}
 		}
 
