@@ -167,8 +167,8 @@ namespace PA.TileList.Selection
 			// full mode / follows SelectionConfiguration
 			var points = c.CountPoints(tile, profile, config);
 
-			if (points > 0)
-				return points >= config.MinSurface;
+			if (config.SelectionType.HasFlag(SelectionPosition.Under))
+				return points > 0;
 
 			return (points > 0 && points >= config.MinSurface);
 		}
