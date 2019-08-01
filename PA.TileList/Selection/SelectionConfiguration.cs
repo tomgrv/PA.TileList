@@ -12,11 +12,12 @@ namespace PA.TileList.Selection
         /// </summary>
         /// <param name="selectionType">Selection type.</param>
         /// <param name="tolerance">Surface of "on profile items", in %, to be inside to be considered "inside profile"  </param>
-        public SelectionConfiguration(SelectionPosition selectionType, float tolerance)
+		/// <param name="useFullSurface">Surface considered is full available surface between stepX / stepY</param>
+        public SelectionConfiguration(SelectionPosition selectionType, float tolerance, bool useFullSurface = true)
         {
             if ((tolerance <= 0f) || (tolerance > 1f))
                 throw new ArgumentOutOfRangeException(nameof(tolerance), tolerance, "Must be a percentage");
-            this.Init(selectionType, tolerance);
+			this.Init(selectionType, tolerance, useFullSurface);
         }
 
 
@@ -24,9 +25,9 @@ namespace PA.TileList.Selection
         ///     Define SelectionConfiguration with automatic resolution based on tolerance
         /// </summary>
         /// <param name="selectionType"></param>
-        public SelectionConfiguration(SelectionPosition selectionType)
+        public SelectionConfiguration(SelectionPosition selectionType, bool useFullSurface = true)
         {
-            this.Init(selectionType, 1f);
+            this.Init(selectionType, 1f, useFullSurface);
         }
 
 
@@ -79,8 +80,14 @@ namespace PA.TileList.Selection
         /// <value>The type of the selection.</value>
         public SelectionPosition SelectionType { get; private set; }
 
+		/// <summary>
+		///     Surface considered is full available surface between stepX / stepY
+		/// </summary>
+		/// <value>The type of the selection.</value>
+		public bool UseFullSurface { get; private set; }
 
-        private void Init(SelectionPosition selectionType, float tolerance)
+
+        private void Init(SelectionPosition selectionType, float tolerance, bool useFullSurface)
         {
             this.Tolerance = tolerance;
             this.SelectionType = selectionType;
@@ -93,6 +100,7 @@ namespace PA.TileList.Selection
             this.ResolutionY = (int) Math.Round( resolution + 1f, 0);
             this.MaxSurface = this.ResolutionX*this.ResolutionY;
             this.MinSurface = this.Tolerance*this.MaxSurface;
+			this.UseFullSurface = useFullSurface;
         }
 
         public float GetSurfacePercent(int points)

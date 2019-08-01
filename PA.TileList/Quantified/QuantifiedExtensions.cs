@@ -55,13 +55,13 @@ namespace PA.TileList.Quantified
 		///     Each element is divided into pointsInX*pointsInY points, each of them submitted to predicate
 		/// </summary>
 		public static IEnumerable<IGrouping<float, P>> GroupByPercent<P>(this IQuantifiedTile<P> tile, ISelectionProfile profile,
-					SelectionConfiguration config, bool fullSize = false)
+		                                                                 SelectionConfiguration config)
 			where P : ICoordinate
 		{
 
 			return tile.GroupBy(c =>
 			{
-				var p = c.CountPoints(tile, profile, config, fullSize);
+				var p = c.CountPoints(tile, profile, config);
 				if ((p == 0) || (p == config.MaxSurface)) return p;
 				return (float)p / config.MaxSurface;
 			});
@@ -80,7 +80,7 @@ namespace PA.TileList.Quantified
 			Contract.Requires(profile != null);
 			Contract.Requires(config != null);
 
-			return tile.GroupBy(c => c.CountPoints(tile, profile, config, fullSize));
+			return tile.GroupBy(c => c.CountPoints(tile, profile, config));
 		}
 
 

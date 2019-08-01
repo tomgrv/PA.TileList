@@ -26,7 +26,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 			foreach (
 				var c in
 				q.SelectCoordinates(new RectangularProfile(r.Left, r.Top, r.Right, r.Bottom),
-					new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under), false))
+					new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under, false)))
 			{
 				//this.DrawPoints(q, r, i, cl);
 
@@ -65,45 +65,35 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 		[Test]
 		public void CoordinatesIn()
 		{
-			var t0 = new Tile<Item>(new Zone(0, 0, 100, 100), new Item(0, 0, Color.Red));
-			t0.Fill(
-				c =>
-					(c.X > 25) && (c.X < 75) && (c.Y > 30) && (c.Y < 60)
-						? new Item(c.X, c.Y, c.X == c.Y ? Color.Yellow : Color.Green)
-						: new Item(c.X, c.Y, Color.Red));
 
-			var q0 = t0.ToQuantified(10, 10);
+			var rr = new RulersRenderer<IContextual<Item>>(new[] { 100f, 500f });
+			var rrr = new RectangularRenderer(Color.Black, 1);
+			var p = new RectangularProfile(-2000, -1990, -1000, -1000);
 
-			var signature0 = q0.RenderImage(1000, 1000, ScaleMode.STRETCH, new QuantifiedRenderer<Item>((z, s) =>
-				  z.ToBitmap(100, 50, z.X + "\n" + z.Y))).Item.GetSignature();
+			var r = new SelectionConfiguration[4]{
+				new SelectionConfiguration(SelectionPosition.Inside , false),
+				new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under, false),
+				new SelectionConfiguration(SelectionPosition.Inside , true),
+				new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under, true)
+			};
 
+			for (int i = 0; i < r.Length; i++)
+			{
+				var tile = MainTile.GetTile(1).Flatten<SubTile, Item>();
 
-			foreach (
-				var c in
-				q0.SelectCoordinates(new RectangularProfile(250, 250, 600, 600),
-					new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under)))
-				t0.Find(c).Color = Color.Chocolate;
+				foreach (var c in tile.SelectCoordinates(p, r[i]))
+				{
+					tile.Find(c).Context.Color = Color.Chocolate;
+				}
 
-			var signature1 = q0.RenderImage(1000, 1000, ScaleMode.STRETCH, new QuantifiedRenderer<Item>((z, s) =>
-				   z.ToBitmap(100, 50, z.X + "\n" + z.Y))).Item.GetSignature();
+				var img = tile.RenderImage(5000, 5000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(s, z)))
+							 .Render(tile, rr)
+							 .Render(p, rrr);
 
-			foreach (
-				var c in
-				q0.SelectCoordinates(new RectangularProfile(52, 52, 62, 62),
-					new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under)))
-				t0.Find(c).Color = Color.White;
+				tile.DrawSelectionPoints<IContextual<Item>, Bitmap>(p, r[i], img, Color.Green, Color.Red,true);
 
-			var signature2 = q0.RenderImage(1000, 1000, ScaleMode.STRETCH, new QuantifiedRenderer<Item>((z, s) =>
-				  z.ToBitmap(100, 50, z.X + "\n" + z.Y))).Item.GetSignature();
-
-			foreach (
-				var c in
-				q0.SelectCoordinates(new RectangularProfile(12, 12, 13, 13),
-					new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under)))
-				t0.Find(c).Color = Color.Black;
-
-			var signature3 = q0.RenderImage(1000, 1000, ScaleMode.STRETCH, new QuantifiedRenderer<Item>((z, s) =>
-				  z.ToBitmap(100, 50, z.X + "\n" + z.Y))).Item.GetSignature();
+				img.Item.GetSignature(i.ToString());
+			}
 		}
 
 
@@ -122,7 +112,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 			var i = tile.RenderImage(5000, 5000, ScaleMode.CENTER, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap((int)s.Width, (int)s.Height, z.X + "\n" + z.Y),
 																										Pens.Blue, new Pen(Color.Violet, 5)));
 
-			tile.DrawSelectionPoints<IContextual<Item>,Bitmap> (p, sc, i, Color.Green, Color.Red, false);
+			tile.DrawSelectionPoints<IContextual<Item>, Bitmap>(p, sc, i, Color.Green, Color.Red, false);
 
 			p.DrawImage(i, new CircularProfileRenderer(Color.BlueViolet));
 
@@ -170,9 +160,11 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 			var p = new CircularProfile(1000);
 
-			 p.DrawImage(i1, new CircularProfileRenderer(null, null, Pens.DarkViolet));
+			p.DrawImage(i1, new CircularProfileRenderer(null, null, Pens.DarkViolet));
 
 			t1.DrawImage(i1, new RulersRenderer<IContextual<Item>>(new[] { 100f, 500f }));
+
+			i1.Item.GetSignature();
 			//Assert.AreEqual("9272D2C42A039C2122B649DAD516B390A3A2A3C51BA861B6E615F27BA0F1BDA3", i1, "Image hash");
 		}
 
@@ -196,14 +188,14 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 			var p = new CircularProfile(1000);
 
-			 p.DrawImage(i1, new CircularProfileRenderer(null, null, Pens.DarkViolet));
+			p.DrawImage(i1, new CircularProfileRenderer(null, null, Pens.DarkViolet));
 
 			var r = new RectangularProfile(-500, 1000, 500, 1100);
 
 
 
 			r.DrawImage(i1, new RectangularRenderer());
-				
+
 			//Assert.AreEqual("9272D2C42A039C2122B649DAD516B390A3A2A3C51BA861B6E615F27BA0F1BDA3", signature, "Image hash");
 
 		}
@@ -228,7 +220,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 			var p = new CircularProfile(1000);
 
-			 p.DrawImage(r1, new CircularProfileRenderer(null, null, Pens.DarkViolet));
+			p.DrawImage(r1, new CircularProfileRenderer(null, null, Pens.DarkViolet));
 
 			var signature = r1.Item.GetSignature();
 

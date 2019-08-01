@@ -33,6 +33,6 @@ namespace PA.TileList.Selection
     {
         Inside = 0x01,
         Outside = 0x02,
-        Under = 0x03
+        Under = 0x04
     }
 }

@@ -47,13 +47,13 @@ namespace PA.TileList.Selection
 		/// <param name="config">Config.</param>
 		/// <param name="fullsize">If set to <c>true</c> fullsize.</param>
 		public static IEnumerable<Coordinate> SelectCoordinates(this IQuantifiedTile tile,
-				ISelectionProfile profile, SelectionConfiguration config, bool fullSize = true)
+				ISelectionProfile profile, SelectionConfiguration config)
 		{
 			Contract.Requires(tile != null, nameof(tile));
 			Contract.Requires(profile != null, nameof(profile));
 			Contract.Requires(config != null, nameof(config));
 
-			return tile.Zone.Where(c => c.Selected(tile, profile, config, fullSize));
+			return tile.Zone.Where(c => c.Selected(tile, profile, config));
 		}
 
 		#endregion
@@ -70,14 +70,14 @@ namespace PA.TileList.Selection
 		/// <param name="fullSize">If set to <c>true</c> full size.</param>
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
 		public static QuantifiedTile<T> Filter<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
-			SelectionConfiguration config, bool fullSize = false)
+			SelectionConfiguration config)
 			where T : class, ICoordinate
 		{
 			Contract.Requires(tile != null, nameof(tile));
 			Contract.Requires(profile != null, nameof(profile));
 			Contract.Requires(config != null, nameof(config));
 
-			return tile.Except(profile, config, fullSize).ToTile().ToQuantified(tile.ElementSizeX, tile.ElementSizeY, tile.ElementStepX, tile.ElementStepY, tile.RefOffsetX, tile.RefOffsetY);
+			return tile.Except(profile, config).ToTile().ToQuantified(tile.ElementSizeX, tile.ElementSizeY, tile.ElementStepX, tile.ElementStepY, tile.RefOffsetX, tile.RefOffsetY);
 		}
 
 		/// <summary>
@@ -90,25 +90,25 @@ namespace PA.TileList.Selection
 		/// <param name="fullsize">If set to <c>true</c> full size.</param>
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
 		public static IEnumerable<T> Take<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
-			SelectionConfiguration config, bool fullSize = false)
+			SelectionConfiguration config)
 			where T : class, ICoordinate
 		{
 			Contract.Requires(tile != null, nameof(tile));
 			Contract.Requires(profile != null, nameof(profile));
 			Contract.Requires(config != null, nameof(config));
 
-			return tile.Where(c =>  c.Selected(tile, profile, config, fullSize)); ;
+			return tile.Where(c =>  c.Selected(tile, profile, config)); ;
 		}
 
 		public static IEnumerable<T> Except<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
-			SelectionConfiguration config, bool fullSize = false)
+			SelectionConfiguration config)
 			where T : class, ICoordinate
 		{
 			Contract.Requires(tile != null, nameof(tile));
 			Contract.Requires(profile != null, nameof(profile));
 			Contract.Requires(config != null, nameof(config));
 
-			return tile.Where(c => ! c.Selected(tile, profile, config, fullSize));
+			return tile.Where(c => ! c.Selected(tile, profile, config));
 		}
 
 		#endregion
@@ -126,9 +126,8 @@ namespace PA.TileList.Selection
 		/// <param name="config">Config.</param>
 		/// <param name="fullSize">If set to <c>true</c> full size.</param>
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
-		[Obsolete("Should use Selected() instead")]
 		public static SelectionPosition Position<T>(this T c, IQuantifiedTile tile, ISelectionProfile profile,
-			SelectionConfiguration config, bool fullSize = false)
+			SelectionConfiguration config)
 			where T : ICoordinate
 		{
 			Contract.Requires(tile != null, nameof(tile));
@@ -136,7 +135,7 @@ namespace PA.TileList.Selection
 			Contract.Requires(config != null, nameof(config));
 
 			// full mode / follows SelectionConfiguration
-			var points = c.CountPoints(tile, profile, config, fullSize);
+			var points = c.CountPoints(tile, profile, config);
 
 			if (points >= config.MinSurface)
 				return config.SelectionType;
@@ -158,7 +157,7 @@ namespace PA.TileList.Selection
 		/// <param name="fullSize">If set to <c>true</c> full size.</param>
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
 		public static bool Selected<T>(this T c, IQuantifiedTile tile, ISelectionProfile profile,
-			SelectionConfiguration config, bool fullSize = false)
+			SelectionConfiguration config)
 			where T : ICoordinate
 		{
 			Contract.Requires(tile != null, nameof(tile));
@@ -166,10 +165,10 @@ namespace PA.TileList.Selection
 			Contract.Requires(config != null, nameof(config));
 
 			// full mode / follows SelectionConfiguration
-			var points = c.CountPoints(tile, profile, config, fullSize);
+			var points = c.CountPoints(tile, profile, config);
 
-			if (SelectionPosition.Under.HasFlag(config.SelectionType))
-				return (points > 0);
+			if (points > 0)
+				return points >= config.MinSurface;
 
 			return (points > 0 && points >= config.MinSurface);
 		}
@@ -185,7 +184,7 @@ namespace PA.TileList.Selection
 		/// <param name="fullSize">If set to <c>true</c> full size.</param>
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
 		public static uint CountPoints<T>(this T c, IQuantifiedTile tile, ISelectionProfile profile,
-			SelectionConfiguration config, bool fullSize = false)
+			SelectionConfiguration config)
 			where T : ICoordinate
 		{
 			Contract.Requires(tile != null, nameof(tile));
@@ -194,10 +193,8 @@ namespace PA.TileList.Selection
 
 			profile.OptimizeProfile();
 
-			SelectionPosition position = 0x00;
-
 			return c.CountPoints(tile, config.ResolutionX, config.ResolutionY,
-			                     (xc, yc, xc2, yc2) => (position |= profile.Position(xc, yc, xc2, yc2)).HasFlag(config.SelectionType), fullSize);
+			                     (xc, yc, xc2, yc2) => ( profile.Position(xc, yc, xc2, yc2) & config.SelectionType) > 0,config.UseFullSurface);
 		}
 
 		/// <summary>
@@ -212,7 +209,7 @@ namespace PA.TileList.Selection
 		/// <param name="fullSize">If set to <c>true</c> full size.</param>
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
 		public static uint CountPoints<T>(this T c, IQuantifiedTile tile, int pointsInX, int pointsInY,
-			Func<double, double, double, double, bool> predicate, bool fullSize = false)
+			Func<double, double, double, double, bool> predicate, bool fullSize)
 			where T : ICoordinate
 		{
 			Contract.Requires(tile != null);
@@ -237,7 +234,7 @@ namespace PA.TileList.Selection
 		/// <param name="fullSize">If set to <c>true</c> full size.</param>
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
 		public static void GetBounds<T>(this T c, IQuantifiedTile tile,
-		 Action<double, double, double, double> predicate, bool fullSize = false)
+		 Action<double, double, double, double> predicate, bool fullSize)
 		 where T : ICoordinate
 		{
 			Contract.Requires(tile != null, nameof(tile));
@@ -275,7 +272,7 @@ namespace PA.TileList.Selection
 		/// <param name="fullSize">If set to <c>true</c> full size.</param>
 		/// <typeparam name="T">ICoordinate</typeparam>
 		public static void GetPoints<T>(this T c, IQuantifiedTile tile, int pointsInX, int pointsInY,
-			Action<double, double, double, double> predicate, bool fullSize = false)
+			Action<double, double, double, double> predicate, bool fullSize)
 			where T : ICoordinate
 		{
 			Contract.Requires(tile != null, nameof(tile));

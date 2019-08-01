@@ -56,7 +56,7 @@ namespace PA.TileList.Drawing.Quantified
 		#region DrawPoints
 
 		public static void DrawSelectionPoints<T, U>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
-									   SelectionConfiguration config, RectangleD<Bitmap> i, Color selectedColor, Color notSelectedColor, bool drawPoints = true, bool fullSize = false)
+									   SelectionConfiguration config, RectangleD<Bitmap> i, Color selectedColor, Color notSelectedColor, bool drawPoints = true)
 			where T : ICoordinate
 			where U : Image
 		{
@@ -76,13 +76,13 @@ namespace PA.TileList.Drawing.Quantified
 				var points = portions.Item.CountPoints(tile, config.ResolutionX, config.ResolutionY,
 										   (xc, yc, xc2, yc2) =>
 										   {
-											   var selected = profile.Position(xc, yc, xc2, yc2).HasFlag(config.SelectionType);
+											   var selected = (profile.Position(xc, yc, xc2, yc2) & config.SelectionType) > 0;
 
-											 	if(drawPoints)
-											   		g.Graphics.FillRectangle(selected ? bs : bn, g.OffsetX + (float)xc * g.ScaleX - 1f, g.OffsetY + (float)yc * g.ScaleY - 1f, 2, 2);
-					
+											   if (drawPoints)
+												   g.Graphics.FillRectangle(selected ? bs : bn, g.OffsetX + (float)xc * g.ScaleX - 1f, g.OffsetY + (float)yc * g.ScaleY - 1f, 2, 2);
+
 											   return selected;
-										   }, fullSize);
+				}, config.UseFullSurface);
 
 				var ratio = 100 * points / config.MaxSurface;
 
@@ -111,7 +111,7 @@ namespace PA.TileList.Drawing.Quantified
 					? SelectionPosition.Inside
 					: SelectionPosition.Inside | SelectionPosition.Under);
 
-			return list.SelectCoordinates(new RectangularProfile(inner.Left, inner.Top, inner.Right, inner.Bottom), sc, true);
+			return list.SelectCoordinates(new RectangularProfile(inner.Left, inner.Top, inner.Right, inner.Bottom), sc);
 		}
 
 		#endregion

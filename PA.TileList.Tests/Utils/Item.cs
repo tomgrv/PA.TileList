@@ -33,76 +33,90 @@ using System.Collections.Generic;
 
 namespace PA.TileList.Tests.Utils
 {
-    public class Item : Coordinate, ICacheable
-    {
-        public Item(int x, int y, Color c)
-            : base(x, y)
-        {
-            this.Color = c;
-            this._changed = new Dictionary<object, bool>();
-            this._default = false;
-        }
+	public class Item : Coordinate, ICacheable
+	{
+		public Item(int x, int y, Color c)
+			: base(x, y)
+		{
+			this.Color = c;
+			this._changed = new Dictionary<object, bool>();
+			this._default = false;
+		}
 
-        public Color Color { get; set; }
-        #region Cache
+		public Color Color { get; set; }
+		#region Cache
 
-        private Dictionary<object, bool> _changed;
-        private bool _default;
+		private Dictionary<object, bool> _changed;
+		private bool _default;
 
-        public bool IsCached()
-        {
-            return IsCachedBy(null);
-        }
+		public bool IsCached()
+		{
+			return IsCachedBy(null);
+		}
 
-        public bool IsCachedBy(object t)
-        {
-            if (!_changed.ContainsKey(t))
-            {
-                _changed.Add(t, _default);
-            }
+		public bool IsCachedBy(object t)
+		{
+			if (!_changed.ContainsKey(t))
+			{
+				_changed.Add(t, _default);
+			}
 
-            return _changed[t];
-        }
+			return _changed[t];
+		}
 
-        public void NotifyCached()
-        {
-            NotifyCachedBy(null);
-        }
+		public void NotifyCached()
+		{
+			NotifyCachedBy(null);
+		}
 
-        public void NotifyCachedBy(object t)
-        {
-            if (!_changed.ContainsKey(t))
-            {
-                _changed[t] = _default;
-            }
-            else
-            {
-                _changed.Add(t, _default);
-            }
-        }
+		public void NotifyCachedBy(object t)
+		{
+			if (!_changed.ContainsKey(t))
+			{
+				_changed[t] = _default;
+			}
+			else
+			{
+				_changed.Add(t, _default);
+			}
+		}
 
-        #endregion
+		#endregion
 
-        public Bitmap ToBitmap(int w, int h, string s)
-        {
-            var b = new Bitmap(w, h);
+		public Bitmap ToBitmap(int w, int h, string s)
+		{
+			var b = new Bitmap(w, h);
 
-            using (var g = Graphics.FromImage(b))
-            {
-                g.Clip = new Region(new RectangleF(0, 0, w, h));
-                this.Draw(g, s);
-            }
+			using (var g = Graphics.FromImage(b))
+			{
+				g.Clip = new Region(new RectangleF(0, 0, w, h));
+				this.Draw(g, s);
+			}
 
-            return b;
-        }
+			return b;
+		}
 
-        public void Draw(Graphics g, String s)
-        {
-            var r = g.ClipBounds;
+		public Bitmap ToBitmap(SizeF s, ICoordinate c)
+		{
+			var b = new Bitmap((int)s.Width, (int)s.Height);
 
-			g.FillRectangle(new SolidBrush(Color.Pink), r.X, r.Y, r.Width , r.Height );
-            g.FillRectangle(new SolidBrush(this.Color), r.X + 1, r.Y + 1, r.Width - 2, r.Height - 2);
-            g.DrawString(s, new Font(FontFamily.GenericSansSerif, r.Width / 3f), Brushes.Gray, r.X, r.Y);
-        }
-    }
+			using (var g = Graphics.FromImage(b))
+			{
+				g.Clip = new Region(new RectangleF(PointF.Empty, s));
+				this.Draw(g, c.X + "\n" + c.Y);
+			}
+
+			return b;
+		
+		}
+
+		public void Draw(Graphics g, String s)
+		{
+			var r = g.ClipBounds;
+
+			g.FillRectangle(new SolidBrush(Color.Pink), r.X, r.Y, r.Width, r.Height);
+			g.FillRectangle(new SolidBrush(this.Color), r.X + 1, r.Y + 1, r.Width - 2, r.Height - 2);
+			g.DrawString(s, new Font(FontFamily.GenericSansSerif, r.Height / 3f), Brushes.Gray, r.X, r.Y);
+		}
+	}
 }
