@@ -73,7 +73,9 @@ namespace PA.TileList.Drawing.Quantified
 			foreach (var portions in  tile.GetPortions(g, i.Mode))
 			{
 				
-				var points = portions.Item.CountPoints(tile, config.ResolutionX, config.ResolutionY,
+				var points = 0u;
+
+				portions.Item.GetPoints(tile, config.ResolutionX, config.ResolutionY,
 										   (xc, yc, xc2, yc2) =>
 										   {
 											   var selected = (profile.Position(xc, yc, xc2, yc2) & config.SelectionType) > 0;
@@ -81,7 +83,7 @@ namespace PA.TileList.Drawing.Quantified
 											   if (drawPoints)
 												   g.Graphics.FillRectangle(selected ? bs : bn, g.OffsetX + (float)xc * g.ScaleX - 1f, g.OffsetY + (float)yc * g.ScaleY - 1f, 2, 2);
 
-											   return selected;
+												points += selected ? 1u:0u;
 				}, config.UseFullSurface);
 
 				var ratio = 100 * points / config.MaxSurface;

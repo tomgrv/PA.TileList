@@ -71,7 +71,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 			var pro = new RectangularProfile[2]{
 				new RectangularProfile(-2000, -1990, -1000, -1000),
-				new RectangularProfile(0, 0, 2000, 100)
+				new RectangularProfile(-25, 0, 2000, 112.5)
 			};
 
 			for (int k = 0; k < pro.Length; k++)
@@ -82,8 +82,8 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 						new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under, false),
 						new SelectionConfiguration(SelectionPosition.Inside , true),
 						new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under, true),
-						new SelectionConfiguration(SelectionPosition.Inside , 0.25f, false, true),
-						new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under , 0.25f, false, true),
+						new SelectionConfiguration(SelectionPosition.Inside , 0.25f, true, true),
+						new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under , 0.25f,true, true),
 						
 					};
 

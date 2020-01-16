@@ -151,6 +151,7 @@
     <Compile Include="Selection\SelectionPosition.cs" />
     <Compile Include="Cacheable\ICacheable.cs" />
     <Compile Include="Cacheable\Cacheable.cs" />
+    <Compile Include="Selection\SelectionPoints.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PA.TileList.nuspec" />

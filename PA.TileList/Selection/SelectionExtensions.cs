@@ -36,6 +36,9 @@ namespace PA.TileList.Selection
 {
 	public static class SelectionExtensions
 	{
+
+
+
 		#region Select 
 
 		/// <summary>
@@ -97,7 +100,7 @@ namespace PA.TileList.Selection
 			Contract.Requires(profile != null, nameof(profile));
 			Contract.Requires(config != null, nameof(config));
 
-			return tile.Where(c =>  c.Selected(tile, profile, config)); ;
+			return tile.Where(c => c.Selected(tile, profile, config)); ;
 		}
 
 		public static IEnumerable<T> Except<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
@@ -108,7 +111,7 @@ namespace PA.TileList.Selection
 			Contract.Requires(profile != null, nameof(profile));
 			Contract.Requires(config != null, nameof(config));
 
-			return tile.Where(c => ! c.Selected(tile, profile, config));
+			return tile.Where(c => !c.Selected(tile, profile, config));
 		}
 
 		#endregion
@@ -124,37 +127,6 @@ namespace PA.TileList.Selection
 		/// <param name="tile">Tile.</param>
 		/// <param name="profile">Profile.</param>
 		/// <param name="config">Config.</param>
-		/// <param name="fullSize">If set to <c>true</c> full size.</param>
-		/// <typeparam name="T">The 1st type parameter.</typeparam>
-		public static SelectionPosition Position<T>(this T c, IQuantifiedTile tile, ISelectionProfile profile,
-			SelectionConfiguration config)
-			where T : ICoordinate
-		{
-			Contract.Requires(tile != null, nameof(tile));
-			Contract.Requires(profile != null, nameof(profile));
-			Contract.Requires(config != null, nameof(config));
-
-			// full mode / follows SelectionConfiguration
-			var points = c.CountPoints(tile, profile, config);
-
-			if (points >= config.MinSurface)
-				return config.SelectionType;
-
-			if (points <= 0)
-				return config.SelectionType ^ SelectionPosition.Under;
-
-			return SelectionPosition.Under;
-		}
-
-		/// <summary>
-		/// Position the specified c within tile according to profile, config and fullSize.
-		/// </summary>
-		/// <returns>The position.</returns>
-		/// <param name="c">C.</param>
-		/// <param name="tile">Tile.</param>
-		/// <param name="profile">Profile.</param>
-		/// <param name="config">Config.</param>
-		/// <param name="fullSize">If set to <c>true</c> full size.</param>
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
 		public static bool Selected<T>(this T c, IQuantifiedTile tile, ISelectionProfile profile,
 			SelectionConfiguration config)
@@ -164,14 +136,48 @@ namespace PA.TileList.Selection
 			Contract.Requires(profile != null, nameof(profile));
 			Contract.Requires(config != null, nameof(config));
 
-			// full mode / follows SelectionConfiguration
-			var points = c.CountPoints(tile, profile, config);
-
-			if (config.SelectionType.HasFlag(SelectionPosition.Under))
-				return points > 0;
-
-			return (points > 0 && points >= config.MinSurface);
+			return c.Surface(tile, profile, config) > 0;
+				
 		}
+
+
+		/// <summary>
+		/// Returns the surface covered by profile within tile according config and fullSize.
+		/// </summary>
+		/// <returns>The position.</returns>
+		/// <param name="c">C.</param>
+		/// <param name="tile">Tile.</param>
+		/// <param name="profile">Profile.</param>
+		/// <param name="config">Config.</param>
+		/// <typeparam name="T">The 1st type parameter.</typeparam>
+		public static uint Surface<T>(this T c, IQuantifiedTile tile, ISelectionProfile profile,
+			SelectionConfiguration config)
+			where T : ICoordinate
+		{
+			Contract.Requires(tile != null, nameof(tile));
+			Contract.Requires(profile != null, nameof(profile));
+			Contract.Requires(config != null, nameof(config));
+
+
+			// full mode / follows SelectionConfiguration
+			SelectionPoints points = c.CountPoints(tile, profile, config);
+
+			uint surface = 0u;
+
+			if (points.Outside > 0 && points.Outside >= config.MinSurface && config.SelectionType.HasFlag(SelectionPosition.Outside))
+				surface += points.Outside;
+
+			if (points.Inside > 0 && points.Inside >= config.MinSurface && config.SelectionType.HasFlag(SelectionPosition.Inside))
+				surface += points.Inside;
+
+			if (points.Under > 0 && config.SelectionType.HasFlag(SelectionPosition.Under))
+				surface += points.Under;
+
+			return surface;
+		}
+
+
+
 
 		/// <summary>
 		/// Counts the points.
@@ -181,9 +187,8 @@ namespace PA.TileList.Selection
 		/// <param name="tile">Tile.</param>
 		/// <param name="profile">Profile.</param>
 		/// <param name="config">Config.</param>
-		/// <param name="fullSize">If set to <c>true</c> full size.</param>
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
-		public static uint CountPoints<T>(this T c, IQuantifiedTile tile, ISelectionProfile profile,
+		public static SelectionPoints CountPoints<T>(this T c, IQuantifiedTile tile, ISelectionProfile profile,
 			SelectionConfiguration config)
 			where T : ICoordinate
 		{
@@ -193,37 +198,22 @@ namespace PA.TileList.Selection
 
 			profile.OptimizeProfile();
 
-			return c.CountPoints(tile, config.ResolutionX, config.ResolutionY,
-			                     (xc, yc, xc2, yc2) => ( profile.Position(xc, yc, xc2, yc2) & config.SelectionType) > 0,config.UseFullSurface);
+			SelectionPoints p = new SelectionPoints();
+
+			c.GetPoints(tile, config.ResolutionX, config.ResolutionY,
+								 (xc, yc, xc2, yc2) =>
+								 {
+									 var position = profile.Position(xc, yc, xc2, yc2);
+
+									 p.Inside += config.SelectionType.HasFlag(SelectionPosition.Inside) ? 1u : 0u;
+									 p.Outside += config.SelectionType.HasFlag(SelectionPosition.Outside) ? 1u : 0u;
+									 p.Under += config.SelectionType.HasFlag(SelectionPosition.Under) ? 1u : 0u;
+
+								 }, config.UseFullSurface);
+
+			return p;
 		}
 
-		/// <summary>
-		/// Counts the points.
-		/// </summary>
-		/// <returns>The points.</returns>
-		/// <param name="c">C.</param>
-		/// <param name="tile">Tile.</param>
-		/// <param name="pointsInX">Points in x.</param>
-		/// <param name="pointsInY">Points in y.</param>
-		/// <param name="predicate">Predicate.</param>
-		/// <param name="fullSize">If set to <c>true</c> full size.</param>
-		/// <typeparam name="T">The 1st type parameter.</typeparam>
-		public static uint CountPoints<T>(this T c, IQuantifiedTile tile, int pointsInX, int pointsInY,
-			Func<double, double, double, double, bool> predicate, bool fullSize)
-			where T : ICoordinate
-		{
-			Contract.Requires(tile != null);
-			Contract.Requires(predicate != null);
-			Contract.Requires(pointsInX >= 2, nameof(pointsInX));
-			Contract.Requires(pointsInY >= 2, nameof(pointsInY));
-
-			var points = 0u;
-
-			c.GetPoints(tile, pointsInX, pointsInY, (xc, yc, xc2, yc2) => points += predicate(xc, yc, xc2, yc2) ? 1u : 0u,
-				fullSize);
-
-			return points;
-		}
 
 		/// <summary>
 		/// Gets the bounds.

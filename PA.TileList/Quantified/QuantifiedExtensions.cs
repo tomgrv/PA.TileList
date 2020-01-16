@@ -61,7 +61,7 @@ namespace PA.TileList.Quantified
 
 			return tile.GroupBy(c =>
 			{
-				var p = c.CountPoints(tile, profile, config);
+				var p = c.Surface(tile, profile, config);
 				if ((p == 0) || (p == config.MaxSurface)) return p;
 				return (float)p / config.MaxSurface;
 			});
@@ -80,7 +80,7 @@ namespace PA.TileList.Quantified
 			Contract.Requires(profile != null);
 			Contract.Requires(config != null);
 
-			return tile.GroupBy(c => c.CountPoints(tile, profile, config));
+			return tile.GroupBy(c => c.Surface(tile, profile, config));
 		}
 
 
