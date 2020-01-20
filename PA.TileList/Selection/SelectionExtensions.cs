@@ -90,7 +90,6 @@ namespace PA.TileList.Selection
 		/// <param name="tile">Tile.</param>
 		/// <param name="profile">Profile.</param>
 		/// <param name="config">Config.</param>
-		/// <param name="fullsize">If set to <c>true</c> full size.</param>
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
 		public static IEnumerable<T> Take<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
 			SelectionConfiguration config)
@@ -137,7 +136,7 @@ namespace PA.TileList.Selection
 			Contract.Requires(config != null, nameof(config));
 
 			return c.Surface(tile, profile, config) > 0;
-				
+
 		}
 
 
@@ -205,9 +204,9 @@ namespace PA.TileList.Selection
 								 {
 									 var position = profile.Position(xc, yc, xc2, yc2);
 
-									 p.Inside += config.SelectionType.HasFlag(SelectionPosition.Inside) ? 1u : 0u;
-									 p.Outside += config.SelectionType.HasFlag(SelectionPosition.Outside) ? 1u : 0u;
-									 p.Under += config.SelectionType.HasFlag(SelectionPosition.Under) ? 1u : 0u;
+									 p.Inside += position == SelectionPosition.Inside && config.SelectionType.HasFlag(SelectionPosition.Inside) ? 1u : 0u;
+									 p.Outside += position == SelectionPosition.Inside && config.SelectionType.HasFlag(SelectionPosition.Outside) ? 1u : 0u;
+									 p.Under += position == SelectionPosition.Under && config.SelectionType.HasFlag(SelectionPosition.Under) ? 1u : 0u;
 
 								 }, config.UseFullSurface);
 

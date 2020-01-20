@@ -77,14 +77,17 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 			for (int k = 0; k < pro.Length; k++)
 			{
 
-				var scs = new SelectionConfiguration[6]{
+				var scs = new SelectionConfiguration[9]{
 						new SelectionConfiguration(SelectionPosition.Inside , false),
-						new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under, false),
+						new SelectionConfiguration(SelectionPosition.Inside |SelectionPosition.Under, false),
+						new SelectionConfiguration(SelectionPosition.Under, false),
 						new SelectionConfiguration(SelectionPosition.Inside , true),
 						new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under, true),
 						new SelectionConfiguration(SelectionPosition.Inside , 0.25f, true, true),
 						new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under , 0.25f,true, true),
-						
+						new SelectionConfiguration(SelectionPosition.Inside , 0.25f, false, true),
+						new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under , 0.25f,false, true)
+
 					};
 
 				for (int i = 0; i < scs.Length; i++)
@@ -97,12 +100,12 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					}
 
 					var img = tile.RenderImage(5000, 5000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(s, z)))
-								 .Render(tile, rr)
-								 .Render(pro[k], rrr);
+			 				.Render(tile, rr)
+			 				.Render(pro[k], rrr);
 
 					tile.DrawSelectionPoints<IContextual<Item>, Bitmap>(pro[k], scs[i], img, Color.Green, Color.Red, true);
 
-					img.Item.GetSignature(k.ToString()+"-"+i.ToString());
+					img.Item.GetSignature(k.ToString() + "-" + i.ToString());
 				}
 			}
 		}
