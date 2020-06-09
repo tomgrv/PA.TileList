@@ -27,10 +27,13 @@ namespace PA.TileList.Quantified
 
         public SelectionPosition Position(double x, double y)
         {
-            if ((x > this.xMin) && (x < this.xMax) && (y > this.yMin) && (y < this.yMax))
+            var xr = System.Math.Round(x, 14);
+            var yr = System.Math.Round(y, 14);
+
+            if ((xr > this.xMin) && (xr < this.xMax) && (yr > this.yMin) && (yr < this.yMax))
                 return SelectionPosition.Inside;
 
-            if ((x < this.xMin) || (x > this.xMax) || (y < this.yMin) || (y > this.yMax))
+            if ((xr < this.xMin) || (xr > this.xMax) || (yr < this.yMin) || (yr > this.yMax))
                 return SelectionPosition.Outside;
 
             return SelectionPosition.Under;

@@ -105,7 +105,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.DrawSelectionPoints<IContextual<Item>, Bitmap>(pro[k], scs[i], img, Color.Green, Color.Red, true);
 
-					img.Item.GetSignature(k.ToString() + "-" + i.ToString());
+					img.Item.Debug(k.ToString() + "-" + i.ToString());
 				}
 			}
 		}
@@ -251,16 +251,16 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 			var tile = MainTile.GetTile(factor);
 			var flat = tile.Flatten<SubTile, Item>();
 
-			var signature1 =
-						tile.ToBitmap(5000, 5000, new RectangleF(-2000, -2000, 4000, 4000)).GetSignature("imbricated");
+	
+						tile.ToBitmap(5000, 5000, new RectangleF(-2000, -2000, 4000, 4000)).Debug("imbricated");
 
-			var signature2 =
+	
 					   flat.RenderImage(5000, 5000, new RectangleF(-2000, -2000, 4000, 4000), ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>(
 								(z2, s2) =>
 								{
 									return z2.Context.ToBitmap((int)s2.Width, (int)s2.Height, z2.X + "\n" + z2.Y);
 								})
-						).Item.GetSignature("flattened");
+						).Item.Debug("flattened");
 
 		}
 	}

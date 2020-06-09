@@ -154,7 +154,30 @@ namespace PA.TileList.Drawing.Graphics2D
 			return converter.ConvertTo(image, typeof(byte[])) as byte[];
 		}
 
-		public static string GetSignature(this Image image, string tag = null)
+		
+		public static void Debug(this Image image, string tag = null)
+		{
+#if DEBUG
+			var stack = new StackTrace();
+
+			var frame =
+				stack.GetFrames().FirstOrDefault(s => s.GetMethod().GetCustomAttributes(false)
+					.Any(i => i.ToString().EndsWith("TestAttribute")));
+
+			var p = Directory.GetCurrentDirectory();
+
+			if (frame != null)
+			{
+				var name = frame.GetMethod().Name + "_" + frame.GetMethod().DeclaringType.Name + (tag != null ? "_" + tag : string.Empty);
+				image.Save(Path.GetTempPath() + name + ".png", ImageFormat.Png);
+			}
+#endif
+
+		}
+
+
+
+		public static string GetSignature(this Image image)
 		{
 			using (var sha = new MD5CryptoServiceProvider())
 			{
@@ -162,19 +185,7 @@ namespace PA.TileList.Drawing.Graphics2D
 				var key = BitConverter.ToString(hash).Replace("-", string.Empty);
 
 #if DEBUG
-				var st = new StackTrace();
-
-				var sf =
-					st.GetFrames().FirstOrDefault(s => s.GetMethod().GetCustomAttributes(false)
-						.Any(i => i.ToString().EndsWith("TestAttribute")));
-
-				var p = Directory.GetCurrentDirectory();
-
-				if (sf != null)
-				{
-					var name = sf.GetMethod().Name + (tag != null ? "_" + tag : string.Empty);
-					image.Save(Path.GetTempPath() + name + "_" + key + ".png", ImageFormat.Png);
-				}
+				image.Debug(key);
 #endif
 
 				return key;

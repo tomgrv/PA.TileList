@@ -36,15 +36,15 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\GitVersionTask.2.0.1\Build\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.2.0.1\Build\GitVersionTask.targets')" />
   <ItemGroup>
+    <Compile Include="Tiles\TestBigTile.cs" />
+    <Compile Include="Tiles\BigTile.cs" />
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="CoordinateTests.cs" />
+    <Compile Include="Utils\Signature.cs" />
     <Compile Include="ZoneTests.cs" />
     <Compile Include="Utils\MainTile.cs" />
     <Compile Include="Utils\SubTile.cs" />
@@ -57,29 +57,31 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitVersionTask">
-      <Version>4.0.0-beta0012</Version>
+      <Version>5.3.5</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="NUnit">
-      <Version>3.10.1</Version>
+      <Version>3.12.0</Version>
     </PackageReference>
     <PackageReference Include="NUnit3TestAdapter">
-      <Version>3.10.0</Version>
+      <Version>3.17.0-beta.1</Version>
     </PackageReference>
     <PackageReference Include="PA.Utilities">
-      <Version>6.0.4</Version>
+      <Version>6.1.0</Version>
     </PackageReference>
     <PackageReference Include="PA.Utilities.AssemblyMetadata">
-      <Version>6.0.4</Version>
+      <Version>6.1.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PA.TileList\PA.TileList.csproj">
-      <Project>{5B4FACE3-DDB3-4EAA-985A-9DE4AAC34A91}</Project>
-      <Name>PA.TileList</Name>
-    </ProjectReference>
     <ProjectReference Include="..\PA.TileList.Drawing\PA.TileList.Drawing.csproj">
       <Project>{2D187F72-216C-40D5-B9DD-FFB52F7B3AAF}</Project>
       <Name>PA.TileList.Drawing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PA.TileList\PA.TileList.csproj">
+      <Project>{5b4face3-ddb3-4eaa-985a-9de4aac34a91}</Project>
+      <Name>PA.TileList</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

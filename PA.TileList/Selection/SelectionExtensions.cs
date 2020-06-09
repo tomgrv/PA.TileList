@@ -205,7 +205,7 @@ namespace PA.TileList.Selection
 									 var position = profile.Position(xc, yc, xc2, yc2);
 
 									 p.Inside += position == SelectionPosition.Inside && config.SelectionType.HasFlag(SelectionPosition.Inside) ? 1u : 0u;
-									 p.Outside += position == SelectionPosition.Inside && config.SelectionType.HasFlag(SelectionPosition.Outside) ? 1u : 0u;
+									 p.Outside += position == SelectionPosition.Outside && config.SelectionType.HasFlag(SelectionPosition.Outside) ? 1u : 0u;
 									 p.Under += position == SelectionPosition.Under && config.SelectionType.HasFlag(SelectionPosition.Under) ? 1u : 0u;
 
 								 }, config.UseFullSurface);
