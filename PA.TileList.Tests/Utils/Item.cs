@@ -26,31 +26,97 @@
 
 using System.Drawing;
 using PA.TileList.Linear;
+using PA.TileList.Drawing.Graphics2D;
+using System;
+using PA.TileList.Cacheable;
+using System.Collections.Generic;
 
 namespace PA.TileList.Tests.Utils
 {
-    public class Item : Coordinate
-    {
-        public Item(int x, int y, Color c)
-            : base(x, y)
-        {
-            this.Color = c;
-        }
+	public class Item : Coordinate, ICacheable
+	{
+		public Item(int x, int y, Color c)
+			: base(x, y)
+		{
+			this.Color = c;
+			this._changed = new Dictionary<object, bool>();
+			this._default = false;
+		}
 
-        public Color Color { get; set; }
+		public Color Color { get; set; }
+		#region Cache
 
-        public Bitmap ToBitmap(int w, int h, string s)
-        {
-            var b = new Bitmap(w, h);
+		private Dictionary<object, bool> _changed;
+		private bool _default;
 
-            using (var g = Graphics.FromImage(b))
-            {
-                g.DrawRectangle(Pens.Pink, 0, 0, w - 1, h - 1);
-                g.FillRectangle(new SolidBrush(this.Color), 1, 1, w - 2, h - 2);
-                g.DrawString(s, new Font(FontFamily.GenericSansSerif, w/3f), Brushes.Gray, 0, 0);
-            }
+		public bool IsCached()
+		{
+			return IsCachedBy(null);
+		}
 
-            return b;
-        }
-    }
+		public bool IsCachedBy(object t)
+		{
+			if (!_changed.ContainsKey(t))
+			{
+				_changed.Add(t, _default);
+			}
+
+			return _changed[t];
+		}
+
+		public void NotifyCached()
+		{
+			NotifyCachedBy(null);
+		}
+
+		public void NotifyCachedBy(object t)
+		{
+			if (!_changed.ContainsKey(t))
+			{
+				_changed[t] = _default;
+			}
+			else
+			{
+				_changed.Add(t, _default);
+			}
+		}
+
+		#endregion
+
+		public Bitmap ToBitmap(int w, int h, string s)
+		{
+			var b = new Bitmap(w, h);
+
+			using (var g = Graphics.FromImage(b))
+			{
+				g.Clip = new Region(new RectangleF(0, 0, w, h));
+				this.Draw(g, s);
+			}
+
+			return b;
+		}
+
+		public Bitmap ToBitmap(SizeF s, ICoordinate c)
+		{
+			var b = new Bitmap((int)s.Width, (int)s.Height);
+
+			using (var g = Graphics.FromImage(b))
+			{
+				g.Clip = new Region(new RectangleF(PointF.Empty, s));
+				this.Draw(g, c.X + "\n" + c.Y);
+			}
+
+			return b;
+		
+		}
+
+		public void Draw(Graphics g, String s)
+		{
+			var r = g.ClipBounds;
+
+			g.FillRectangle(new SolidBrush(Color.Pink), r.X, r.Y, r.Width, r.Height);
+			g.FillRectangle(new SolidBrush(this.Color), r.X + 1, r.Y + 1, r.Width - 2, r.Height - 2);
+			g.DrawString(s, new Font(FontFamily.GenericSansSerif, r.Height / 3f), Brushes.Gray, r.X, r.Y);
+		}
+	}
 }

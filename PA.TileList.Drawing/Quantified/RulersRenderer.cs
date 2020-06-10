@@ -32,108 +32,107 @@ using System.Linq;
 
 namespace PA.TileList.Drawing.Quantified
 {
-    public class RulersRenderer<T> : IRenderer<IQuantifiedTile<T>, Bitmap>
-    where T : ICoordinate
-    {
-        private float[] _steps;
+	public class RulersRenderer<T> : AbstractBitmapRenderer<IQuantifiedTile<T>>, IRenderer<IQuantifiedTile<T>, Bitmap>
+	where T : ICoordinate
+	{
+		private float[] _steps;
 
-        private enum Direction
-        {
-            Vertical,
-            Horizontal
-        }
+		private enum Direction
+		{
+			Vertical,
+			Horizontal
+		}
 
-        public RulersRenderer(float[] steps)
-        {
-            this._steps = steps;
-        }
+		public RulersRenderer(float[] steps)
+		{
+			this._steps = steps;
+		}
 
-        public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, int width, int height, ScaleMode mode)
-        {
-            return this.Render(obj, new Bitmap(width, height), new RectangleD(obj.GetOrigin(), obj.GetSize()), mode);
-        }
+		public override RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, Bitmap baseImage, ScaleMode mode)
+		{
+			return this.Render(obj, baseImage, new RectangleD(obj.GetOrigin(), obj.GetSize()), mode);
+		}
 
-        public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, int width, int height, RectangleF inner, ScaleMode mode)
-        {
-            return this.Render(obj, new RectangleD<Bitmap>(new Bitmap(width, height), inner, mode));
-        }
+		public override void Draw(IQuantifiedTile<T> obj, RectangleD<Bitmap> portion)
+		{
+			using (var g = portion.GetGraphicsD())
+			{
+				DrawSteps(g, this._steps, Direction.Vertical);
+				DrawSteps(g, this._steps, Direction.Horizontal);
 
-        public RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, RectangleD<Bitmap> portion)
-        {
-            return this.Render(obj, new Bitmap(portion.Item), portion as RectangleD, portion.Mode);
-        }
+			}
+		}
 
-        private RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, Bitmap image, RectangleD portion, ScaleMode mode)
-        {
-            var rendered = new RectangleD<Bitmap>(image, portion, mode);
+		private RectangleD<Bitmap> Render(IQuantifiedTile<T> obj, Bitmap image, RectangleD portion, ScaleMode mode)
+		{
+			var r = new RectangleD<Bitmap>(image, portion, mode);
 
-            using (var g = rendered.GetGraphicsD())
-            {
-                if (rendered.Mode.HasFlag(ScaleMode.XYRATIO))
-                {
-                    DrawSteps(g.Graphics, this._steps, rendered.Inner.Left, rendered.Inner.Right, g.OffsetX, Direction.Horizontal,
-                        g.ScaleX);
-                    DrawSteps(g.Graphics, this._steps, rendered.Inner.Top, rendered.Inner.Bottom, g.OffsetY, Direction.Vertical,
-                          g.ScaleY);
-                }
-                else
-                {
-                    DrawSteps(g.Graphics, this._steps, g.Portion.Inner.Left, g.Portion.Inner.Right, g.OffsetX,
-                        Direction.Horizontal, g.ScaleX);
-                    DrawSteps(g.Graphics, this._steps, g.Portion.Inner.Top, g.Portion.Inner.Bottom, g.OffsetY,
-                        Direction.Vertical, g.ScaleY);
-                }
-            }
+			Draw(obj, r);
 
-            return rendered;
-        }
+			return r;
+		}
 
-        private static void DrawSteps(Graphics g, float[] steps, float min, float max, float offset, Direction d,
-            float scale = 1)
-        {
-            switch (d)
-            {
-                case Direction.Horizontal:
-                    g.DrawLine(Pens.Black, min * scale, 0, max * scale, 0);
-                    break;
-                case Direction.Vertical:
-                    g.DrawLine(Pens.Black, 0, min * scale, 0, max * scale);
-                    break;
-            }
+		private static void DrawSteps(GraphicsD g, float[] steps, Direction d)
+		{
+			var min = 0f;
+			var max = 0f;
+			var scale = 1f;
 
-            for (var i = 0; i < steps.Length; i++)
-            {
-                float start = 0;
-                var step = steps[i] * scale;
-                var size = (i + 1f) / scale;
+			//g.Graphics.FillRectangle(Brushes.Pink, 
+			//    new Rectangle((int)(g.OffsetX + g.Portion.Inner.X),  (int)(g.OffsetY + g.Portion.Inner.Y),
+			//    (int)(g.Portion.Inner.Width ), (int)(g.Portion.Inner.Height )));
 
-                while (start < min * scale)
-                    start += step;
+			switch (d)
+			{
+				case Direction.Vertical:
+					min = g.Portion.Inner.Top;
+					max = g.Portion.Inner.Bottom;
+					scale = g.ScaleY;
+					g.Graphics.DrawLine(Pens.Blue, g.OffsetX, min * scale, g.OffsetX, max * scale);
+					break;
 
-                while (start > min * scale)
-                    start -= step;
+				case Direction.Horizontal:
+					min = g.Portion.Inner.Left;
+					max = g.Portion.Inner.Right;
+					scale = g.ScaleX;
+					g.Graphics.DrawLine(Pens.Blue, min * scale, g.OffsetY, max * scale, g.OffsetY);
+					break;
 
-                for (var position = start + step; position < max * scale; position += step)
-                    switch (d)
-                    {
-                        case Direction.Vertical:
-                            if (i == 0)
-                                g.DrawString(Math.Round(position / scale).ToString(),
-                                    new Font(FontFamily.GenericSansSerif, 10 / scale), Brushes.Black, offset - size,
-                                    position + offset);
-                            g.DrawLine(Pens.Black, offset - 10 * size, position + offset, offset + 10 * size,
-                                position + offset);
-                            break;
-                        case Direction.Horizontal:
-                            if (i == 0)
-                                g.DrawString(Math.Round(position / scale).ToString(),
-                                    new Font(FontFamily.GenericSansSerif, 10 / scale), Brushes.Black, position + offset,
-                                    offset - size);
-                            g.DrawLine(Pens.Black, position + offset, offset - 10 * size, position + offset,
-                                offset + 10 * size);
-                            break;
-                    }
-            }
-        }
-    }
+			}
+
+			for (var i = 0; i < steps.Length; i++)
+			{
+				var step = steps[i] * scale;
+				var size = (i + 1f) / scale;
+				var start = 0f;
+
+				while (start < min)
+					start += step;
+
+				while (start > min)
+					start -= step;
+
+				for (var position = start; position < max; position += step)
+					switch (d)
+					{
+						case Direction.Vertical:
+							if (i == 0)
+								g.Graphics.DrawString(Math.Round(position / scale).ToString(),
+														  new Font(FontFamily.GenericSansSerif, 20 * g.ScaleY), Brushes.Black,
+																  g.OffsetX - size, position + g.OffsetY);
+							g.Graphics.DrawLine(Pens.Black, g.OffsetX - 10 * size, position + g.OffsetY, g.OffsetX + 10 * size,
+								position + g.OffsetY);
+							break;
+						case Direction.Horizontal:
+							if (i == 0)
+								g.Graphics.DrawString(Math.Round(position / scale).ToString(),
+														  new Font(FontFamily.GenericSansSerif, 20 * g.ScaleY), Brushes.Black,
+															  position + g.OffsetX, g.OffsetY - size);
+							g.Graphics.DrawLine(Pens.Black, position + g.OffsetX, g.OffsetY - 10 * size, position + g.OffsetX,
+								g.OffsetY + 10 * size);
+							break;
+					}
+			}
+		}
+	}
 }

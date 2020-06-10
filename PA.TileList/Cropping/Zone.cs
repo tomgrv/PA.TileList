@@ -4,7 +4,7 @@ using PA.TileList.Linear;
 
 namespace PA.TileList.Cropping
 {
-    public class Zone : IZone, IEnumerable<ICoordinate>
+    public class Zone : IZone, IEnumerable<Coordinate>
     {
         public static Zone Unitary = new Zone(0, 0, 0, 0);
 
@@ -31,12 +31,12 @@ namespace PA.TileList.Cropping
 
         public ushort SizeX
         {
-            get { return (ushort) (this.Max.X - this.Min.X + 1); }
+            get { return (ushort)(this.Max.X - this.Min.X + 1); }
         }
 
         public ushort SizeY
         {
-            get { return (ushort) (this.Max.Y - this.Min.Y + 1); }
+            get { return (ushort)(this.Max.Y - this.Min.Y + 1); }
         }
 
         public void Offset(ICoordinate c)
@@ -44,9 +44,9 @@ namespace PA.TileList.Cropping
             this.Offset(c.X, c.Y);
         }
 
-        public ICoordinate Center()
+        public Coordinate Center()
         {
-            return new Coordinate((int) (this.SizeX/2f + this.Min.X), (int) (this.SizeY/2f + this.Min.Y));
+            return new Coordinate((int)(this.SizeX / 2f + this.Min.X), (int)(this.SizeY / 2f + this.Min.Y));
         }
 
         public bool Contains(ICoordinate c)
@@ -59,7 +59,7 @@ namespace PA.TileList.Cropping
             return (this.Min.X <= b.Min.X) && (b.Max.X <= this.Max.X) && (this.Min.Y <= b.Min.Y) && (b.Max.Y <= this.Max.Y);
         }
 
-        public IEnumerator<ICoordinate> GetEnumerator()
+        public IEnumerator<Coordinate> GetEnumerator()
         {
             return this.GetInnerCoordinates().GetEnumerator();
         }
@@ -112,7 +112,7 @@ namespace PA.TileList.Cropping
             return this.MemberwiseClone();
         }
 
-        private IEnumerable<ICoordinate> GetInnerCoordinates()
+        private IEnumerable<Coordinate> GetInnerCoordinates()
         {
             for (var x = this.Min.X; x <= this.Max.X; x++)
                 for (var y = this.Min.Y; y <= this.Max.Y; y++)

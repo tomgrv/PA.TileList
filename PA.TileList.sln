@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7533DCCC-1456-4257-B295-7AA16A860F6F}"
 	ProjectSection(SolutionItems) = preProject
 		common\GlobalAssemblyInfo.cs = common\GlobalAssemblyInfo.cs
+		readme.md = readme.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D0194E25-483A-404A-B7C2-1E9AB4E88143}"

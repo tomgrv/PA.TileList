@@ -8,7 +8,7 @@ namespace PA.TileList.Tests
     [TestFixture]
     public class LinearTests
     {
-        [Test]
+        [Test, Category("Trustable")]
         public void GetLine()
         {
             var list = new List<Coordinate>

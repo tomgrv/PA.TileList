@@ -59,37 +59,37 @@ namespace PA.TileList.Linear
             }
         }
 
-        public static ITile<IContextual<T>> Translate<T>(this ITile<T> t, TranslateSource source)
+        public static Tile<IContextual<T>> Translate<T>(this ITile<T> t, TranslateSource source)
             where T : class, ICoordinate
         {
             return t.AsEnumerable().Translate(source)
-                .AsTile(t.IndexOf(t.Reference))
+                .ToTile(t.IndexOf(t.Reference))
                 .RefreshZone();
         }
 
-        public static ITile<IContextual<T>> Translate<T>(this ITile<IContextual<T>> t, TranslateSource source)
+        public static Tile<IContextual<T>> Translate<T>(this ITile<IContextual<T>> t, TranslateSource source)
             where T : class, ICoordinate
         {
             return t.AsEnumerable().Translate(source)
-                .AsTile(t.IndexOf(t.Reference))
+                .ToTile(t.IndexOf(t.Reference))
                 .RefreshZone();
         }
 
-        public static IQuantifiedTile<IContextual<T>> Translate<T>(this IQuantifiedTile<T> t, TranslateSource source)
+        public static QuantifiedTile<IContextual<T>> Translate<T>(this IQuantifiedTile<T> t, TranslateSource source)
             where T : class, ICoordinate
         {
             return t.AsTile()
                 .Translate(source)
-                .AsQuantified(t.ElementSizeX, t.ElementSizeY, t.ElementStepX, t.ElementStepY, t.RefOffsetX, t.RefOffsetY);
+                .ToQuantified(t.ElementSizeX, t.ElementSizeY, t.ElementStepX, t.ElementStepY, t.RefOffsetX, t.RefOffsetY);
         }
 
-        public static IQuantifiedTile<IContextual<T>> Translate<T>(this IQuantifiedTile<IContextual<T>> t,
+        public static QuantifiedTile<IContextual<T>> Translate<T>(this IQuantifiedTile<IContextual<T>> t,
             TranslateSource source)
             where T : class, ICoordinate
         {
             return t.AsTile()
                 .Translate(source)
-                .AsQuantified(t.ElementSizeX, t.ElementSizeY, t.ElementStepX, t.ElementStepY, t.RefOffsetX, t.RefOffsetY);
+                .ToQuantified(t.ElementSizeX, t.ElementSizeY, t.ElementStepX, t.ElementStepY, t.RefOffsetX, t.RefOffsetY);
         }
 
 

@@ -27,6 +27,8 @@
 using System;
 using System.Drawing;
 using PA.TileList.Cropping;
+using PA.TileList.Drawing.Graphics2D;
+using PA.TileList.Drawing.Quantified;
 using PA.TileList.Quadrant;
 using PA.TileList.Quantified;
 using PA.TileList.Tile;
@@ -38,6 +40,10 @@ namespace PA.TileList.Tests.Utils
         public MainTile(IZone a, SubTile t)
             : base(a, t)
         {
+            this.ElementStepX = t.ElementStepX;
+            this.ElementStepY = t.ElementStepY;
+            this.ElementSizeX = t.ElementSizeX;
+            this.ElementSizeY = t.ElementSizeY;
         }
 
         public Quadrant.Quadrant Quadrant { get; private set; }
@@ -61,10 +67,15 @@ namespace PA.TileList.Tests.Utils
 
         public static MainTile GetTile(float factor)
         {
-            IZone first = new Zone((int) (-5*factor), (int) (-5*factor), (int) (5*factor), (int) (5*factor));
+            IZone first = new Zone((int)(-5 * factor), (int)(-5 * factor), (int)(5 * factor), (int)(5 * factor));
             IZone second = new Zone(1, 1, 5, 5);
 
             var t1 = new SubTile(second, new Item(3, 3, Color.Red));
+			t1.ElementStepX = 100;
+			t1.ElementStepY = 75;
+			t1.ElementSizeX = 50;
+			t1.ElementSizeY = 50;
+
             t1.Fill(c => new Item(c.X, c.Y, c.X + c.Y == 6 ? Color.Green : Color.Yellow), false);
 
 
@@ -75,19 +86,20 @@ namespace PA.TileList.Tests.Utils
                 return a;
             });
 
-            t0.ElementSizeX = 45f/factor*second.SizeX;
-            t0.ElementSizeY = 50f/factor*second.SizeY;
-            t0.ElementStepX = 50f/factor*second.SizeX;
-            t0.ElementStepY = 60f/factor*second.SizeY;
-            t0.RefOffsetX = 25;
+			t0.ElementSizeX = second.SizeX* t1.ElementSizeX + (second.SizeX - 1) * (t1.ElementStepX - t1.ElementSizeX);
+            t0.ElementSizeY = second.SizeY* t1.ElementSizeX + (second.SizeY - 1) * (t1.ElementStepY - t1.ElementSizeY);
+            t0.ElementStepX = second.SizeX* t1.ElementStepX ;
+            t0.ElementStepY = second.SizeY* t1.ElementStepY ;
+	        t0.RefOffsetX = 25;
             t0.RefOffsetY = 0;
+
 
             return t0;
         }
 
         public static MainTile GetTileFullSpace(float factor)
         {
-            IZone first = new Zone((int) (-5*factor), (int) (-5*factor), (int) (5*factor), (int) (5*factor));
+            IZone first = new Zone((int)(-5 * factor), (int)(-5 * factor), (int)(5 * factor), (int)(5 * factor));
             IZone second = new Zone(1, 1, 5, 5);
 
             var t1 = new SubTile(second, new Item(3, 3, Color.Red));
@@ -96,14 +108,23 @@ namespace PA.TileList.Tests.Utils
             var t0 = new MainTile(first, t1);
             t0.Fill(c => t1.Clone(c.X, c.Y) as SubTile);
 
-            t0.ElementSizeX = 50f/factor*second.SizeX;
-            t0.ElementSizeY = 50f/factor*second.SizeY;
-            t0.ElementStepX = 50f/factor*second.SizeX;
-            t0.ElementStepY = 50f/factor*second.SizeY;
+            t0.ElementSizeX = 50f / factor * second.SizeX;
+            t0.ElementSizeY = 50f / factor * second.SizeY;
+            t0.ElementStepX = 50f / factor * second.SizeX;
+            t0.ElementStepY = 50f / factor * second.SizeY;
             t0.RefOffsetX = 50;
             t0.RefOffsetY = 0;
 
             return t0;
+        }
+
+
+        public Bitmap ToBitmap(int w, int h, RectangleF inner)
+        {
+            return this.ToQuantified(this.ElementStepX, this.ElementStepY, this.ElementStepX, this.ElementStepY, this.RefOffsetX, this.RefOffsetY)
+				       .RenderImage(w, h, inner, ScaleMode.XYRATIO, new QuantifiedRenderer<SubTile>(
+                                   (z, s) => z.ToBitmap((int)s.Width, (int)s.Height, this), Pens.Blue)
+                        ).Item;
         }
     }
 }

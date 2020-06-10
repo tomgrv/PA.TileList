@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.Linq;
 using PA.TileList.Linear;
 using PA.TileList.Tile;
+using PA.TileList.Quantified;
 
 namespace PA.TileList.Cropping
 {
@@ -75,32 +76,77 @@ namespace PA.TileList.Cropping
             return crop;
         }
 
-        public static ITile<T> Crop<T>(this ITile<T> list, IZone a)
-            where T : ICoordinate
-        {
-            foreach (var e in list.Where(e => !a.Contains(e)).ToArray())
-                list.Remove(e);
+        #region Crop
 
-            list.UpdateZone();
-            return list;
+        public static void Crop<T>(this ITile<T> tile, IZone a)
+            where T : class, ICoordinate
+        {
+            var l = tile.Take(a);
+            tile.RemoveAll(tile.Except(l));
         }
 
-        public static ITile<T> Crop<T>(this ITile<T> list, Func<T, bool> predicate)
-            where T : ICoordinate
+        public static IEnumerable<Coordinate> SelectCoordinates(this ITile list, IZone a)
         {
-            return list.Crop(list.GetCroppingZone(predicate));
+            return list.Zone.Where(e => a.Contains(e));
         }
 
-        public static IEnumerable<T> Cropping<T>(this IEnumerable<T> list, IZone a)
+        #endregion
+
+        #region Take IQuantifiedTile
+
+        public static QuantifiedTile<T> Filter<T>(this IQuantifiedTile<T> tile, IZone a)
+           where T : class, ICoordinate
+        {
+            var q = new QuantifiedTile<T>(tile);
+            q.Crop(a);
+            return q;
+        }
+
+        public static QuantifiedTile<T> Filter<T>(this IQuantifiedTile<T> tile, Func<T, bool> predicate)
+         where T : class, ICoordinate
+        {
+            var q = new QuantifiedTile<T>(tile);
+            q.Crop(tile.GetCroppingZone(predicate));
+            return q;
+        }
+
+        #endregion
+
+        #region Take ITile
+
+
+        public static Tile<T> Filter<T>(this ITile<T> tile, IZone a)
+            where T : class, ICoordinate
+        {
+            var q = new Tile<T>(tile);
+            q.Crop(a);
+            return q;
+        }
+
+        public static Tile<T> Filter<T>(this ITile<T> tile, Func<T, bool> predicate)
+           where T : class, ICoordinate
+        {
+            var q = new Tile<T>(tile);
+            q.Crop(tile.GetCroppingZone(predicate));
+            return q;
+        }
+
+        #endregion
+
+        #region Take IEnumerable
+
+        public static IEnumerable<T> Take<T>(this IEnumerable<T> list, IZone a)
             where T : ICoordinate
         {
             return list.Where(e => a.Contains(e));
         }
 
-        public static IEnumerable<T> Cropping<T>(this IEnumerable<T> list, Func<T, bool> predicate)
+        public static IEnumerable<T> TakeWhile<T>(this IEnumerable<T> list, Func<T, bool> predicate)
             where T : ICoordinate
         {
-            return list.Cropping(list.GetCroppingZone(predicate));
+            return list.Take(list.GetCroppingZone(predicate));
         }
+
+        #endregion
     }
 }

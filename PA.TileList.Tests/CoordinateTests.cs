@@ -6,7 +6,7 @@ namespace PA.TileList.Tests
     [TestFixture]
     public class CoordinateTests
     {
-        [Test]
+        [Test, Category("Trustable")]
         public void CreateCoordinate()
         {
             var a = new Coordinate(0, 0);

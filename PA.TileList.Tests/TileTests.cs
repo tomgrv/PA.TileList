@@ -1,6 +1,9 @@
 ﻿using System.Drawing;
 using NUnit.Framework;
+using PA.TileList.Contextual;
 using PA.TileList.Cropping;
+using PA.TileList.Drawing.Graphics2D;
+using PA.TileList.Drawing.Quantified;
 using PA.TileList.Extensions;
 using PA.TileList.Quantified;
 using PA.TileList.Tests.Utils;
@@ -9,7 +12,7 @@ using PA.TileList.Tile;
 namespace PA.TileList.Tests
 {
     [TestFixture]
-    public class TileTest
+    public class TileTests
     {
         [Test]
         [Category("Image hash")]
@@ -31,7 +34,7 @@ namespace PA.TileList.Tests
             // Assert.AreEqual("BFE39DA3858C0A979B54F99442B397DA", s0, "Image hash");
             Assert.AreEqual("0,0;100,100", t0.GetZone().ToString(), "Area");
 
-            var crop1 = t0.Crop(new Zone(25, 30, 75, 60));
+            var crop1 = t0.Take(new Zone(25, 30, 75, 60));
             var t1 = new Tile<Item>(crop1);
 
             //string signature1 = t1.AsQuantified().GetImage(1000, 1000, (z, s) =>
@@ -41,7 +44,7 @@ namespace PA.TileList.Tests
             Assert.AreEqual("25,30;75,60", t1.GetZone().ToString(), "Area");
 
 
-            var crop2 = t0.Crop(t => t.Color != Color.Yellow);
+            var crop2 = t0.TakeWhile(t => t.Color != Color.Yellow);
             var t2 = new Tile<Item>(crop2);
 
             //string signature2 = t2.AsQuantified().GetImage(1000, 1000, (z, s) =>
