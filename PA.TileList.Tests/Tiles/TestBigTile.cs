@@ -28,7 +28,7 @@ namespace PA.TileList.Tests
             var bt = BigTile.GetTile();
 
             var btflat = bt.Flatten<SubTile, Item>()
-                            .ToQuantified(0.6, 0.300, 0.600, 0.3, -18.9, 69.600)
+                            .ToQuantified(bt.ElementSizeX / 1000f, bt.ElementSizeY / 1000f, bt.ElementStepX / 1000f, bt.ElementStepY / 1000f, -18.9, 69.600)
                             .Translate(TranslateExtensions.TranslateSource.Min);
 
             // OK 7 juin 2020
@@ -45,17 +45,17 @@ namespace PA.TileList.Tests
                 d.Context.Color = Color.Red;
             }
 
-            //  btflat.RenderImage(6000, 6000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(s, z)))
-            //.Render(crop, new RectangularRenderer(Color.Black, 1))
-            //    .Item.Debug();
+            btflat.RenderImage(6000, 6000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(s, z)))
+                .Render(crop, new RectangularRenderer(Color.Black, 1))
+                .Item.Debug();
 
-
-            //btflat.DrawSelectionPoints<IContextual<Item>, Bitmap>(crop, conf, img, Color.Green, Color.Red, true);
 
             // OK 7 juin 2020
             Assert.AreEqual(300, btflat.Count(c => c.Context.Color == Color.Red), "BigTile Selection Count");
 
 
         }
+
+
     }
 }

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using PA.TileList.Selection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using PA.TileList.Selection;
 
 namespace PA.TileList.Circular
 {
@@ -51,9 +51,24 @@ namespace PA.TileList.Circular
             }
         }
 
+        public SelectionPosition Position(double[] x, double[] y)
+        {
+            return this.Position(x[0], y[0], x[1], y[1]);
+        }
+
+        public double[] GetValuesX(double x)
+        {
+            return new double[] { x, x * x };
+        }
+
+        public double[] GetValuesY(double y)
+        {
+            return new double[] { y, y * y };
+        }
+
         public SelectionPosition Position(double x, double y)
         {
-            return this.Position(x, y, Math.Pow(x, 2), Math.Pow(y, 2));
+            return this.Position(x, y, x * x, y * y);
         }
 
         public SelectionPosition Position(double x, double y, double x2, double y2)

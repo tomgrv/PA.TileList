@@ -40,6 +40,10 @@ namespace PA.TileList.Tests.Utils
         public MainTile(IZone a, SubTile t)
             : base(a, t)
         {
+            this.ElementStepX = t.ElementStepX;
+            this.ElementStepY = t.ElementStepY;
+            this.ElementSizeX = t.ElementSizeX;
+            this.ElementSizeY = t.ElementSizeY;
         }
 
         public Quadrant.Quadrant Quadrant { get; private set; }

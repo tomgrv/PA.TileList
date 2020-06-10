@@ -283,7 +283,7 @@ namespace PA.TileList.Tile
 
 			foreach (Coordinate c in zone)
 			{
-				var item = this.FirstOrDefault(t => (t.X == c.X) && (t.Y == c.Y));
+				var item = this.Find(c);
 
 				if ((item != null) && overwrite)
 					this.Remove(item);

@@ -25,6 +25,21 @@ namespace PA.TileList.Quantified
 
         }
 
+        public SelectionPosition Position(double[] x, double[] y)
+        {
+            return this.Position(x[0], y[0]);
+        }
+
+        public double[] GetValuesX(double x)
+        {
+            return new double[] { x };
+        }
+
+        public double[] GetValuesY(double y)
+        {
+            return new double[] { y };
+        }
+
         public SelectionPosition Position(double x, double y)
         {
             var xr = System.Math.Round(x, 14);
