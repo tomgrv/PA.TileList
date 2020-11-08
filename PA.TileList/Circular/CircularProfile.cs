@@ -1,4 +1,5 @@
-﻿using PA.TileList.Selection;
+﻿using PA.TileList.Quantified;
+using PA.TileList.Selection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,13 +20,19 @@ namespace PA.TileList.Circular
 
         private ProfileStep[] _ordered;
 
-        public CircularProfile(double radius)
+        public CircularProfile(double radius, string name = null)
         {
             this.Radius = radius;
+            this.Name = name;
+            this.GranularityX = radius;
+            this.GranularityY = radius;
             this.ResetProfile();
         }
 
+        public double GranularityX { get; private set; }
+        public double GranularityY { get; private set; }
         public double Radius { get; }
+        public string Name { get; }
 
         public IEnumerable<ProfileStep> Profile
         {
@@ -37,7 +44,7 @@ namespace PA.TileList.Circular
         }
 
         public void OptimizeProfile()
-        {
+        {        
             if (this._profile.Count == 0)
             {
                 this._ordered = new[] { new ProfileStep(0d, this.Radius) };
@@ -46,8 +53,15 @@ namespace PA.TileList.Circular
             if (this._ordered == null)
             {
                 this._ordered = this._profile.OrderBy(p => p.Angle).ToArray();
-                this._maxRadius2 = Math.Pow(this._ordered.Max(p => p.Radius), 2);
-                this._minRadius2 = Math.Pow(this._ordered.Min(p => p.Radius), 2);
+
+                var minAngle = this._ordered.Min(p => p.Angle);
+                var minRadius = this._ordered.Min(p => p.Radius);
+                var maxRadius = this._ordered.Max(p => p.Radius);
+
+                this.GranularityX = this.GranularityY = Math.Min(minAngle, maxRadius - minRadius)/2;
+
+                this._maxRadius2 = Math.Pow(maxRadius, 2);
+                this._minRadius2 = Math.Pow(minRadius, 2);
             }
         }
 

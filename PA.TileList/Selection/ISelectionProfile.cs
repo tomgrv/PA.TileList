@@ -24,13 +24,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using PA.TileList.Quantified;
 using System;
 
 namespace PA.TileList.Selection
 {
     public interface ISelectionProfile
     {
+        string Name { get; }
+        double GranularityX { get; }
+        double GranularityY { get; }
         void OptimizeProfile();
+
         [Obsolete]
         SelectionPosition Position(double x, double y);
         [Obsolete]
