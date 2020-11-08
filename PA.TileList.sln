@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PA.TileList", "PA.TileList\PA.TileList.csproj", "{5B4FACE3-DDB3-4EAA-985A-9DE4AAC34A91}"
 EndProject
@@ -9,15 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PA.TileList.Drawing", "PA.T
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7533DCCC-1456-4257-B295-7AA16A860F6F}"
 	ProjectSection(SolutionItems) = preProject
-		common\GlobalAssemblyInfo.cs = common\GlobalAssemblyInfo.cs
 		readme.md = readme.md
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D0194E25-483A-404A-B7C2-1E9AB4E88143}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Continuous Integration", "Continuous Integration", "{2501E72D-292E-4A13-B382-ACF34EA8CC06}"
@@ -91,10 +83,11 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		UpdateAssemblyVersion = True
-		UpdateAssemblyFileVersion = False
-		UpdateAssemblyInfoVersion = False
 		AssemblyVersionSettings = IncrementOnDemandWithReset.IncrementOnDemandWithReset.DeltaDayStamp.TimeStamp
+		UpdateAssemblyInfoVersion = False
+		UpdateAssemblyFileVersion = False
+		UpdateAssemblyVersion = True
+		SolutionGuid = {B5403778-6F00-4E67-8394-043E5916E49B}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0

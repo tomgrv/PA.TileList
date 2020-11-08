@@ -70,13 +70,13 @@ namespace PA.TileList.Tests.Utils
             IZone first = new Zone((int)(-5 * factor), (int)(-5 * factor), (int)(5 * factor), (int)(5 * factor));
             IZone second = new Zone(1, 1, 5, 5);
 
-            var t1 = new SubTile(second, new Item(3, 3, Color.Red));
+            var t1 = new SubTile(second, new Item(3, 3, Color.Cyan));
 			t1.ElementStepX = 100;
 			t1.ElementStepY = 75;
 			t1.ElementSizeX = 50;
 			t1.ElementSizeY = 50;
 
-            t1.Fill(c => new Item(c.X, c.Y, c.X + c.Y == 6 ? Color.Green : Color.Yellow), false);
+            t1.Fill(c => new Item(c.X, c.Y, c.X + c.Y == 6 ? Color.Purple : Color.Yellow), false);
 
 
             var t0 = new MainTile(first, t1);

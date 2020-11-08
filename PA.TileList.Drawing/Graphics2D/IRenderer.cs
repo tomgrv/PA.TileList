@@ -24,7 +24,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Runtime.Remoting.Messaging;
 using System.Drawing;
 using PA.TileList.Linear;
 namespace PA.TileList.Drawing.Graphics2D
