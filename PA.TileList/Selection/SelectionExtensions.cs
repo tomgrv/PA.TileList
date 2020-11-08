@@ -31,6 +31,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace PA.TileList.Selection
 {
@@ -150,30 +151,34 @@ namespace PA.TileList.Selection
         /// <param name="config">Config.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
         public static uint Surface<T>(this T c, IQuantifiedTile tile, ISelectionProfile profile,
-            SelectionConfiguration config)
+            SelectionConfiguration config, bool quickMode = true)
             where T : ICoordinate
         {
             Contract.Requires(tile != null, nameof(tile));
             Contract.Requires(profile != null, nameof(profile));
             Contract.Requires(config != null, nameof(config));
 
+            if (quickMode)
+            {
+                var quick = c.CountPoints(tile, profile, config.GetQuickSelectionVariant());
 
-            // full mode / follows SelectionConfiguration
-            SelectionPoints points = c.CountPoints(tile, profile, config);
+                if ((quick.Inside == 0 ^ quick.Outside == 0) && quick.Under == 0)
+                {
+#if DEBUG
+                    c.Tag = quick.IsSelected(config.GetQuickSelectionVariant());
+#endif
+                    return quick.GetSurface(config.GetQuickSelectionVariant());
+                }
+            }
 
-            uint surface = 0u;
-
-            if (points.Outside > 0 && points.Outside >= config.MinSurface && config.SelectionType.HasFlag(SelectionPosition.Outside))
-                surface += points.Outside;
-
-            if (points.Inside > 0 && points.Inside >= config.MinSurface && config.SelectionType.HasFlag(SelectionPosition.Inside))
-                surface += points.Inside;
-
-            if (points.Under > 0 && config.SelectionType.HasFlag(SelectionPosition.Under))
-                surface += points.Under;
-
-            return surface;
+            var surface = c.CountPoints(tile, profile, config);
+#if DEBUG
+            c.Tag = surface.IsSelected(config);
+#endif
+            return surface.GetSurface(config);
         }
+
+    
 
 
         /// <summary>
@@ -200,7 +205,7 @@ namespace PA.TileList.Selection
             c.GetPoints(tile, config,
                                  (xc, yc) =>
                                  {
-                                     switch(profile.Position(xc, yc))
+                                     switch (profile.Position(xc, yc))
                                      {
                                          case SelectionPosition.Inside:
                                              p.Inside += 1;
@@ -251,7 +256,7 @@ namespace PA.TileList.Selection
 
             predicate(xMin, yMin, xMax, yMax);
         }
-       
+
 
         /// <summary>
         ///     Gets the points.

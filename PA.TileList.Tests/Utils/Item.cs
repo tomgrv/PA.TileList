@@ -116,7 +116,13 @@ namespace PA.TileList.Tests.Utils
 
 			g.FillRectangle(new SolidBrush(Color.Pink), r.X, r.Y, r.Width, r.Height);
 			g.FillRectangle(new SolidBrush(this.Color), r.X + 1, r.Y + 1, r.Width - 2, r.Height - 2);
+
+#if DEBUG
+			g.DrawString(this.Tag == null ? s : this.Tag.ToString(), new Font(FontFamily.GenericSansSerif, r.Height / 3f), this.Tag == null ? Brushes.Gray : Brushes.Blue, r.X, r.Y);
+#else
 			g.DrawString(s, new Font(FontFamily.GenericSansSerif, r.Height / 3f), Brushes.Gray, r.X, r.Y);
+#endif
+
 		}
 	}
 }

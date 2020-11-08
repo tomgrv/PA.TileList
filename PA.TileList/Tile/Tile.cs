@@ -11,6 +11,10 @@ namespace PA.TileList.Tile
 	public class Tile<T> : List<T>, ITile<T>
 		where T : class, ICoordinate
 	{
+#if DEBUG
+		public object Tag { get; set; }
+#endif
+
 		protected Tile(ITile<T> t)
 			: base(t)
 		{

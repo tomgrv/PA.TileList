@@ -1,10 +1,25 @@
 ﻿using PA.TileList.Linear;
+using System.Dynamic;
 
 namespace PA.TileList.Contextual
 {
     public class Contextual<T> : Coordinate, IContextual<T>
         where T : ICoordinate
     {
+#if DEBUG
+        public new object Tag
+        {
+            get
+            { 
+                return this.Context.Tag;
+            }
+            set
+            {
+                this.Context.Tag = value;
+            }
+        }
+#endif
+
         public Contextual(int x, int y, T context)
             : base(x, y)
         {

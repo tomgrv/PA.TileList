@@ -31,9 +31,42 @@ namespace PA.TileList.Selection
 		public uint Inside { get; set;}
 		public uint Outside { get; set;}
 		public uint Under { get; set;}
-
+		
 		public SelectionPoints()
 		{
 		}
-	}
+
+		public uint CountSelected(SelectionPosition selectionType)
+        {
+			uint points = 0;
+
+			if (this.Outside > 0 && selectionType.HasFlag(SelectionPosition.Outside))
+				points += this.Outside;
+
+			if (this.Inside > 0 && selectionType.HasFlag(SelectionPosition.Inside))
+				points += this.Inside;
+
+			if (this.Under > 0 && selectionType.HasFlag(SelectionPosition.Under))
+				points += this.Under;
+
+			return points;
+		}
+
+		public bool IsSelected(SelectionConfiguration config)
+		{
+			return this.CountSelected(config.SelectionType) >= config.MinSurface ;
+		}
+
+		public uint GetSurface(SelectionConfiguration config)
+        {
+			uint surface = this.CountSelected(config.SelectionType);
+			return surface >= config.MinSurface ? surface : 0;
+		}
+
+        public override string ToString()
+        {
+			return "[" + this.Inside + ", " + this.Under + ", " + this.Outside + "]";
+
+		}
+    }
 }

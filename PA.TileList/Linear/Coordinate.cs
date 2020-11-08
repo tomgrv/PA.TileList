@@ -2,6 +2,10 @@ namespace PA.TileList.Linear
 {
     public class Coordinate : ICoordinate
     {
+#if DEBUG
+        public object Tag { get; set; }
+#endif
+
         public static Coordinate Zero = new Coordinate(0, 0);
 
         public static int Dim = 2;
