@@ -150,30 +150,13 @@ namespace PA.TileList.Drawing.Graphics2D
 
 		public static byte[] GetRawData(this Image image)
 		{
-			var converter = new ImageConverter();
-			return converter.ConvertTo(image, typeof(byte[])) as byte[];
-		}
-
-		
-		public static void Debug(this Image image, string tag = null)
-		{
-#if DEBUG
-			var stack = new StackTrace();
-
-			var frame =
-				stack.GetFrames().FirstOrDefault(s => s.GetMethod().GetCustomAttributes(false)
-					.Any(i => i.ToString().EndsWith("TestAttribute")));
-
-			var p = Directory.GetCurrentDirectory();
-
-			if (frame != null)
+			using (MemoryStream mStream = new MemoryStream())
 			{
-				var name = frame.GetMethod().Name + "_" + frame.GetMethod().DeclaringType.Name + (tag != null ? "_" + tag : string.Empty);
-				image.Save(Path.GetTempPath() + name + ".png", ImageFormat.Png);
+				image.Save(mStream,ImageFormat.Png);
+				return mStream.ToArray();
 			}
-#endif
-
 		}
+
 
 
 
@@ -183,10 +166,6 @@ namespace PA.TileList.Drawing.Graphics2D
 			{
 				var hash = sha.ComputeHash(image.GetRawData());
 				var key = BitConverter.ToString(hash).Replace("-", string.Empty);
-
-#if DEBUG
-				image.Debug(key);
-#endif
 
 				return key;
 			}

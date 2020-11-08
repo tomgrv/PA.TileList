@@ -36,7 +36,7 @@ namespace PA.TileList.Tests
 
 
             var crop = new RectangularProfile(-9, 69.45, 9, 72.25);
-            var conf = new SelectionConfiguration(SelectionPosition.Inside, 0.25f, false, true);
+            var conf = new SelectionConfiguration(SelectionPosition.Inside, 0.25f, false);
 
             foreach (ICoordinate o in btflat.Take(crop, conf))
             {
@@ -47,7 +47,7 @@ namespace PA.TileList.Tests
 
             btflat.RenderImage(6000, 6000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(s, z)))
                 .Render(crop, new RectangularRenderer(Color.Black, 1))
-                .Item.Debug();
+                .SaveDebugImage();
 
 
             // OK 7 juin 2020

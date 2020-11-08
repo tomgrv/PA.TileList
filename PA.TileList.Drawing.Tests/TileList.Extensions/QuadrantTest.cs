@@ -26,17 +26,17 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             tile[15].Reference.Color = Color.Pink;
 
-            tile.ToBitmap(5000, 5000, new RectangleF(-2000, -2000, 4000, 4000)).Debug("Init");
+            tile.ToBitmap(5000, 5000, new RectangleF(-2000, -2000, 4000, 4000)).SaveDebugImage("Init");
 
-            ChangeAndRender(tile, Quadrant.Quadrant.Array).Debug(Quadrant.Quadrant.Array.ToString());
+            ChangeAndRender(tile, Quadrant.Quadrant.Array).SaveDebugImage(Quadrant.Quadrant.Array.ToString());
 
-            ChangeAndRender(tile, Quadrant.Quadrant.BottomLeft).Debug(Quadrant.Quadrant.BottomLeft.ToString());
+            ChangeAndRender(tile, Quadrant.Quadrant.BottomLeft).SaveDebugImage(Quadrant.Quadrant.BottomLeft.ToString());
 
-            ChangeAndRender(tile, Quadrant.Quadrant.BottomRight).Debug(Quadrant.Quadrant.BottomRight.ToString());
+            ChangeAndRender(tile, Quadrant.Quadrant.BottomRight).SaveDebugImage(Quadrant.Quadrant.BottomRight.ToString());
 
-            ChangeAndRender(tile, Quadrant.Quadrant.TopLeft).Debug(Quadrant.Quadrant.TopLeft.ToString());
+            ChangeAndRender(tile, Quadrant.Quadrant.TopLeft).SaveDebugImage(Quadrant.Quadrant.TopLeft.ToString());
 
-            ChangeAndRender(tile, Quadrant.Quadrant.TopRight).Debug(Quadrant.Quadrant.TopRight.ToString());
+            ChangeAndRender(tile, Quadrant.Quadrant.TopRight).SaveDebugImage(Quadrant.Quadrant.TopRight.ToString());
 
         }
 
@@ -69,7 +69,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
     
                 t1.RenderImage(5000, 5000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.X + "\n" + z.Y)))
-                    .Item.Debug("TopLeft");
+                     .SaveDebugImage("TopLeft");
             //Assert.AreEqual("055FBADECFE4D727D083968D6D2AEA62A2312E303FF48635474E11E5525CEEC3", signature1, "TopLeft");
 
             var t2 = t
@@ -78,7 +78,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
      
                 t2.RenderImage(5000, 5000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.Context.X + "\n" + z.Context.Y)))
-                    .Item.Debug("BottomLeft");
+                     .SaveDebugImage("BottomLeft");
             //Assert.AreEqual("4B02E3B3619367AB0CCE9AB8648B508FE5611B1D1B46BD225AB62A90F014BA0D", signature2, "BottomLeft");
 
             var t3 = t
@@ -87,7 +87,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
  
                 t3.RenderImage(5000, 5000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.Context.X + "\n" + z.Context.Y)))
-                    .Item.Debug("BottomRight");
+                     .SaveDebugImage("BottomRight");
 
             // Assert.AreEqual("0ED609DCF12112DCFDDAEC61C32DBEB9874B347C3E5305CA545A5D6795F8DA31", signature3, "BottomRight");
 
@@ -96,7 +96,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
                 .Filter(p, new SelectionConfiguration(SelectionPosition.Inside, true));
 
                 t4.RenderImage(5000, 5000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.Context.X + "\n" + z.Context.Y)))
-                    .Item.Debug("TopRight");
+                     .SaveDebugImage("TopRight");
 
             // Assert.AreEqual("70CEDF7E06EE71F13DC5844E3ECC5F897501BD8356B3FF6EE60430B23781ECA6", signature4, "TopRight");
         }

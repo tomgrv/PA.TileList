@@ -48,67 +48,29 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 			var t1 = tile
 				.Flatten<SubTile, Item>();
 
+			t1.GetDebugGraphic().SaveDebugImage();
 
-			var coord1 = t1.GetCoordinateAt(1000, 500);
-			Assert.IsNull(coord1);
+			var coord1 = t1.GetCoordinateAt(-75, 0);
+			Assert.AreEqual(2,coord1.X, "coord1.X");
+			Assert.AreEqual(3,coord1.Y, "coord1.Y");
 
-			var coord2 = t1.GetCoordinateAt(1001, 500);
-			var item = t1.ElementAt(coord2);
-			item.Context.Color = Color.Red;
+			var coord2 = t1.GetCoordinateAt(-500, 25);
+			Assert.AreEqual(-2,coord2.X, "coord2.X");
+			Assert.AreEqual(3,coord2.Y, "coord2.Y");
 
-			Assert.AreEqual(item.X, coord2.X);
-			Assert.AreEqual(item.Y, coord2.Y);
-			Assert.AreEqual(23, coord2.X);
-			Assert.AreEqual(11, coord2.Y);
+			var coord3 = t1.GetCoordinateAt(-524, 25);
+			Assert.AreEqual(-2, coord3.X, "coord3.X");
+			Assert.AreEqual(3, coord3.Y, "coord3.Y");
+
+			var coord4 = t1.GetCoordinateAt(-525, 25);
+			Assert.IsNull(coord4, "coord4 in between");
+
+			var coord5 = t1.GetCoordinateAt(-530, 25);
+			Assert.AreEqual(-3, coord5.X, "coord5.X");
+			Assert.AreEqual(3, coord5.Y, "coord5.Y");
 		}
 
-		[Test]
-		public void CoordinatesIn()
-		{
-
-			var rr = new RulersRenderer<IContextual<Item>>(new[] { 100f, 500f });
-			var rrr = new RectangularRenderer(Color.Black, 1);
-
-			var pro = new RectangularProfile[2]{
-				new RectangularProfile(-2000, -1990, -1000, -1000),
-				new RectangularProfile(-25, 0, 2000, 112.5)
-			};
-
-			for (int k = 0; k < pro.Length; k++)
-			{
-
-				var scs = new SelectionConfiguration[9]{
-						new SelectionConfiguration(SelectionPosition.Inside , false),
-						new SelectionConfiguration(SelectionPosition.Inside |SelectionPosition.Under, false),
-						new SelectionConfiguration(SelectionPosition.Under, false),
-						new SelectionConfiguration(SelectionPosition.Inside , true),
-						new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under, true),
-						new SelectionConfiguration(SelectionPosition.Inside , 0.25f, true, true),
-						new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under , 0.25f,true, true),
-						new SelectionConfiguration(SelectionPosition.Inside , 0.25f, false, true),
-						new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under , 0.25f,false, true)
-
-					};
-
-				for (int i = 0; i < scs.Length; i++)
-				{
-					var tile = MainTile.GetTile(1).Flatten<SubTile, Item>();
-
-					foreach (var c in tile.SelectCoordinates(pro[k], scs[i]))
-					{
-						tile.Find(c).Context.Color = Color.Chocolate;
-					}
-
-					var img = tile.RenderImage(5000, 5000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(s, z)))
-			 				.Render(tile, rr)
-			 				.Render(pro[k], rrr);
-
-					tile.DrawSelectionPoints<IContextual<Item>, Bitmap>(pro[k], scs[i], img, Color.Green, Color.Red, true);
-
-					img.Item.Debug(k.ToString() + "-" + i.ToString());
-				}
-			}
-		}
+		
 
 
 		[Test]
@@ -252,7 +214,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 			var flat = tile.Flatten<SubTile, Item>();
 
 	
-						tile.ToBitmap(5000, 5000, new RectangleF(-2000, -2000, 4000, 4000)).Debug("imbricated");
+						tile.ToBitmap(5000, 5000, new RectangleF(-2000, -2000, 4000, 4000)).SaveDebugImage("imbricated");
 
 	
 					   flat.RenderImage(5000, 5000, new RectangleF(-2000, -2000, 4000, 4000), ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>(
@@ -260,7 +222,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 								{
 									return z2.Context.ToBitmap((int)s2.Width, (int)s2.Height, z2.X + "\n" + z2.Y);
 								})
-						).Item.Debug("flattened");
+						) .SaveDebugImage("flattened");
 
 		}
 	}
