@@ -68,16 +68,20 @@
     <PackageReference Include="NUnit" Version="3.12.0" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="TileList.Extensions\SelectionTests.cs">
+    <Compile Update="TileList.Extensions\CircularSelectionTests.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>SelectionTests.tt</DependentUpon>
+      <DependentUpon>CircularSelectionTests.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Update="TileList.Extensions\SelectionTests.tt">
+    <None Update="TileList.Extensions\CircularSelectionTests.tt">
+      <LastGenOutput>CircularSelectionTests.cs</LastGenOutput>
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>SelectionTests.cs</LastGenOutput>
+    </None>
+    <None Update="TileList.Extensions\RectangularSelectionTests.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CircularSelectionTests.cs</LastGenOutput>
     </None>
   </ItemGroup>
 </Project>

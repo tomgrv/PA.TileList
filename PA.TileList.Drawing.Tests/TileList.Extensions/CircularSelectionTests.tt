@@ -1,0 +1,102 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+
+using System;
+using System.Drawing;
+using System.Linq;
+using NUnit.Framework;
+using PA.TileList.Circular;
+using PA.TileList.Contextual;
+using PA.TileList.Cropping;
+using PA.TileList.Drawing.Circular;
+using PA.TileList.Drawing.Graphics2D;
+using PA.TileList.Drawing.Linear;
+using PA.TileList.Drawing.Quantified;
+using PA.TileList.Linear;
+using PA.TileList.Quantified;
+using PA.TileList.Selection;
+using PA.TileList.Tests.Utils;
+using PA.TileList.Tile;
+
+namespace PA.TileList.Drawing.Tests.TileList.Extensions
+{
+
+	[TestFixture]
+	public class CircularSelectionTests
+	{
+		private CircularProfileRenderer cpr = new CircularProfileRenderer(Pens.Red, Pens.Red, Pens.Pink);
+
+		<#
+			var pro = new object[4,2]
+			{
+				{ "GetTestProfile","1000"},
+				{ "GetZeroProfile","1000"},
+				{ "GetFlatProfile","1000"},
+				{ "GetSimpleProfile","1000"},
+			};
+
+			var scs = new string[9,3]
+			{
+				{"IU010","SelectionPosition.Inside | SelectionPosition.Under", "0.10f"},
+				{"IU025","SelectionPosition.Inside | SelectionPosition.Under", "0.25f"},
+				{"IU100","SelectionPosition.Inside | SelectionPosition.Under", "1f"},
+				{"Ix010","SelectionPosition.Inside", "0.10f"},
+				{"Ix025","SelectionPosition.Inside", "0.25f"},
+				{"Ix100","SelectionPosition.Inside", "1f"},
+				{"xU010","SelectionPosition.Under", "0.10f"},
+				{"xU025","SelectionPosition.Under", "0.25f"},
+				{"xU100","SelectionPosition.Inside ^ SelectionPosition.Outside ","1f"},
+			};
+
+			var tests = new int[4, 9,2]
+			{
+				{{411,427},{392,406},{345,315},{411,427},{392,406},{345,315},{0,0},{0,0},{0,0} },
+				{{314,337},{295,308},{230,194},{314,337},{295,308},{230,194},{0,0},{0,0},{0,0} },
+				{{153,162},{295,306},{130,117},{130,162},{130,143},{117,117},{36,0},{0,0},{0,0} },
+				{{153,162},{295,306},{130,117},{130,162},{130,143},{117,117},{36,0},{0,0},{0,0} },
+				
+			};
+
+			for (int k = 0; k < 4; k++)
+			{
+				for (int i = 0; i < 9; i++)
+				{
+					for(int j = 0; j < 2; j++)
+					{
+		#>
+
+		[Test]
+		public void CoordinatesIn_<#=pro[k,0]#>_<#=scs[i,0]#>_<#=j#>()
+		{
+			var pro =  CircularTests.<#=pro[k,0]#>(<#=pro[k,1]#>);
+			var scs =  new SelectionConfiguration(<#=scs[i,1]#>,<#=scs[i,2]#>,<#=j>0 ? "true" : "false" #>);
+			
+			var tile = MainTile.GetTile(1).Flatten<SubTile, Item>();
+			var count = 0;
+
+			scs.OptimizeResolution(tile, pro);
+
+			//foreach (var c in tile.SelectCoordinates(pro, scs))
+			foreach (var c in tile.Take(pro, scs))
+			{
+				tile.Find(c).Context.Color = Color.Brown; 
+				count++;
+			}
+
+			tile.GetDebugGraphic(pro, cpr , scs).SaveDebugImage();
+
+			Assert.AreEqual(<#=tests[k, i,j]#>, count, "index <#=k#>,<#=i#>,<#=j#>" );
+		}
+
+		<#
+					}
+				}
+			}
+
+		#>
+	}
+}

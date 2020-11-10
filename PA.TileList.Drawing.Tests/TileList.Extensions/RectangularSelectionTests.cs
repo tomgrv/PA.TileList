@@ -20,9 +20,8 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 {
 
 	[TestFixture]
-	public class QuantifiedSelectionTests
+	public class RectangularSelectionTests
 	{
-		private RulersRenderer<IContextual<Item>> rr = new RulersRenderer<IContextual<Item>>(new[] { 100f, 500f });
 		private RectangularRenderer rrr = new RectangularRenderer(Color.Black, 1);
 
 		
