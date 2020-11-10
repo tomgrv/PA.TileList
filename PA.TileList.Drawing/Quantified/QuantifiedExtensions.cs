@@ -101,12 +101,12 @@ namespace PA.TileList.Drawing.Quantified
 
                 if ((quick.Inside == 0 ^ quick.Outside == 0) && quick.Under == 0)
                 {
-                    return  100f * quick.CountSelected(config.SelectionType) / qsv.MaxSurface;
+                    return  100f * quick.Count(config.SelectionType) / qsv.MaxSurface;
                 }
             }
 
             var surface = c.CountPoints(tile, profile, config, g, selectedColor, notSelectedColor);
-            return 100f * surface.CountSelected(config.SelectionType) / config.MaxSurface;
+            return 100f * surface.Count(config.SelectionType) / config.MaxSurface;
         }
 
         public static SelectionPoints CountPoints<T>(this T c, IQuantifiedTile tile, ISelectionProfile profile,

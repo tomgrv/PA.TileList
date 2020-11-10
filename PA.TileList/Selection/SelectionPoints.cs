@@ -65,12 +65,12 @@ namespace PA.TileList.Selection
 
 		public bool IsSelected(SelectionConfiguration config)
 		{
-			return this.CountSelected(config.SelectionType) >= config.MinSurface ;
+			return this.Count(config.SelectionType) >= config.MinSurface ;
 		}
 
 		public uint GetSurface(SelectionConfiguration config)
         {
-			uint surface = this.CountSelected(config.SelectionType);
+			uint surface = this.Count(config.SelectionType);
 			return surface >= config.MinSurface ? surface : 0;
 		}
 
