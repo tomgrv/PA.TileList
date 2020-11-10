@@ -164,16 +164,13 @@ namespace PA.TileList.Selection
 
                 if ((quick.Inside == 0 ^ quick.Outside == 0) && quick.Under == 0)
                 {
-#if DEBUG
-                    c.Tag = quick.IsSelected(config.GetQuickSelectionVariant());
-#endif
                     return quick.GetSurface(config.GetQuickSelectionVariant());
                 }
             }
 
             var surface = c.CountPoints(tile, profile, config);
 #if DEBUG
-            c.Tag = surface.IsSelected(config);
+            c.Tag = surface.Under;
 #endif
             return surface.GetSurface(config);
         }
@@ -205,7 +202,7 @@ namespace PA.TileList.Selection
             c.GetPoints(tile, config,
                                  (xc, yc) =>
                                  {
-                                     switch (profile.Position(xc, yc))
+                                     switch (profile.Position(xc, yc, config))
                                      {
                                          case SelectionPosition.Inside:
                                              p.Inside += 1;

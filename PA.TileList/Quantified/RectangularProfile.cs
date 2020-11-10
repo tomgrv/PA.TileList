@@ -37,6 +37,11 @@ namespace PA.TileList.Quantified
             return this.Position(x[0], y[0]);
         }
 
+        public SelectionPosition Position(double[] x, double[] y, SelectionConfiguration config)
+        {
+            return this.Position(x[0], y[0]);
+        }
+
         public double[] GetValuesX(double x)
         {
             return new double[] { x };

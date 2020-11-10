@@ -41,6 +41,8 @@ namespace PA.TileList.Selection
         [Obsolete]
         SelectionPosition Position(double x, double y, double x2, double y2);
         SelectionPosition Position(double[] x, double[] y);
+
+        SelectionPosition Position(double[] x, double[] y, SelectionConfiguration config);
         double[] GetValuesX(double x);
         double[] GetValuesY(double y);
     }

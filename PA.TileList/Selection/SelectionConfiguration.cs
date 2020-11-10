@@ -1,5 +1,6 @@
 ﻿using PA.TileList.Quantified;
 using System;
+using System.Linq.Expressions;
 using System.Xml.Serialization;
 
 namespace PA.TileList.Selection
@@ -49,11 +50,22 @@ namespace PA.TileList.Selection
         ///     Define SelectionConfiguration with automatic resolution based on tolerance
         /// </summary>
         /// <param name="selectionType"></param>
-        private SelectionConfiguration(SelectionPosition selectionType, int resolutionX, int resolutionY , bool useFullSurface = true)
+        private SelectionConfiguration(SelectionConfiguration config)
+            : this(config.SelectionType, 1f, config.UseFullSurface)
         {
             // Set Variables		
-            this.UseFullSurface = useFullSurface;
-            this.SelectionType = selectionType;
+            this.IsQuick = true;
+        }
+
+        /// <summary>
+        ///     Define SelectionConfiguration with automatic resolution based on tolerance
+        /// </summary>
+        /// <param name="selectionType"></param>
+        private SelectionConfiguration(SelectionConfiguration config, uint resolutionX, uint resolutionY)
+            : this(config.SelectionType, 1f, config.UseFullSurface)
+        {
+            // Set Variables		
+            this.IsQuick = true;
             this.ResolutionX = resolutionX;
             this.ResolutionY = resolutionY;
         }
@@ -65,6 +77,12 @@ namespace PA.TileList.Selection
 
 
         /// <summary>
+        ///     Is Quick selection configuration ?
+        /// </summary>
+        public bool IsQuick { get; private set; }
+
+
+        /// <summary>
         ///     Number of Point required for under
         /// </summary>
         public float MinSurface { get; private set; }
@@ -72,17 +90,17 @@ namespace PA.TileList.Selection
         /// <summary>
         ///     Number Of Points required for inside
         /// </summary>
-        public int MaxSurface { get; private set; }
+        public uint MaxSurface { get; private set; }
 
         /// <summary>
         ///     Nb of calc steps (dots per T on X)
         /// </summary>
-        public int ResolutionX { get; protected set; }
+        public uint ResolutionX { get; protected set; }
 
         /// <summary>
         ///     Nb of calc steps (dots per T on Y)
         /// </summary>
-        public int ResolutionY { get; protected set; }
+        public uint ResolutionY { get; protected set; }
 
         /// <summary>
         ///     Gets the type of the selection.
@@ -102,12 +120,10 @@ namespace PA.TileList.Selection
         public SelectionConfiguration GetQuickSelectionVariant()
         {
             if (this._quick == null)
-                this._quick = new SelectionConfiguration(this.SelectionType,1f, this.UseFullSurface);
+                this._quick = new SelectionConfiguration(this);
 
             return this._quick;
         }
-
-
 
 
         public void SetResolution(float tolerance)
@@ -119,7 +135,7 @@ namespace PA.TileList.Selection
             this.Tolerance = tolerance;
 
             // Resolution
-            var r = (int)Math.Pow(10, BitConverter.GetBytes(decimal.GetBits((decimal)tolerance)[3])[2]);
+            var r = (uint)Math.Pow(10, BitConverter.GetBytes(decimal.GetBits((decimal)tolerance)[3])[2]);
 
             // Save X Y
             this.ResolutionX = this.ResolutionY = Math.Max(2, r);
@@ -142,11 +158,11 @@ namespace PA.TileList.Selection
             var rY = tile.ElementStepY / profile.GranularityY;
 
             if (rX > 2 || rY > 2)
-                this._quick = new SelectionConfiguration(this.SelectionType, Math.Max((int) rX, 2),  Math.Max((int) rY, 2), this.UseFullSurface);
+                this._quick = new SelectionConfiguration(this, Math.Max((uint) rX, 2),  Math.Max((uint) rY, 2));
 
             // Save X Y
-            this.ResolutionX = Math.Max(this.ResolutionX, (int)rX);
-            this.ResolutionY = Math.Max(this.ResolutionY, (int)rY);
+            this.ResolutionX = Math.Max(this.ResolutionX, (uint)rX);
+            this.ResolutionY = Math.Max(this.ResolutionY, (uint)rY);
 
             if (isoXY)
             {

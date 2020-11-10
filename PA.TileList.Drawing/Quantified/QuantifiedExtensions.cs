@@ -126,7 +126,7 @@ namespace PA.TileList.Drawing.Quantified
                                  {
                                      var selected = false;
 
-                                     switch (profile.Position(xc, yc))
+                                     switch (profile.Position(xc, yc, config))
                                      {
                                          case SelectionPosition.Inside:
                                              selected = config.SelectionType.HasFlag(SelectionPosition.Inside);

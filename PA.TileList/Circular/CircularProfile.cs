@@ -44,21 +44,24 @@ namespace PA.TileList.Circular
         }
 
         public void OptimizeProfile()
-        {        
+        {
             if (this._profile.Count == 0)
             {
                 this._ordered = new[] { new ProfileStep(0d, this.Radius) };
+
+                this.GranularityX = this.GranularityY = 0;
+
+                this._maxRadius2 = this._minRadius2 =  Math.Pow(this.Radius, 2);
             }
 
             if (this._ordered == null)
             {
                 this._ordered = this._profile.OrderBy(p => p.Angle).ToArray();
 
-                var minAngle = this._ordered.Min(p => p.Angle);
                 var minRadius = this._ordered.Min(p => p.Radius);
                 var maxRadius = this._ordered.Max(p => p.Radius);
 
-                this.GranularityX = this.GranularityY = Math.Min(minAngle, maxRadius - minRadius)/2;
+                this.GranularityX = this.GranularityY = Math.Abs(maxRadius - minRadius);
 
                 this._maxRadius2 = Math.Pow(maxRadius, 2);
                 this._minRadius2 = Math.Pow(minRadius, 2);
@@ -68,6 +71,12 @@ namespace PA.TileList.Circular
         public SelectionPosition Position(double[] x, double[] y)
         {
             return this.Position(x[0], y[0], x[1], y[1]);
+        }
+
+
+        public SelectionPosition Position(double[] x, double[] y, SelectionConfiguration config)
+        {
+            return this.Position(x[0], y[0], x[1], y[1], config);
         }
 
         public double[] GetValuesX(double x)
@@ -87,6 +96,11 @@ namespace PA.TileList.Circular
 
         public SelectionPosition Position(double x, double y, double x2, double y2)
         {
+            return this.Position(x, y, x * x, y * y);
+        }
+
+        private SelectionPosition Position(double x, double y, double x2, double y2, SelectionConfiguration config = null)
+        {
             var angle = Math.Atan2(y, x);
             var r2 = x2 + y2;
 
@@ -95,6 +109,11 @@ namespace PA.TileList.Circular
 
             if (0 < this._maxRadius2 && r2 > this._maxRadius2)
                 return SelectionPosition.Outside;
+
+            if (config?.IsQuick ?? false)
+            {
+                return SelectionPosition.Under;
+            }
 
             var last = this.GetStep(angle);
             var last2 = Math.Pow(last.Radius, 2);

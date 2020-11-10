@@ -36,10 +36,21 @@ namespace PA.TileList.Selection
 		{
 		}
 
-		public uint CountSelected(SelectionPosition selectionType)
+		public SelectionPosition GetPosition()
+        {
+			return (this.Outside > 0 ? SelectionPosition.Outside : 0x00) | (this.Inside > 0 ? SelectionPosition.Inside : 0x00) | (this.Under > 0 ? SelectionPosition.Under : 0x00);
+		}
+
+		public uint Count()
+		{
+			return this.Outside + this.Inside + this.Under;
+		}
+
+		public uint Count(SelectionPosition selectionType)
         {
 			uint points = 0;
 
+			//SelectionPosition current = this.GetPosition();
 			if (this.Outside > 0 && selectionType.HasFlag(SelectionPosition.Outside))
 				points += this.Outside;
 
