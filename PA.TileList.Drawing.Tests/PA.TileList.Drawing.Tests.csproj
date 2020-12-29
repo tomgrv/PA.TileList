@@ -73,6 +73,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>CircularSelectionTests.tt</DependentUpon>
     </Compile>
+    <Compile Update="TileList.Extensions\RectangularSelectionTests.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RectangularSelectionTests.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Update="TileList.Extensions\CircularSelectionTests.tt">
@@ -81,7 +86,7 @@
     </None>
     <None Update="TileList.Extensions\RectangularSelectionTests.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CircularSelectionTests.cs</LastGenOutput>
+      <LastGenOutput>RectangularSelectionTests.cs</LastGenOutput>
     </None>
   </ItemGroup>
 </Project>
