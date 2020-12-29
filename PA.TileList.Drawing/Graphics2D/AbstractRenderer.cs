@@ -2,7 +2,7 @@
 // AbstractRenderer.cs
 //
 // Author:
-//       Thomas GERVAIS <thomas.gervais@gmail.com>
+//       Thomas <tomgrv@users.perspikapps.fr>
 //
 // Copyright (c) 2019 
 //
