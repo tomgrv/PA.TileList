@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using System.Linq;
 using NUnit.Framework;
 using PA.TileList.Circular;
 using PA.TileList.Contextual;
-using PA.TileList.Cropping;
 using PA.TileList.Drawing.Circular;
 using PA.TileList.Drawing.Graphics2D;
 using PA.TileList.Drawing.Linear;
@@ -17,213 +15,210 @@ using PA.TileList.Tile;
 
 namespace PA.TileList.Drawing.Tests.TileList.Extensions
 {
-	[TestFixture]
-	public class QuantifiedTests
-	{
-		private void TestCoordinates<T>(IQuantifiedTile<T> q, Rectangle r, RectangleD<Bitmap> i, Action<T> a, Color cl)
-			where T : class, ICoordinate
-		{
-			foreach (
-				var c in
-				q.SelectCoordinates(new RectangularProfile(r.Left, r.Top, r.Right, r.Bottom),
-					new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under, false)))
-			{
-				//this.DrawPoints(q, r, i, cl);
+    [TestFixture]
+    public class QuantifiedTests
+    {
+        private void TestCoordinates<T>(IQuantifiedTile<T> q, Rectangle r, RectangleD<Bitmap> i, Action<T> a, Color cl)
+            where T : class, ICoordinate
+        {
+            foreach (
+                var c in
+                q.SelectCoordinates(new RectangularProfile(r.Left, r.Top, r.Right, r.Bottom),
+                    new SelectionConfiguration(SelectionPosition.Inside | SelectionPosition.Under, false)))
+            {
+                //this.DrawPoints(q, r, i, cl);
 
 
-				var z = q.ElementAt(c);
+                var z = q.ElementAt(c);
 
-				if (z != null)
-					a(z);
-			}
+                if (z != null)
+                    a(z);
+            }
+        }
 
+        [Test]
+        public void Coordinates()
+        {
+            var tile = MainTile.GetTile(1);
 
-		}
+            var t1 = tile
+                .Flatten<SubTile, Item>();
 
-		[Test]
-		public void Coordinates()
-		{
-			var tile = MainTile.GetTile(1);
+            t1.GetDebugGraphic().SaveDebugImage();
 
-			var t1 = tile
-				.Flatten<SubTile, Item>();
+            var coord1 = t1.GetCoordinateAt(-75, 0);
+            Assert.AreEqual(2, coord1.X, "coord1.X");
+            Assert.AreEqual(3, coord1.Y, "coord1.Y");
 
-			t1.GetDebugGraphic().SaveDebugImage();
+            var coord2 = t1.GetCoordinateAt(-500, 25);
+            Assert.AreEqual(-2, coord2.X, "coord2.X");
+            Assert.AreEqual(3, coord2.Y, "coord2.Y");
 
-			var coord1 = t1.GetCoordinateAt(-75, 0);
-			Assert.AreEqual(2,coord1.X, "coord1.X");
-			Assert.AreEqual(3,coord1.Y, "coord1.Y");
+            var coord3 = t1.GetCoordinateAt(-524, 25);
+            Assert.AreEqual(-2, coord3.X, "coord3.X");
+            Assert.AreEqual(3, coord3.Y, "coord3.Y");
 
-			var coord2 = t1.GetCoordinateAt(-500, 25);
-			Assert.AreEqual(-2,coord2.X, "coord2.X");
-			Assert.AreEqual(3,coord2.Y, "coord2.Y");
+            var coord4 = t1.GetCoordinateAt(-525, 25);
+            Assert.IsNull(coord4, "coord4 in between");
 
-			var coord3 = t1.GetCoordinateAt(-524, 25);
-			Assert.AreEqual(-2, coord3.X, "coord3.X");
-			Assert.AreEqual(3, coord3.Y, "coord3.Y");
+            var coord5 = t1.GetCoordinateAt(-530, 25);
+            Assert.AreEqual(-3, coord5.X, "coord5.X");
+            Assert.AreEqual(3, coord5.Y, "coord5.Y");
+        }
 
-			var coord4 = t1.GetCoordinateAt(-525, 25);
-			Assert.IsNull(coord4, "coord4 in between");
 
-			var coord5 = t1.GetCoordinateAt(-530, 25);
-			Assert.AreEqual(-3, coord5.X, "coord5.X");
-			Assert.AreEqual(3, coord5.Y, "coord5.Y");
-		}
+        [Test]
+        [Category("Image hash")]
+        public void DrawSelectionPoints()
+        {
+            const float factor = 1f;
 
-		
+            var tile = MainTile.GetTile(factor).Flatten<SubTile, Item>();
 
+            var p = new CircularProfile(1400);
 
-		[Test]
-		[Category("Image hash")]
-		public void DrawSelectionPoints()
-		{
-			const float factor = 1f;
+            var sc = new SelectionConfiguration(SelectionPosition.Inside, 0.70f);
 
-			var tile = MainTile.GetTile(factor).Flatten<SubTile, Item>();
+            var i = tile.RenderImage(5000, 5000, ScaleMode.CENTER, new QuantifiedRenderer<IContextual<Item>>(
+                (z, s) => z.Context.ToBitmap((int) s.Width, (int) s.Height, z.X + "\n" + z.Y),
+                Pens.Blue, new Pen(Color.Violet, 5)));
 
-			var p = new CircularProfile(1400);
+            tile.DrawSelectionPoints<IContextual<Item>, Bitmap>(p, sc, i, Color.Green, Color.Red, false);
 
-			var sc = new SelectionConfiguration(SelectionPosition.Inside, 0.70f);
+            p.DrawImage(i, new CircularProfileRenderer(Color.BlueViolet));
 
-			var i = tile.RenderImage(5000, 5000, ScaleMode.CENTER, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap((int)s.Width, (int)s.Height, z.X + "\n" + z.Y),
-																										Pens.Blue, new Pen(Color.Violet, 5)));
+            var signature = i.Item.GetSignature();
+        }
 
-			tile.DrawSelectionPoints<IContextual<Item>, Bitmap>(p, sc, i, Color.Green, Color.Red, false);
+        [Test]
+        [Category("Image hash")]
+        public void FirstOrDefault()
+        {
+            var tile = MainTile.GetTile(1);
 
-			p.DrawImage(i, new CircularProfileRenderer(Color.BlueViolet));
+            var t1 = tile
+                .Flatten<SubTile, Item>();
 
-			var signature = i.Item.GetSignature();
-		}
+            var coord1 = t1.GetCoordinateAt(27.4, 38);
+            Assert.AreEqual(3, coord1.X);
+            Assert.AreEqual(4, coord1.Y);
+            var item1 = t1.ElementAt(coord1);
+            item1.Context.Color = Color.Red;
 
-		[Test]
-		[Category("Image hash")]
-		public void FirstOrDefault()
-		{
-			var tile = MainTile.GetTile(1);
+            var coord2 = t1.GetCoordinateAt(0, 0);
+            Assert.IsNull(coord2);
 
-			var t1 = tile
-				.Flatten<SubTile, Item>();
+            var i1 = t1.RenderImage(2000, 2000, ScaleMode.STRETCH,
+                new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 50, z.X + "\n" + z.Y)));
+            t1.DrawImage(i1, new RulersRenderer<IContextual<Item>>(new[] {100f, 500f}));
+            // Assert.AreEqual("A56EBC8E87772EA73D38342AF45FF00B5489A22DB73E7ED5996C6AF7EEE3DE0A", signature, "Image hash");
+        }
 
-			var coord1 = t1.GetCoordinateAt(27.4, 38);
-			Assert.AreEqual(3, coord1.X);
-			Assert.AreEqual(4, coord1.Y);
-			var item1 = t1.ElementAt(coord1);
-			item1.Context.Color = Color.Red;
+        [Test]
+        [Category("Image hash")]
+        public void Rulers()
+        {
+            var tile = MainTile.GetTile(1);
 
-			var coord2 = t1.GetCoordinateAt(0, 0);
-			Assert.IsNull(coord2);
+            var t1 = tile
+                .Flatten<SubTile, Item>();
 
-			var i1 = t1.RenderImage(2000, 2000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 50, z.X + "\n" + z.Y)));
-			t1.DrawImage(i1, new RulersRenderer<IContextual<Item>>(new[] { 100f, 500f }));
-			// Assert.AreEqual("A56EBC8E87772EA73D38342AF45FF00B5489A22DB73E7ED5996C6AF7EEE3DE0A", signature, "Image hash");
-		}
+            t1.Reference.Context.Color = Color.Lavender;
 
-		[Test]
-		[Category("Image hash")]
-		public void Rulers()
-		{
-			var tile = MainTile.GetTile(1);
+            var item = t1.GetCoordinateAt(500, 1000);
+            //item.Context.Color = Color.Red;
 
-			var t1 = tile
-				.Flatten<SubTile, Item>();
+            var i1 = t1.RenderImage(2000, 2000, ScaleMode.STRETCH,
+                new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.X + "\n" + z.Y)));
 
-			t1.Reference.Context.Color = Color.Lavender;
+            var p = new CircularProfile(1000);
 
-			var item = t1.GetCoordinateAt(500, 1000);
-			//item.Context.Color = Color.Red;
+            p.DrawImage(i1, new CircularProfileRenderer(null, null, Pens.DarkViolet));
 
-			var i1 = t1.RenderImage(2000, 2000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.X + "\n" + z.Y)));
+            t1.DrawImage(i1, new RulersRenderer<IContextual<Item>>(new[] {100f, 500f}));
 
-			var p = new CircularProfile(1000);
+            i1.Item.GetSignature();
+            //Assert.AreEqual("9272D2C42A039C2122B649DAD516B390A3A2A3C51BA861B6E615F27BA0F1BDA3", i1, "Image hash");
+        }
 
-			p.DrawImage(i1, new CircularProfileRenderer(null, null, Pens.DarkViolet));
 
-			t1.DrawImage(i1, new RulersRenderer<IContextual<Item>>(new[] { 100f, 500f }));
+        [Test]
+        [Category("Image hash")]
+        public void Rectangle()
+        {
+            var tile = MainTile.GetTile(1);
 
-			i1.Item.GetSignature();
-			//Assert.AreEqual("9272D2C42A039C2122B649DAD516B390A3A2A3C51BA861B6E615F27BA0F1BDA3", i1, "Image hash");
-		}
+            var t1 = tile
+                .Flatten<SubTile, Item>();
 
+            t1.Reference.Context.Color = Color.Lavender;
 
-		[Test]
-		[Category("Image hash")]
-		public void Rectangle()
-		{
-			var tile = MainTile.GetTile(1);
+            var item = t1.GetCoordinateAt(502, 1000);
 
-			var t1 = tile
-				.Flatten<SubTile, Item>();
+            t1.Find(item).Context.Color = Color.Pink;
 
-			t1.Reference.Context.Color = Color.Lavender;
+            var i1 = t1.RenderImage(2000, 2000, ScaleMode.STRETCH,
+                new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.X + "\n" + z.Y)));
 
-			var item = t1.GetCoordinateAt(502, 1000);
+            var p = new CircularProfile(1000);
 
-			t1.Find(item).Context.Color = Color.Pink;
+            p.DrawImage(i1, new CircularProfileRenderer(null, null, Pens.DarkViolet));
 
-			var i1 = t1.RenderImage(2000, 2000, ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.X + "\n" + z.Y)));
+            var r = new RectangularProfile(-500, 1000, 500, 1100);
 
-			var p = new CircularProfile(1000);
 
-			p.DrawImage(i1, new CircularProfileRenderer(null, null, Pens.DarkViolet));
+            r.DrawImage(i1, new RectangularRenderer());
 
-			var r = new RectangularProfile(-500, 1000, 500, 1100);
+            //Assert.AreEqual("9272D2C42A039C2122B649DAD516B390A3A2A3C51BA861B6E615F27BA0F1BDA3", signature, "Image hash");
+        }
 
+        [Test]
+        [Category("Image hash")]
+        public void RulersFirst()
+        {
+            var tile = MainTile.GetTile(1);
 
+            var t1 = tile
+                .Flatten<SubTile, Item>();
 
-			r.DrawImage(i1, new RectangularRenderer());
+            t1.Reference.Context.Color = Color.Lavender;
 
-			//Assert.AreEqual("9272D2C42A039C2122B649DAD516B390A3A2A3C51BA861B6E615F27BA0F1BDA3", signature, "Image hash");
+            var item = t1.GetCoordinateAt(500, 1000);
+            //item.Context.Color = Color.Red;
 
-		}
+            var r1 = t1.RenderImage(2000, 2000, ScaleMode.STRETCH,
+                new RulersRenderer<IContextual<Item>>(new[] {100f, 500f}));
 
-		[Test]
-		[Category("Image hash")]
-		public void RulersFirst()
-		{
-			var tile = MainTile.GetTile(1);
+            //            var i1 = t1.RenderImage(r1, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.X + "\n" + z.Y)));
 
-			var t1 = tile
-				.Flatten<SubTile, Item>();
+            var p = new CircularProfile(1000);
 
-			t1.Reference.Context.Color = Color.Lavender;
+            p.DrawImage(r1, new CircularProfileRenderer(null, null, Pens.DarkViolet));
 
-			var item = t1.GetCoordinateAt(500, 1000);
-			//item.Context.Color = Color.Red;
+            var signature = r1.Item.GetSignature();
 
-			var r1 = t1.RenderImage(2000, 2000, ScaleMode.STRETCH, new RulersRenderer<IContextual<Item>>(new[] { 100f, 500f }));
+            //    var signature = t1.RenderImage(i2, new RulersRenderer<IContextual<Item>>(new[] { 100f, 500f })).Item.GetSignature();
+            Assert.AreEqual("9272D2C42A039C2122B649DAD516B390A3A2A3C51BA861B6E615F27BA0F1BDA3", signature,
+                "Image hash");
+        }
 
-			//            var i1 = t1.RenderImage(r1, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.X + "\n" + z.Y)));
+        [Test]
+        [Category("Image hash")]
+        public void ImbricatedRendering()
+        {
+            float factor = 1;
 
-			var p = new CircularProfile(1000);
+            var tile = MainTile.GetTile(factor);
+            var flat = tile.Flatten<SubTile, Item>();
 
-			p.DrawImage(r1, new CircularProfileRenderer(null, null, Pens.DarkViolet));
 
-			var signature = r1.Item.GetSignature();
+            tile.ToBitmap(5000, 5000, new RectangleF(-2000, -2000, 4000, 4000)).SaveDebugImage("imbricated");
 
-			//    var signature = t1.RenderImage(i2, new RulersRenderer<IContextual<Item>>(new[] { 100f, 500f })).Item.GetSignature();
-			Assert.AreEqual("9272D2C42A039C2122B649DAD516B390A3A2A3C51BA861B6E615F27BA0F1BDA3", signature, "Image hash");
-		}
 
-		[Test]
-		[Category("Image hash")]
-		public void ImbricatedRendering()
-		{
-			float factor = 1;
-
-			var tile = MainTile.GetTile(factor);
-			var flat = tile.Flatten<SubTile, Item>();
-
-	
-						tile.ToBitmap(5000, 5000, new RectangleF(-2000, -2000, 4000, 4000)).SaveDebugImage("imbricated");
-
-	
-					   flat.RenderImage(5000, 5000, new RectangleF(-2000, -2000, 4000, 4000), ScaleMode.STRETCH, new QuantifiedRenderer<IContextual<Item>>(
-								(z2, s2) =>
-								{
-									return z2.Context.ToBitmap((int)s2.Width, (int)s2.Height, z2.X + "\n" + z2.Y);
-								})
-						) .SaveDebugImage("flattened");
-
-		}
-	}
+            flat.RenderImage(5000, 5000, new RectangleF(-2000, -2000, 4000, 4000), ScaleMode.STRETCH,
+                new QuantifiedRenderer<IContextual<Item>>(
+                    (z2, s2) => { return z2.Context.ToBitmap((int) s2.Width, (int) s2.Height, z2.X + "\n" + z2.Y); })
+            ).SaveDebugImage("flattened");
+        }
+    }
 }

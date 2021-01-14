@@ -8,7 +8,8 @@ namespace PA.TileList.Tests
     [TestFixture]
     public class LinearTests
     {
-        [Test, Category("Trustable")]
+        [Test]
+        [Category("Trustable")]
         public void GetLine()
         {
             var list = new List<Coordinate>
@@ -24,7 +25,7 @@ namespace PA.TileList.Tests
                 new Coordinate(1, 2)
             };
 
-            var line1 = list.GetLine(new Coordinate(0, 0), new Coordinate(2, 2), true);
+            var line1 = list.GetLine(new Coordinate(0, 0), new Coordinate(2, 2));
 
             Assert.IsTrue(line1.Count() == 3);
             Assert.IsTrue(line1.Contains(list[2]));
@@ -34,7 +35,7 @@ namespace PA.TileList.Tests
             Assert.IsTrue(line2.Count() == 2);
             Assert.IsTrue(line2.Contains(list[8]));
 
-            var line3 = list.GetLine(new Coordinate(0, 0), new Coordinate(2, 3), true);
+            var line3 = list.GetLine(new Coordinate(0, 0), new Coordinate(2, 3));
 
             Assert.IsTrue(line3.Count() == 1);
             Assert.IsTrue(line3.Contains(list[0]));

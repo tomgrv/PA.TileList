@@ -26,19 +26,41 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using PA.TileList.Cacheable;
 using PA.TileList.Cropping;
+using PA.TileList.Drawing.Graphics2D;
+using PA.TileList.Drawing.Quantified;
 using PA.TileList.Quadrant;
 using PA.TileList.Quantified;
 using PA.TileList.Tile;
-using System.Drawing;
-using PA.TileList.Drawing.Quantified;
-using PA.TileList.Drawing.Graphics2D;
-using PA.TileList.Cacheable;
 
 namespace PA.TileList.Tests.Utils
 {
     public class SubTile : Tile<Item>, IQuadrant<Item>, ICacheable
     {
+        public SubTile(IZone a, Item t)
+            : base(a, t)
+        {
+            _changed = new Dictionary<object, bool>();
+            _default = false;
+        }
+
+        public SubTile(Tile<Item> t, Quadrant.Quadrant q)
+            : base(t)
+        {
+            _changed = new Dictionary<object, bool>();
+            _default = false;
+            Quadrant = q;
+        }
+
+        public SubTile(IEnumerable<Item> t, int referenceIndex = 0)
+            : base(t, referenceIndex)
+        {
+            _changed = new Dictionary<object, bool>();
+            _default = false;
+        }
+
         public double ElementSizeX { get; internal set; }
 
         public double ElementSizeY { get; internal set; }
@@ -51,33 +73,41 @@ namespace PA.TileList.Tests.Utils
 
         public double RefOffsetY { get; internal set; }
 
-        public SubTile(IZone a, Item t)
-            : base(a, t)
+        public Quadrant.Quadrant Quadrant { get; }
+
+
+        public void SetQuadrant(Quadrant.Quadrant q)
         {
-            this._changed = new Dictionary<object, bool>();
-            this._default = false;
+            throw new NotImplementedException();
         }
 
-        public SubTile(Tile<Item> t, Quadrant.Quadrant q)
-            : base(t)
+        public override object Clone()
         {
-
-            this._changed = new Dictionary<object, bool>();
-            this._default = false;
-            this.Quadrant = q;
+            return new SubTile((Tile<Item>) base.Clone(), Quadrant);
         }
 
-        public SubTile(IEnumerable<Item> t, int referenceIndex = 0)
-            : base(t, referenceIndex)
+        public override object Clone(int x, int y)
         {
-            this._changed = new Dictionary<object, bool>();
-            this._default = false;
+            return new SubTile((Tile<Item>) base.Clone(x, y), Quadrant);
+        }
+
+        public Bitmap ToBitmap(int w, int h, IQuantifiedTile m, Pen p = null)
+        {
+            return this.ToQuantified(m.ElementSizeX / Zone.SizeX, m.ElementSizeY / Zone.SizeY,
+                    m.ElementStepX / Zone.SizeX, m.ElementStepY / Zone.SizeY)
+                .RenderImage(w, h, ScaleMode.STRETCH, new QuantifiedRenderer<Item>(
+                    (z, s) => z.ToBitmap((int) s.Width, (int) s.Height, z.X + "\n" + z.Y), p)
+                ).Item;
+        }
+
+        public void NotifyRendered()
+        {
         }
 
         #region Cache
 
-        private Dictionary<object, bool> _changed;
-        private bool _default;
+        private readonly Dictionary<object, bool> _changed;
+        private readonly bool _default;
 
         public bool IsCached()
         {
@@ -86,10 +116,7 @@ namespace PA.TileList.Tests.Utils
 
         public bool IsCachedBy(object t)
         {
-            if (!_changed.ContainsKey(t))
-            {
-                _changed.Add(t, _default);
-            }
+            if (!_changed.ContainsKey(t)) _changed.Add(t, _default);
 
             return _changed[t];
         }
@@ -102,47 +129,11 @@ namespace PA.TileList.Tests.Utils
         public void NotifyCachedBy(object t)
         {
             if (!_changed.ContainsKey(t))
-            {
                 _changed[t] = _default;
-            }
             else
-            {
                 _changed.Add(t, _default);
-            }
         }
 
         #endregion
-
-        public Quadrant.Quadrant Quadrant { get; }
-
-
-
-        public void SetQuadrant(Quadrant.Quadrant q)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override object Clone()
-        {
-            return new SubTile((Tile<Item>)base.Clone(), this.Quadrant);
-        }
-
-        public override object Clone(int x, int y)
-        {
-            return new SubTile((Tile<Item>)base.Clone(x, y), this.Quadrant);
-        }
-
-        public Bitmap ToBitmap(int w, int h, IQuantifiedTile m, Pen p = null)
-        {
-            return this.ToQuantified(m.ElementSizeX / this.Zone.SizeX, m.ElementSizeY / this.Zone.SizeY, m.ElementStepX / this.Zone.SizeX, m.ElementStepY / this.Zone.SizeY)
-                        .RenderImage(w, h, ScaleMode.STRETCH, new QuantifiedRenderer<Item>(
-                                                                         (z, s) => z.ToBitmap((int)s.Width, (int)s.Height, z.X + "\n" + z.Y), p)
-                                                                  ).Item;
-        }
-
-        public void NotifyRendered()
-        {
-
-        }
     }
 }

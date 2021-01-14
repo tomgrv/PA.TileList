@@ -54,7 +54,7 @@ namespace PA.TileList.Linear
         public static int DotProduct<T>(this T o, ICoordinate a, ICoordinate b)
             where T : ICoordinate
         {
-            return (a.X - o.X)*(b.X - o.X) + (a.Y - o.Y)*(b.Y - o.Y);
+            return (a.X - o.X) * (b.X - o.X) + (a.Y - o.Y) * (b.Y - o.Y);
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace PA.TileList.Linear
         public static Orientation GetOrientation<P>(this P o, P p1, P p2)
             where P : ICoordinate
         {
-            var a = (p1.X - o.X)*(p2.Y - o.Y) - (p2.X - o.X)*(p1.Y - o.Y);
+            var a = (p1.X - o.X) * (p2.Y - o.Y) - (p2.X - o.X) * (p1.Y - o.Y);
 
             if (a < 0)
                 return Orientation.ClockWise;

@@ -14,14 +14,15 @@ namespace PA.TileList.Circular
             where T : ICoordinate
         {
             return
-                tile.WhereOrDefault(predicate).Select(c => new KeyValuePair<T, double>(c, Math.Sqrt(tile.Distance2(c))));
+                tile.WhereOrDefault(predicate)
+                    .Select(c => new KeyValuePair<T, double>(c, Math.Sqrt(tile.Distance2(c))));
         }
 
         internal static double Distance2<T>(this IQuantifiedTile<T> tile, T c)
             where T : ICoordinate
         {
-            var testX = (c.X - tile.Reference.X)*tile.ElementStepX + tile.RefOffsetX;
-            var testY = (c.Y - tile.Reference.Y)*tile.ElementStepY + tile.RefOffsetY;
+            var testX = (c.X - tile.Reference.X) * tile.ElementStepX + tile.RefOffsetX;
+            var testY = (c.Y - tile.Reference.Y) * tile.ElementStepY + tile.RefOffsetY;
             return Math.Pow(testX, 2d) + Math.Pow(testY, 2d);
         }
     }

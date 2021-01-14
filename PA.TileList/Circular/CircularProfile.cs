@@ -1,8 +1,7 @@
-﻿using PA.TileList.Quantified;
-using PA.TileList.Selection;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using PA.TileList.Selection;
 
 namespace PA.TileList.Circular
 {
@@ -12,110 +11,109 @@ namespace PA.TileList.Circular
         private ProfileStep _first;
 
         private ProfileStep _last;
-
-        private double _minRadius2;
         private double _maxRadius2;
 
-        private List<ProfileStep> _profile;
+        private double _minRadius2;
 
         private ProfileStep[] _ordered;
 
+        private List<ProfileStep> _profile;
+
         public CircularProfile(double radius, string name = null)
         {
-            this.Radius = radius;
-            this.Name = name;
-            this.GranularityX = radius;
-            this.GranularityY = radius;
-            this.ResetProfile();
+            Radius = radius;
+            Name = name;
+            GranularityX = radius;
+            GranularityY = radius;
+            ResetProfile();
         }
 
-        public double GranularityX { get; private set; }
-        public double GranularityY { get; private set; }
         public double Radius { get; }
-        public string Name { get; }
 
         public IEnumerable<ProfileStep> Profile
         {
             get
             {
-                this.OptimizeProfile();
-                return this._ordered;
+                OptimizeProfile();
+                return _ordered;
             }
         }
 
+        public double GranularityX { get; private set; }
+        public double GranularityY { get; private set; }
+        public string Name { get; }
+
         public void OptimizeProfile()
         {
-            if (this._profile.Count == 0)
+            if (_profile.Count == 0)
             {
-                this._ordered = new[] { new ProfileStep(0d, this.Radius) };
+                _ordered = new[] {new ProfileStep(0d, Radius)};
 
-                this.GranularityX = this.GranularityY = 0;
+                GranularityX = GranularityY = 0;
 
-                this._maxRadius2 = this._minRadius2 =  Math.Pow(this.Radius, 2);
+                _maxRadius2 = _minRadius2 = Math.Pow(Radius, 2);
             }
 
-            if (this._ordered == null)
+            if (_ordered == null)
             {
-                this._ordered = this._profile.OrderBy(p => p.Angle).ToArray();
+                _ordered = _profile.OrderBy(p => p.Angle).ToArray();
 
-                var minRadius = this._ordered.Min(p => p.Radius);
-                var maxRadius = this._ordered.Max(p => p.Radius);
+                var minRadius = _ordered.Min(p => p.Radius);
+                var maxRadius = _ordered.Max(p => p.Radius);
 
-                this.GranularityX = this.GranularityY = Math.Abs(maxRadius - minRadius);
+                GranularityX = GranularityY = Math.Abs(maxRadius - minRadius);
 
-                this._maxRadius2 = Math.Pow(maxRadius, 2);
-                this._minRadius2 = Math.Pow(minRadius, 2);
+                _maxRadius2 = Math.Pow(maxRadius, 2);
+                _minRadius2 = Math.Pow(minRadius, 2);
             }
         }
 
         public SelectionPosition Position(double[] x, double[] y)
         {
-            return this.Position(x[0], y[0], x[1], y[1]);
+            return Position(x[0], y[0], x[1], y[1]);
         }
 
 
         public SelectionPosition Position(double[] x, double[] y, SelectionConfiguration config)
         {
-            return this.Position(x[0], y[0], x[1], y[1], config);
+            return Position(x[0], y[0], x[1], y[1], config);
         }
 
         public double[] GetValuesX(double x)
         {
-            return new double[] { x, x * x };
+            return new[] {x, x * x};
         }
 
         public double[] GetValuesY(double y)
         {
-            return new double[] { y, y * y };
+            return new[] {y, y * y};
         }
 
         public SelectionPosition Position(double x, double y)
         {
-            return this.Position(x, y, x * x, y * y);
+            return Position(x, y, x * x, y * y);
         }
 
         public SelectionPosition Position(double x, double y, double x2, double y2)
         {
-            return this.Position(x, y, x * x, y * y);
+            return Position(x, y, x * x, y * y);
         }
 
-        private SelectionPosition Position(double x, double y, double x2, double y2, SelectionConfiguration config = null)
+        private SelectionPosition Position(double x, double y, double x2, double y2,
+            SelectionConfiguration config = null)
         {
             var angle = Math.Atan2(y, x);
             var r2 = x2 + y2;
 
-            if (0 < this._minRadius2 && r2 < this._minRadius2)
+            if (0 < _minRadius2 && r2 < _minRadius2)
                 return SelectionPosition.Inside;
 
-            if (0 < this._maxRadius2 && r2 > this._maxRadius2)
+            if (0 < _maxRadius2 && r2 > _maxRadius2)
                 return SelectionPosition.Outside;
 
-            if (config?.IsQuick ?? false)
-            {
-                return SelectionPosition.Under;
-            }
+            if (config?.IsQuick ?? false) return SelectionPosition.Under;
 
-            var last = this.GetStep(angle);
+            var last = GetStep(angle);
             var last2 = Math.Pow(last.Radius, 2);
 
             if (r2 < last2)
@@ -129,59 +127,59 @@ namespace PA.TileList.Circular
 
         public ProfileStep GetLast()
         {
-            if (this._last == null)
-                this._last = new ProfileStep(Math.PI, this.Profile.Last().Radius);
+            if (_last == null)
+                _last = new ProfileStep(Math.PI, Profile.Last().Radius);
 
-            return this._last;
+            return _last;
         }
 
         public ProfileStep GetFirst()
         {
-            if (this._first == null)
-                this._first = new ProfileStep(-Math.PI, this.GetLast().Radius);
+            if (_first == null)
+                _first = new ProfileStep(-Math.PI, GetLast().Radius);
 
-            return this._first;
+            return _first;
         }
 
         public double GetMinRadius()
         {
-            return this.Profile.Min(p => p.Radius);
+            return Profile.Min(p => p.Radius);
         }
 
         public double GetMaxRadius()
         {
-            return this.Profile.Max(p => p.Radius);
+            return Profile.Max(p => p.Radius);
         }
 
         public double GetRadius()
         {
-            return this.Profile.Sum(p => p.Radius) / this.Profile.Count();
+            return Profile.Sum(p => p.Radius) / Profile.Count();
         }
 
         public ProfileStep GetStep(double angle)
         {
-            return this.Profile.LastOrDefault(p => p.Angle < angle) ?? this.GetLast();
+            return Profile.LastOrDefault(p => p.Angle < angle) ?? GetLast();
         }
 
         /// <summary>
-        /// Resets the profile.
+        ///     Resets the profile.
         /// </summary>
         public void ResetProfile()
         {
-            this._ordered = null;
-            this._last = null;
-            this._profile = new List<ProfileStep>();
+            _ordered = null;
+            _last = null;
+            _profile = new List<ProfileStep>();
         }
 
         /// <summary>
-        /// Adds the profile step.
+        ///     Adds the profile step.
         /// </summary>
         /// <param name="step">Step.</param>
         public void AddProfileStep(ProfileStep step)
         {
-            this._ordered = null;
-            this._last = null;
-            this._profile.Add(step);
+            _ordered = null;
+            _last = null;
+            _profile.Add(step);
         }
 
         /// <summary>
@@ -191,7 +189,7 @@ namespace PA.TileList.Circular
         /// <param name="radius">Radius of selection from specified angle to next step (to end of circle if last step)</param>
         public void AddProfileStep(double angle, double radius)
         {
-            this.AddProfileStep(new ProfileStep(angle, radius));
+            AddProfileStep(new ProfileStep(angle, radius));
         }
 
         /// <summary>
@@ -202,17 +200,17 @@ namespace PA.TileList.Circular
         /// <param name="length">Zone length, centered on specified angle</param>
         public void AddProfileZone(double angle, double thickness, double length)
         {
-            var delta = Math.Atan2(length / 2d, this.Radius);
+            var delta = Math.Atan2(length / 2d, Radius);
 
             var angle_0 = angle - delta;
-            var rayon_0 = this.Radius - thickness;
+            var rayon_0 = Radius - thickness;
 
-            this.AddProfileStep(angle_0, rayon_0);
+            AddProfileStep(angle_0, rayon_0);
 
             var angle_1 = angle + delta;
-            var rayon_1 = this.Radius;
+            var rayon_1 = Radius;
 
-            this.AddProfileStep(angle_1, rayon_1);
+            AddProfileStep(angle_1, rayon_1);
         }
 
         /// <summary>
@@ -225,15 +223,15 @@ namespace PA.TileList.Circular
         public void AddProfileFlatByThickness(double angle, double thickness, double step = 1d, double resolution = 1d)
         {
             // Rayon central
-            var r0 = this.Radius - thickness;
+            var r0 = Radius - thickness;
 
             // Arc de demi-flat
-            var delta_flat = Math.Acos(r0 / this.Radius);
+            var delta_flat = Math.Acos(r0 / Radius);
 
             // flat
-            var length = 2d * this.Radius * Math.Sin(delta_flat);
+            var length = 2d * Radius * Math.Sin(delta_flat);
 
-            this.AddProfileFlat(angle, r0, length, step, resolution);
+            AddProfileFlat(angle, r0, length, step, resolution);
         }
 
         /// <summary>
@@ -246,12 +244,12 @@ namespace PA.TileList.Circular
         public void AddProfileFlatByLength(double angle, double length, double step = 1d, double resolution = 1d)
         {
             // Arc de demi-flat
-            var delta_flat = Math.Atan2(length / 2d, this.Radius);
+            var delta_flat = Math.Atan2(length / 2d, Radius);
 
             // Rayon central
-            var r0 = Math.Cos(delta_flat) * this.Radius;
+            var r0 = Math.Cos(delta_flat) * Radius;
 
-            this.AddProfileFlat(angle, r0, length, step, resolution);
+            AddProfileFlat(angle, r0, length, step, resolution);
         }
 
         /// <summary>
@@ -265,18 +263,18 @@ namespace PA.TileList.Circular
         public void AddProfileFlat(double angle, double radius, double length, double step = 1d, double resolution = 1d)
         {
             // Arc de demi-flat
-            var delta_flat = Math.Atan2(length / 2d, this.Radius);
+            var delta_flat = Math.Atan2(length / 2d, Radius);
 
             // Rayon orthogonal au flat, corrigé selon la bordure
             var r0 = radius;
 
-            var delta = Math.Atan2(step, this.Radius) * resolution;
+            var delta = Math.Atan2(step, Radius) * resolution;
 
             double angle_0;
             double rayon_0;
 
             // Nb de points de calcul
-            var steps = (int)Math.Round(delta_flat / delta);
+            var steps = (int) Math.Round(delta_flat / delta);
 
             // Debut du flat: les arcs partent du rayon considéré DANS le flat: OK
             for (var s = -steps; s < 0; s++)
@@ -284,7 +282,7 @@ namespace PA.TileList.Circular
                 angle_0 = angle + s * delta;
                 rayon_0 = r0 / Math.Cos(angle_0 - angle);
 
-                this.AddProfileStep(angle_0, rayon_0);
+                AddProfileStep(angle_0, rayon_0);
             }
 
             // Fin du flat: les arcs partent du rayon considéré HORS du flat: NOK
@@ -294,14 +292,14 @@ namespace PA.TileList.Circular
                 angle_0 = angle + s * delta;
                 rayon_0 = r0 / Math.Cos(angle_0 - angle + delta);
 
-                this.AddProfileStep(angle_0, rayon_0);
+                AddProfileStep(angle_0, rayon_0);
             }
 
             // Dernier point
             angle_0 = angle + delta_flat;
-            rayon_0 = this.Radius;
+            rayon_0 = Radius;
 
-            this.AddProfileStep(angle_0, rayon_0);
+            AddProfileStep(angle_0, rayon_0);
         }
 
         /// <summary>
@@ -311,14 +309,14 @@ namespace PA.TileList.Circular
         {
             internal ProfileStep(ProfileStep s)
             {
-                this.Angle = s.Angle;
-                this.Radius = s.Radius;
+                Angle = s.Angle;
+                Radius = s.Radius;
             }
 
             public ProfileStep(double angle, double radius)
             {
-                this.SetAngle(angle);
-                this.Radius = radius;
+                SetAngle(angle);
+                Radius = radius;
             }
 
             /// <summary>
@@ -333,18 +331,18 @@ namespace PA.TileList.Circular
 
             public override string ToString()
             {
-                return this.Angle + ";" + this.Radius;
+                return Angle + ";" + Radius;
             }
 
             public void SetAngle(double angle)
             {
-                this.Angle = angle;
+                Angle = angle;
 
-                while (this.Angle < -Math.PI)
-                    this.Angle += 2f * Math.PI;
+                while (Angle < -Math.PI)
+                    Angle += 2f * Math.PI;
 
-                while (this.Angle > Math.PI)
-                    this.Angle -= 2f * Math.PI;
+                while (Angle > Math.PI)
+                    Angle -= 2f * Math.PI;
             }
         }
     }

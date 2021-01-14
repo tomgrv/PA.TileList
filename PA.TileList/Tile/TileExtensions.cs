@@ -9,7 +9,7 @@ namespace PA.TileList.Tile
         public static T ElementAt<T>(this IEnumerable<T> list, ICoordinate c)
             where T : class, ICoordinate
         {
-            return list.First(e => (e.X == c.X) && (e.Y == c.Y));
+            return list.First(e => e.X == c.X && e.Y == c.Y);
         }
 
         public static Tile<T> ToTile<T>(this IEnumerable<T> c, int referenceIndex = 0)

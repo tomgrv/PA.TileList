@@ -23,61 +23,57 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
+
 namespace PA.TileList.Selection
 {
-	public class SelectionPoints
-	{
-		public uint Inside { get; set;}
-		public uint Outside { get; set;}
-		public uint Under { get; set;}
-		
-		public SelectionPoints()
-		{
-		}
+    public class SelectionPoints
+    {
+        public uint Inside { get; set; }
+        public uint Outside { get; set; }
+        public uint Under { get; set; }
 
-		public SelectionPosition GetPosition()
+        public SelectionPosition GetPosition()
         {
-			return (this.Outside > 0 ? SelectionPosition.Outside : 0x00) | (this.Inside > 0 ? SelectionPosition.Inside : 0x00) | (this.Under > 0 ? SelectionPosition.Under : 0x00);
-		}
+            return (Outside > 0 ? SelectionPosition.Outside : 0x00) | (Inside > 0 ? SelectionPosition.Inside : 0x00) |
+                   (Under > 0 ? SelectionPosition.Under : 0x00);
+        }
 
-		public uint Count()
-		{
-			return this.Outside + this.Inside + this.Under;
-		}
-
-		public uint Count(SelectionPosition selectionType)
+        public uint Count()
         {
-			uint points = 0;
+            return Outside + Inside + Under;
+        }
 
-			//SelectionPosition current = this.GetPosition();
-			if (this.Outside > 0 && selectionType.HasFlag(SelectionPosition.Outside))
-				points += this.Outside;
-
-			if (this.Inside > 0 && selectionType.HasFlag(SelectionPosition.Inside))
-				points += this.Inside;
-
-			if (this.Under > 0 && selectionType.HasFlag(SelectionPosition.Under))
-				points += this.Under;
-
-			return points;
-		}
-
-		public bool IsSelected(SelectionConfiguration config)
-		{
-			return this.Count(config.SelectionType) >= config.MinSurface ;
-		}
-
-		public uint GetSurface(SelectionConfiguration config)
+        public uint Count(SelectionPosition selectionType)
         {
-			uint surface = this.Count(config.SelectionType);
-			return surface >= config.MinSurface ? surface : 0;
-		}
+            uint points = 0;
+
+            //SelectionPosition current = this.GetPosition();
+            if (Outside > 0 && selectionType.HasFlag(SelectionPosition.Outside))
+                points += Outside;
+
+            if (Inside > 0 && selectionType.HasFlag(SelectionPosition.Inside))
+                points += Inside;
+
+            if (Under > 0 && selectionType.HasFlag(SelectionPosition.Under))
+                points += Under;
+
+            return points;
+        }
+
+        public bool IsSelected(SelectionConfiguration config)
+        {
+            return Count(config.SelectionType) >= config.MinSurface;
+        }
+
+        public uint GetSurface(SelectionConfiguration config)
+        {
+            var surface = Count(config.SelectionType);
+            return surface >= config.MinSurface ? surface : 0;
+        }
 
         public override string ToString()
         {
-			return "[" + this.Inside + ", " + this.Under + ", " + this.Outside + "]";
-
-		}
+            return "[" + Inside + ", " + Under + ", " + Outside + "]";
+        }
     }
 }

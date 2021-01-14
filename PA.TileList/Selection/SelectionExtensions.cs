@@ -24,26 +24,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using PA.TileList.Linear;
-using PA.TileList.Quantified;
-using PA.TileList.Tile;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using PA.TileList.Linear;
+using PA.TileList.Quantified;
+using PA.TileList.Tile;
 
 namespace PA.TileList.Selection
 {
     public static class SelectionExtensions
     {
-
-
-
-        #region Select 
+        #region Select
 
         /// <summary>
-        /// Selects the coordinates.
+        ///     Selects the coordinates.
         /// </summary>
         /// <returns>The coordinates.</returns>
         /// <param name="tile">List.</param>
@@ -51,7 +47,7 @@ namespace PA.TileList.Selection
         /// <param name="config">Config.</param>
         /// <param name="fullsize">If set to <c>true</c> fullsize.</param>
         public static IEnumerable<Coordinate> SelectCoordinates(this IQuantifiedTile tile,
-                ISelectionProfile profile, SelectionConfiguration config)
+            ISelectionProfile profile, SelectionConfiguration config)
         {
             Contract.Requires(tile != null, nameof(tile));
             Contract.Requires(profile != null, nameof(profile));
@@ -65,7 +61,7 @@ namespace PA.TileList.Selection
         #region IQuantifiedTile
 
         /// <summary>
-        /// Filter from tile according to profile, config and fullSize.
+        ///     Filter from tile according to profile, config and fullSize.
         /// </summary>
         /// <returns>The filter.</returns>
         /// <param name="tile">Tile.</param>
@@ -81,11 +77,12 @@ namespace PA.TileList.Selection
             Contract.Requires(profile != null, nameof(profile));
             Contract.Requires(config != null, nameof(config));
 
-            return tile.Except(profile, config).ToTile().ToQuantified(tile.ElementSizeX, tile.ElementSizeY, tile.ElementStepX, tile.ElementStepY, tile.RefOffsetX, tile.RefOffsetY);
+            return tile.Except(profile, config).ToTile().ToQuantified(tile.ElementSizeX, tile.ElementSizeY,
+                tile.ElementStepX, tile.ElementStepY, tile.RefOffsetX, tile.RefOffsetY);
         }
 
         /// <summary>
-        /// Take from tile according to profile, config and fullSize.
+        ///     Take from tile according to profile, config and fullSize.
         /// </summary>
         /// <returns>The take.</returns>
         /// <param name="tile">Tile.</param>
@@ -100,7 +97,8 @@ namespace PA.TileList.Selection
             Contract.Requires(profile != null, nameof(profile));
             Contract.Requires(config != null, nameof(config));
 
-            return tile.Where(c => c.Selected(tile, profile, config)); ;
+            return tile.Where(c => c.Selected(tile, profile, config));
+            ;
         }
 
         public static IEnumerable<T> Except<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
@@ -116,11 +114,10 @@ namespace PA.TileList.Selection
 
         #endregion
 
-
         #region Helpers
 
         /// <summary>
-        /// Position the specified c within tile according to profile, config and fullSize.
+        ///     Position the specified c within tile according to profile, config and fullSize.
         /// </summary>
         /// <returns>The position.</returns>
         /// <param name="c">C.</param>
@@ -137,12 +134,11 @@ namespace PA.TileList.Selection
             Contract.Requires(config != null, nameof(config));
 
             return c.Surface(tile, profile, config) > 0;
-
         }
 
 
         /// <summary>
-        /// Returns the surface covered by profile within tile according config and fullSize.
+        ///     Returns the surface covered by profile within tile according config and fullSize.
         /// </summary>
         /// <returns>The position.</returns>
         /// <param name="c">C.</param>
@@ -162,10 +158,8 @@ namespace PA.TileList.Selection
             {
                 var quick = c.CountPoints(tile, profile, config.GetQuickSelectionVariant());
 
-                if ((quick.Inside == 0 ^ quick.Outside == 0) && quick.Under == 0)
-                {
+                if ((quick.Inside == 0) ^ (quick.Outside == 0) && quick.Under == 0)
                     return quick.GetSurface(config.GetQuickSelectionVariant());
-                }
             }
 
             var surface = c.CountPoints(tile, profile, config);
@@ -175,11 +169,9 @@ namespace PA.TileList.Selection
             return surface.GetSurface(config);
         }
 
-    
-
 
         /// <summary>
-        /// Counts the points.
+        ///     Counts the points.
         /// </summary>
         /// <returns>The points.</returns>
         /// <param name="c">C.</param>
@@ -197,30 +189,30 @@ namespace PA.TileList.Selection
 
             profile.OptimizeProfile();
 
-            SelectionPoints p = new SelectionPoints();
+            var p = new SelectionPoints();
 
             c.GetPoints(tile, config,
-                                 (xc, yc) =>
-                                 {
-                                     switch (profile.Position(xc, yc, config))
-                                     {
-                                         case SelectionPosition.Inside:
-                                             p.Inside += 1;
-                                             break;
-                                         case SelectionPosition.Outside:
-                                             p.Outside += 1;
-                                             break;
-                                         case SelectionPosition.Under:
-                                             p.Under += 1;
-                                             break;
-                                     }
-                                 }, profile.GetValuesX, profile.GetValuesY);
+                (xc, yc) =>
+                {
+                    switch (profile.Position(xc, yc, config))
+                    {
+                        case SelectionPosition.Inside:
+                            p.Inside += 1;
+                            break;
+                        case SelectionPosition.Outside:
+                            p.Outside += 1;
+                            break;
+                        case SelectionPosition.Under:
+                            p.Under += 1;
+                            break;
+                    }
+                }, profile.GetValuesX, profile.GetValuesY);
 
             return p;
         }
 
         /// <summary>
-        /// Gets the bounds.
+        ///     Gets the bounds.
         /// </summary>
         /// <param name="c">C.</param>
         /// <param name="tile">Tile.</param>
@@ -228,8 +220,8 @@ namespace PA.TileList.Selection
         /// <param name="fullSize">If set to <c>true</c> full size.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
         public static void GetBounds<T>(this T c, IQuantifiedTile tile,
-         Action<double, double, double, double> predicate, bool fullSize)
-         where T : ICoordinate
+            Action<double, double, double, double> predicate, bool fullSize)
+            where T : ICoordinate
         {
             Contract.Requires(tile != null, nameof(tile));
             Contract.Requires(predicate != null, nameof(predicate));
@@ -264,8 +256,8 @@ namespace PA.TileList.Selection
         /// <param name="predicate">Predicate.</param>
         /// <typeparam name="T">ICoordinate</typeparam>
         public static void GetPoints<T>(this T c, IQuantifiedTile tile, SelectionConfiguration config,
-        Action<double[], double[]> predicate, Func<double, double[]> getValuesX, Func<double, double[]> getValuesY)
-        where T : ICoordinate
+            Action<double[], double[]> predicate, Func<double, double[]> getValuesX, Func<double, double[]> getValuesY)
+            where T : ICoordinate
         {
             Contract.Requires(tile != null, nameof(tile));
             Contract.Requires(predicate != null, nameof(predicate));
@@ -286,14 +278,14 @@ namespace PA.TileList.Selection
 
             for (var i = 0; i < config.ResolutionX; i++)
             {
-                var testX = getValuesX((c.X - reference.X - offsetX + i * stepSizeX) * tile.ElementStepX + tile.RefOffsetX);
+                var testX = getValuesX((c.X - reference.X - offsetX + i * stepSizeX) * tile.ElementStepX +
+                                       tile.RefOffsetX);
 
                 for (var j = 0; j < config.ResolutionY; j++)
                 {
                     if (i == 0)
-                    {
-                        testY[j] = getValuesY((c.Y - reference.Y - offsetY + j * stepSizeY) * tile.ElementStepY + tile.RefOffsetY);
-                    }
+                        testY[j] = getValuesY((c.Y - reference.Y - offsetY + j * stepSizeY) * tile.ElementStepY +
+                                              tile.RefOffsetY);
 
                     predicate(testX, testY[j]);
                 }

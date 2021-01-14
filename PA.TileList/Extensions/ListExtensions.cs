@@ -19,15 +19,15 @@ namespace PA.TileList.Extensions
             var checksum = 0;
 
             foreach (var c in list.SelectMany(signature))
-                checksum = (checksum + c)*16%251;
+                checksum = (checksum + c) * 16 % 251;
 
-            checksum = (checksum + 'A')*16%251;
-            checksum = (checksum + 'A')%251;
+            checksum = (checksum + 'A') * 16 % 251;
+            checksum = (checksum + 'A') % 251;
 
             if (checksum != 0)
                 checksum = 251 - checksum;
 
-            return 65 + checksum/16 + (65 + checksum%16).ToString();
+            return 65 + checksum / 16 + (65 + checksum % 16).ToString();
         }
     }
 }

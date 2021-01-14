@@ -7,13 +7,12 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace PA.TileList.Tests.Utils
 {
-    static class Signature
+    internal static class Signature
     {
-        private static readonly Object locker = new Object();
+        private static readonly object locker = new object();
 
         public static string GetMD5Hash<T>(this T value)
         {
@@ -27,15 +26,12 @@ namespace PA.TileList.Tests.Utils
             MD5 md5 = new MD5CryptoServiceProvider();
             try
             {
-                byte[] result = md5.ComputeHash(objectAsBytes);
+                var result = md5.ComputeHash(objectAsBytes);
 
                 // Build the final string by converting each byte
                 // into hex and appending it to a StringBuilder
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < result.Length; i++)
-                {
-                    sb.Append(result[i].ToString("X2"));
-                }
+                var sb = new StringBuilder();
+                for (var i = 0; i < result.Length; i++) sb.Append(result[i].ToString("X2"));
 
                 // And return it
                 return sb.ToString();
@@ -49,10 +45,10 @@ namespace PA.TileList.Tests.Utils
             }
         }
 
-            private static byte[] ObjectToByteArray<T>(this T objectToSerialize)
+        private static byte[] ObjectToByteArray<T>(this T objectToSerialize)
         {
-            MemoryStream fs = new MemoryStream();
-            BinaryFormatter formatter = new BinaryFormatter();
+            var fs = new MemoryStream();
+            var formatter = new BinaryFormatter();
             try
             {
                 //Here's the core functionality! One Line!
@@ -61,12 +57,13 @@ namespace PA.TileList.Tests.Utils
                 {
                     formatter.Serialize(fs, objectToSerialize);
                 }
+
                 return fs.ToArray();
             }
             catch (SerializationException se)
             {
                 Console.WriteLine("Error occurred during serialization. Message: " +
-                se.Message);
+                                  se.Message);
                 return null;
             }
             finally
@@ -84,8 +81,12 @@ namespace PA.TileList.Tests.Utils
             var seen = new HashSet<object>();
             var properties = GetAllSimpleProperties(entity, seen).ToList();
 
-            var prop_array = properties.Select(p => ObjectToByteArray(p).AsEnumerable()).Aggregate((ag, next) => ag.Concat(next)).ToArray();
-            var item_array = entity is IEnumerable ? (entity as IEnumerable).Cast<object>().Select(p => p.Hash().AsEnumerable()).Aggregate((ag, next) => ag.Concat(next)).ToArray() : new byte[] {};
+            var prop_array = properties.Select(p => ObjectToByteArray(p).AsEnumerable())
+                .Aggregate((ag, next) => ag.Concat(next)).ToArray();
+            var item_array = entity is IEnumerable
+                ? (entity as IEnumerable).Cast<object>().Select(p => p.Hash().AsEnumerable())
+                .Aggregate((ag, next) => ag.Concat(next)).ToArray()
+                : new byte[] { };
 
             return prop_array.Concat(item_array).ToArray();
         }
@@ -94,16 +95,13 @@ namespace PA.TileList.Tests.Utils
         private static IEnumerable<object> GetAllSimpleProperties<T>(this T entity, HashSet<object> seen)
         {
             foreach (var property in PropertiesOf<T>.All(entity))
-            {
-                if (property is int || property is long || property is string ) yield return property;
+                if (property is int || property is long || property is string) yield return property;
                 else if (seen.Add(property)) // Handle cyclic references
-                {
-                    foreach (var simple in GetAllSimpleProperties(property, seen)) yield return simple;
-                }
-            }
+                    foreach (var simple in GetAllSimpleProperties(property, seen))
+                        yield return simple;
         }
 
-            private static class ItemsOf<T>
+        private static class ItemsOf<T>
         {
             private static readonly List<Func<T, dynamic>> Properties = new List<Func<T, dynamic>>();
 
@@ -112,7 +110,7 @@ namespace PA.TileList.Tests.Utils
                 foreach (var property in typeof(T).GetProperties())
                 {
                     var getMethod = property.GetGetMethod();
-                    var function = (Func<T, dynamic>)Delegate.CreateDelegate(typeof(Func<T, dynamic>), getMethod);
+                    var function = (Func<T, dynamic>) Delegate.CreateDelegate(typeof(Func<T, dynamic>), getMethod);
                     Properties.Add(function);
                 }
             }
@@ -132,7 +130,7 @@ namespace PA.TileList.Tests.Utils
                 foreach (var property in typeof(T).GetProperties())
                 {
                     var getMethod = property.GetGetMethod();
-                    var function = (Func<T, dynamic>)Delegate.CreateDelegate(typeof(Func<T, dynamic>), getMethod);
+                    var function = (Func<T, dynamic>) Delegate.CreateDelegate(typeof(Func<T, dynamic>), getMethod);
                     Properties.Add(function);
                 }
             }

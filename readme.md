@@ -3,6 +3,15 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/v9eb4cx999xne88h?svg=true)](https://ci.appveyor.com/project/perspicapps/pa-tilelist)
 
+[![Nuget](https://img.shields.io/nuget/v/pa.tilelist?logo=nuget)](https://www.nuget.org/packages/pa.tilelist)
+[![Nuget](https://img.shields.io/nuget/dt/pa.tilelist?logo=nuget)](https://www.nuget.org/packages/pa.tilelist)
+
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+
+[![license](https://img.shields.io/github/license/tomgrv/pa.tilelist.svg)](https://github.com/tomgrv/pa.tilelist/blob/master/LICENSE)
+[![Buy me a coffee](https://badgen.net/badge/buymeacoffe/tomgrv/yellow?icon=buymeacoffee)](https://buymeacoffee.com/tomgrv)
+
 Handle 2-dimensionnal arrays, with extensions for:
 
 - Imbrication (array of arrays)

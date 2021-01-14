@@ -23,40 +23,36 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
+
 using System.Drawing;
 
 namespace PA.TileList.Drawing.Graphics2D
 {
-	public abstract class AbstractBitmapRenderer<T> : IRenderer<T, Bitmap>
+    public abstract class AbstractBitmapRenderer<T> : IRenderer<T, Bitmap>
 
-	{
-		public AbstractBitmapRenderer()
-		{
-		}
+    {
+        public abstract void Draw(T obj, RectangleD<Bitmap> portion);
 
-		public abstract void Draw(T obj, RectangleD<Bitmap> portion);
+        public abstract RectangleD<Bitmap> Render(T obj, Bitmap baseImage, ScaleMode mode);
 
-		public abstract RectangleD<Bitmap> Render(T obj, Bitmap baseImage, ScaleMode mode);
+        public virtual RectangleD<Bitmap> Render(T obj, Bitmap baseImage, RectangleF inner, ScaleMode mode)
+        {
+            var r = new RectangleD<Bitmap>(baseImage, inner, mode);
+            Draw(obj, r);
+            return r;
+        }
 
-		public virtual RectangleD<Bitmap> Render(T obj, Bitmap baseImage,RectangleF inner, ScaleMode mode)
-		{
-			var r = new RectangleD<Bitmap>(baseImage, inner, mode);
-			this.Draw(obj, r);
-			return r;
-		}
-
-		public virtual RectangleD<Bitmap> Render(T obj, int width, int height, ScaleMode mode)
-		{
-			return this.Render(obj, new Bitmap(width, height), mode);
-		}
+        public virtual RectangleD<Bitmap> Render(T obj, int width, int height, ScaleMode mode)
+        {
+            return Render(obj, new Bitmap(width, height), mode);
+        }
 
 
-		public virtual RectangleD<Bitmap> Render(T obj, int width, int height, RectangleF inner, ScaleMode mode)
-		{
-			var r = new RectangleD<Bitmap>(new Bitmap(width, height), inner, mode);
-			this.Draw(obj, r);
-			return r;
-		}
-	}
+        public virtual RectangleD<Bitmap> Render(T obj, int width, int height, RectangleF inner, ScaleMode mode)
+        {
+            var r = new RectangleD<Bitmap>(new Bitmap(width, height), inner, mode);
+            Draw(obj, r);
+            return r;
+        }
+    }
 }

@@ -12,9 +12,10 @@ namespace PA.TileList.Quadrant
     public static class QuadrantExtension
     {
         #region ToTopLeftPositive
+
         [Obsolete]
         public static void ToTopLeftPositive<T>(this IQuadrant<T> zl, IZone a, ref int x, ref int y)
-                    where T : class, ICoordinate
+            where T : class, ICoordinate
         {
             switch (zl.Quadrant)
             {
@@ -40,9 +41,10 @@ namespace PA.TileList.Quadrant
         #endregion
 
         #region FirstOrDefault
+
         [Obsolete]
         public static T FirstOrDefault<R, T>(this IQuadrant<T> zl, int x, int y, bool flattenQuadrant = false)
-                    where T : class, ICoordinate
+            where T : class, ICoordinate
         {
             IZone a = new Zone(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
 
@@ -52,7 +54,7 @@ namespace PA.TileList.Quadrant
                 zl.ToTopLeftPositive(a, ref x, ref y);
             }
 
-            return zl.FirstOrDefault(delegate (T item)
+            return zl.FirstOrDefault(delegate(T item)
             {
                 var ix = item.X;
                 var iy = item.Y;
@@ -60,7 +62,7 @@ namespace PA.TileList.Quadrant
                 if (flattenQuadrant)
                     zl.ToTopLeftPositive(a, ref ix, ref iy);
 
-                return (ix == x) && (iy == y);
+                return ix == x && iy == y;
             });
         }
 
@@ -255,7 +257,7 @@ namespace PA.TileList.Quadrant
 
         #endregion
 
-        #region ICoordinate Change 
+        #region ICoordinate Change
 
         public static IContextual<T> ChangeQuadrant<T>(this T e, IZone a, Quadrant source,
             Quadrant target = Quadrant.Array)
@@ -320,10 +322,11 @@ namespace PA.TileList.Quadrant
         #endregion
 
         #region FirstOrAdd
+
         [Obsolete]
         public static T FirstOrAdd<T, L>(this IQuadrant<T> zl, int x, int y, Quadrant q, bool flattenQuadrant = false)
-                    where T : class, ICoordinate, IQuadrant<L>
-                    where L : class, ICoordinate
+            where T : class, ICoordinate, IQuadrant<L>
+            where L : class, ICoordinate
         {
             var unique = zl.FirstOrDefault<IQuadrant<T>, T>(x, y, flattenQuadrant);
 
@@ -338,9 +341,10 @@ namespace PA.TileList.Quadrant
 
             return unique;
         }
+
         [Obsolete]
         public static T FirstOrAdd<T>(this IQuadrant<T> zl, int x, int y, bool flattenQuadrant = false)
-                    where T : class, ICoordinate
+            where T : class, ICoordinate
         {
             var unique = zl.FirstOrDefault<IQuadrant<T>, T>(x, y, flattenQuadrant);
 

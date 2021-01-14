@@ -23,14 +23,15 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
+
 using System.Collections.Generic;
+
 namespace PA.TileList.Cacheable
 {
     public class Cacheable : ICacheable
     {
-        private Dictionary<object, bool> _changed;
-        private bool _default;
+        private readonly Dictionary<object, bool> _changed;
+        private readonly bool _default;
 
         public Cacheable()
         {
@@ -53,10 +54,7 @@ namespace PA.TileList.Cacheable
 
         public bool IsCachedBy(object t)
         {
-            if (!_changed.ContainsKey(t))
-            {
-                _changed.Add(t, _default);
-            }
+            if (!_changed.ContainsKey(t)) _changed.Add(t, _default);
 
             return _changed[t];
         }
@@ -69,13 +67,9 @@ namespace PA.TileList.Cacheable
         public void NotifyCachedBy(object t)
         {
             if (!_changed.ContainsKey(t))
-            {
                 _changed[t] = _default;
-            }
             else
-            {
                 _changed.Add(t, _default);
-            }
         }
     }
 }

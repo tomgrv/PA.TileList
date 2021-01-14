@@ -16,8 +16,8 @@ namespace PA.TileList.Rotation
             float cX = c.X - center.X;
             float cY = c.Y - center.Y;
 
-            c.X = Convert.ToInt32(center.X + RotationTable.Cos(angle)*cX - RotationTable.Sin(angle)*cY);
-            c.Y = Convert.ToInt32(center.Y + RotationTable.Sin(angle)*cX + RotationTable.Cos(angle)*cY);
+            c.X = Convert.ToInt32(center.X + RotationTable.Cos(angle) * cX - RotationTable.Sin(angle) * cY);
+            c.Y = Convert.ToInt32(center.Y + RotationTable.Sin(angle) * cX + RotationTable.Cos(angle) * cY);
 
             return c;
         }

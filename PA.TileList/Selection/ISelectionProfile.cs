@@ -24,7 +24,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using PA.TileList.Quantified;
 using System;
 
 namespace PA.TileList.Selection
@@ -38,8 +37,10 @@ namespace PA.TileList.Selection
 
         [Obsolete]
         SelectionPosition Position(double x, double y);
+
         [Obsolete]
         SelectionPosition Position(double x, double y, double x2, double y2);
+
         SelectionPosition Position(double[] x, double[] y);
 
         SelectionPosition Position(double[] x, double[] y, SelectionConfiguration config);

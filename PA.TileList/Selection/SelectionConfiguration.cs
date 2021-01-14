@@ -1,7 +1,5 @@
-﻿using PA.TileList.Quantified;
-using System;
-using System.Linq.Expressions;
-using System.Xml.Serialization;
+﻿using System;
+using PA.TileList.Quantified;
 
 namespace PA.TileList.Selection
 {
@@ -10,24 +8,26 @@ namespace PA.TileList.Selection
     /// </summary>
     public class SelectionConfiguration
     {
+        private SelectionConfiguration _quick;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:PA.TileList.Selection.SelectionConfiguration" /> class.
         /// </summary>
         /// <param name="selectionType">Selection type.</param>
         /// <param name="tolerance">Surface of "on profile items", in %, to be inside to be considered "inside profile"  </param>
-		/// <param name="useFullSurface">Surface considered is full available surface between stepX / stepY</param>
-		/// <param name="forceMinResolution">Force minimum 2x2 resolution, whatever the tolerance</param>
+        /// <param name="useFullSurface">Surface considered is full available surface between stepX / stepY</param>
+        /// <param name="forceMinResolution">Force minimum 2x2 resolution, whatever the tolerance</param>
         public SelectionConfiguration(SelectionPosition selectionType, float tolerance, bool useFullSurface = true)
         {
-            if ((tolerance < 0f) || (tolerance > 1f))
+            if (tolerance < 0f || tolerance > 1f)
                 throw new ArgumentOutOfRangeException(nameof(tolerance), tolerance, "Must be a percentage");
 
             // Set Variables	
-            this.UseFullSurface = useFullSurface;
-            this.SelectionType = selectionType;
+            UseFullSurface = useFullSurface;
+            SelectionType = selectionType;
 
             // Init
-            this.SetResolution(tolerance);
+            SetResolution(tolerance);
         }
 
 
@@ -38,11 +38,11 @@ namespace PA.TileList.Selection
         public SelectionConfiguration(SelectionPosition selectionType, bool useFullSurface = true)
         {
             // Set Variables		
-            this.UseFullSurface = useFullSurface;
-            this.SelectionType = selectionType;
+            UseFullSurface = useFullSurface;
+            SelectionType = selectionType;
 
             // Init
-            this.SetResolution(1f);
+            SetResolution(1f);
         }
 
 
@@ -54,7 +54,7 @@ namespace PA.TileList.Selection
             : this(config.SelectionType, 1f, config.UseFullSurface)
         {
             // Set Variables		
-            this.IsQuick = true;
+            IsQuick = true;
         }
 
         /// <summary>
@@ -65,9 +65,9 @@ namespace PA.TileList.Selection
             : this(config.SelectionType, 1f, config.UseFullSurface)
         {
             // Set Variables		
-            this.IsQuick = true;
-            this.ResolutionX = resolutionX;
-            this.ResolutionY = resolutionY;
+            IsQuick = true;
+            ResolutionX = resolutionX;
+            ResolutionY = resolutionY;
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace PA.TileList.Selection
         /// <summary>
         ///     Is Quick selection configuration ?
         /// </summary>
-        public bool IsQuick { get; private set; }
+        public bool IsQuick { get; }
 
 
         /// <summary>
@@ -106,47 +106,48 @@ namespace PA.TileList.Selection
         ///     Gets the type of the selection.
         /// </summary>
         /// <value>The type of the selection.</value>
-        public SelectionPosition SelectionType { get; private set; }
+        public SelectionPosition SelectionType { get; }
 
         /// <summary>
         ///     Surface considered is full available surface between stepX / stepY
         /// </summary>
         /// <value>The type of the selection.</value>
-        public bool UseFullSurface { get; private set; }
-
-
-        private SelectionConfiguration _quick;
+        public bool UseFullSurface { get; }
 
         public SelectionConfiguration GetQuickSelectionVariant()
         {
-            if (this._quick == null)
-                this._quick = new SelectionConfiguration(this);
+            if (_quick == null)
+                _quick = new SelectionConfiguration(this);
 
-            return this._quick;
+            return _quick;
         }
 
+        public bool IsMatching(SelectionPosition selection)
+        {
+            return (selection & SelectionType) != 0;
+        }
 
         public void SetResolution(float tolerance)
         {
-            if ((tolerance < 0f) || (tolerance > 1f))
+            if (tolerance < 0f || tolerance > 1f)
                 throw new ArgumentOutOfRangeException(nameof(tolerance), tolerance, "Must be a percentage");
 
             // Save
-            this.Tolerance = tolerance;
+            Tolerance = tolerance;
 
             // Resolution
-            var r = (uint)Math.Pow(10, BitConverter.GetBytes(decimal.GetBits((decimal)tolerance)[3])[2]);
+            var r = (uint) Math.Pow(10, BitConverter.GetBytes(decimal.GetBits((decimal) tolerance)[3])[2]);
 
             // Save X Y
-            this.ResolutionX = this.ResolutionY = Math.Max(2, r);
+            ResolutionX = ResolutionY = Math.Max(2, r);
 
             // Surface
-            this.OptimizeSurface();
+            OptimizeSurface();
         }
 
         public float GetSurfacePercent(int points)
         {
-            return points / this.MaxSurface;
+            return points / MaxSurface;
         }
 
         public void OptimizeResolution(IQuantifiedTile tile, ISelectionProfile profile, bool isoXY = false)
@@ -158,28 +159,22 @@ namespace PA.TileList.Selection
             var rY = tile.ElementStepY / profile.GranularityY;
 
             if (rX > 2 || rY > 2)
-                this._quick = new SelectionConfiguration(this, Math.Max((uint) rX, 2),  Math.Max((uint) rY, 2));
+                _quick = new SelectionConfiguration(this, Math.Max((uint) rX, 2), Math.Max((uint) rY, 2));
 
             // Save X Y
-            this.ResolutionX = Math.Max(this.ResolutionX, (uint)rX);
-            this.ResolutionY = Math.Max(this.ResolutionY, (uint)rY);
+            ResolutionX = Math.Max(ResolutionX, (uint) rX);
+            ResolutionY = Math.Max(ResolutionY, (uint) rY);
 
-            if (isoXY)
-            {
-                this.ResolutionX = this.ResolutionY = Math.Max(this.ResolutionX, this.ResolutionY);
-            }
+            if (isoXY) ResolutionX = ResolutionY = Math.Max(ResolutionX, ResolutionY);
 
             // Surface
-            this.OptimizeSurface();
+            OptimizeSurface();
         }
 
         public void OptimizeSurface()
         {
-            this.MaxSurface = this.ResolutionX * this.ResolutionY;
-            this.MinSurface = this.Tolerance * this.MaxSurface;
+            MaxSurface = ResolutionX * ResolutionY;
+            MinSurface = Tolerance * MaxSurface;
         }
-
-
-
     }
 }

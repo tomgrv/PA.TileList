@@ -25,150 +25,151 @@
 // THE SOFTWARE.
 
 using System;
-using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 
 namespace PA.TileList.Drawing.Graphics2D
 {
-	public static class GraphicExtensions
-	{
+    public static class GraphicExtensions
+    {
+        public static PointF GetLocationOf<U>(this RectangleD<U> image, PointF imagePoint)
+            where U : Image
+        {
+            using (var i = image.GetGraphicsD())
+            {
+                return new PointF((imagePoint.X - i.OffsetX) / i.ScaleX, (imagePoint.Y - i.OffsetY) / i.ScaleY);
+            }
+        }
 
-		#region RenderImage
+        public static RectangleF GetAreaOf<U>(this RectangleD<U> image, RectangleF imageArea)
+            where U : Image
+        {
+            var lt = image.GetLocationOf(imageArea.Location);
+            var rb = image.GetLocationOf(imageArea.Location + imageArea.Size);
 
-		public static RectangleD<U> RenderImage<T, U>(this T c, U baseImage, ScaleMode mode, IRenderer<T, U> renderer)
-		   where U : Image
-		{
-			return renderer.Render(c, baseImage, mode);
-		}
+            return RectangleF.FromLTRB(lt.X, lt.Y, rb.X, rb.Y);
+        }
 
-		public static RectangleD<U> RenderImage<T, U>(this T c, int width, int height, ScaleMode mode, IRenderer<T, U> renderer)
-			where U : Image
-		{
-			return renderer.Render(c, width, height, mode);
-		}
+        public static GraphicsD GetGraphicsD<U>(this RectangleD<U> image)
+            where U : Image
+        {
+            var scaleX = image.Item.Width / image.Outer.Width;
+            var scaleY = image.Item.Height / image.Outer.Height;
 
-		public static RectangleD<U> RenderImage<T, U>(this T c, int width, int height, RectangleF inner, ScaleMode mode, IRenderer<T, U> renderer)
-			where U : Image
-		{
-			return renderer.Render(c, width, height, inner, mode);
-		}
-
-		public static void DrawImage<T, U>(this T c, RectangleD<U> image, IRenderer<T, U> renderer)
-			where U : Image
-		{
-			renderer.Draw(c, image);
-		}
-
-		#endregion
-
-		#region Render
-
-		public static RectangleD<U> Render<T, U>(this RectangleD<U> c, T baseObject, IRenderer<T, U> renderer)
-		  where U : Image
-		{
-			return renderer.Render(baseObject, c.Item, c.Inner, c.Mode);
-		}
-
-		public static RectangleD<U> Render<T, U>(this RectangleD<U> c, T baseObject, ScaleMode mode, IRenderer<T, U> renderer)
-		   where U : Image
-		{
-			return renderer.Render(baseObject, c.Item, c.Inner, mode);
-		}
-
-		public static RectangleD<U> Render<T, U>(this RectangleD<U> c, T baseObject, int width, int height, ScaleMode mode, IRenderer<T, U> renderer)
-			where U : Image
-		{
-			return renderer.Render(baseObject, width, height, mode);
-		}
-
-		public static RectangleD<U> Render<T, U>(this RectangleD<U> c, T baseObject, int width, int height, RectangleF inner, ScaleMode mode, IRenderer<T, U> renderer)
-		  where U : Image
-		{
-			return renderer.Render(baseObject, width, height, inner, mode);
-		}
-
-		public static void Draw<T, U>(this RectangleD<U> c, T baseObject, IRenderer<T, U> renderer)
-			where U : Image
-		{
-			renderer.Draw(baseObject, c);
-		}
-
-		#endregion
-
-		public static PointF GetLocationOf<U>(this RectangleD<U> image, PointF imagePoint)
-	  where U : Image
-		{
-			using (var i = image.GetGraphicsD())
-			{
-				return new PointF((imagePoint.X - i.OffsetX) / i.ScaleX, (imagePoint.Y - i.OffsetY) / i.ScaleY);
-			}
-		}
-
-		public static RectangleF GetAreaOf<U>(this RectangleD<U> image, RectangleF imageArea)
-		where U : Image
-		{
-			var lt = image.GetLocationOf(imageArea.Location);
-			var rb = image.GetLocationOf(imageArea.Location + imageArea.Size);
-
-			return RectangleF.FromLTRB(lt.X, lt.Y, rb.X, rb.Y);
-		}
-
-		public static GraphicsD GetGraphicsD<U>(this RectangleD<U> image)
-			where U : Image
-		{
-			var scaleX = image.Item.Width / image.Outer.Width;
-			var scaleY = image.Item.Height / image.Outer.Height;
-
-			if (image.Mode.HasFlag(ScaleMode.XYRATIO))
-			{
-				var scale = Math.Min(scaleX, scaleY);
-				scaleX = scale;
-				scaleY = scale;
-			}
+            if (image.Mode.HasFlag(ScaleMode.XYRATIO))
+            {
+                var scale = Math.Min(scaleX, scaleY);
+                scaleX = scale;
+                scaleY = scale;
+            }
 
 
-			// Zone definition
-			var outerZone = new RectangleF(image.Outer.X * scaleX, image.Outer.Y * scaleY, image.Outer.Width * scaleX, image.Outer.Height * scaleY);
-			var innerZone = new RectangleF(image.Inner.X * scaleX, image.Inner.Y * scaleY, image.Inner.Width * scaleX, image.Inner.Height * scaleY);
+            // Zone definition
+            var outerZone = new RectangleF(image.Outer.X * scaleX, image.Outer.Y * scaleY, image.Outer.Width * scaleX,
+                image.Outer.Height * scaleY);
+            var innerZone = new RectangleF(image.Inner.X * scaleX, image.Inner.Y * scaleY, image.Inner.Width * scaleX,
+                image.Inner.Height * scaleY);
 
-			// Extract graphic
-			var g = Graphics.FromImage(image.Item);
+            // Extract graphic
+            var g = Graphics.FromImage(image.Item);
 
-			// Offset
-			var offsetX = (image.Item.Width - image.Inner.Width * scaleX) / 2f - outerZone.Left;
-			var offsetY = (image.Item.Height - image.Inner.Height * scaleY) / 2f - outerZone.Top;
+            // Offset
+            var offsetX = (image.Item.Width - image.Inner.Width * scaleX) / 2f - outerZone.Left;
+            var offsetY = (image.Item.Height - image.Inner.Height * scaleY) / 2f - outerZone.Top;
 
-			// Return Item
-			return new GraphicsD(g, scaleX, scaleY, outerZone, innerZone, offsetX, offsetY);
-		}
-
-
-		public static byte[] GetRawData(this Image image)
-		{
-			using (MemoryStream mStream = new MemoryStream())
-			{
-				image.Save(mStream,ImageFormat.Png);
-				return mStream.ToArray();
-			}
-		}
+            // Return Item
+            return new GraphicsD(g, scaleX, scaleY, outerZone, innerZone, offsetX, offsetY);
+        }
 
 
+        public static byte[] GetRawData(this Image image)
+        {
+            using (var mStream = new MemoryStream())
+            {
+                image.Save(mStream, ImageFormat.Png);
+                return mStream.ToArray();
+            }
+        }
 
 
-		public static string GetSignature(this Image image)
-		{
-			using (var sha = new MD5CryptoServiceProvider())
-			{
-				var hash = sha.ComputeHash(image.GetRawData());
-				var key = BitConverter.ToString(hash).Replace("-", string.Empty);
+        public static string GetSignature(this Image image)
+        {
+            using (var sha = new MD5CryptoServiceProvider())
+            {
+                var hash = sha.ComputeHash(image.GetRawData());
+                var key = BitConverter.ToString(hash).Replace("-", string.Empty);
 
-				return key;
-			}
-		}
-	}
+                return key;
+            }
+        }
+
+        #region RenderImage
+
+        public static RectangleD<U> RenderImage<T, U>(this T c, U baseImage, ScaleMode mode, IRenderer<T, U> renderer)
+            where U : Image
+        {
+            return renderer.Render(c, baseImage, mode);
+        }
+
+        public static RectangleD<U> RenderImage<T, U>(this T c, int width, int height, ScaleMode mode,
+            IRenderer<T, U> renderer)
+            where U : Image
+        {
+            return renderer.Render(c, width, height, mode);
+        }
+
+        public static RectangleD<U> RenderImage<T, U>(this T c, int width, int height, RectangleF inner, ScaleMode mode,
+            IRenderer<T, U> renderer)
+            where U : Image
+        {
+            return renderer.Render(c, width, height, inner, mode);
+        }
+
+        public static void DrawImage<T, U>(this T c, RectangleD<U> image, IRenderer<T, U> renderer)
+            where U : Image
+        {
+            renderer.Draw(c, image);
+        }
+
+        #endregion
+
+        #region Render
+
+        public static RectangleD<U> Render<T, U>(this RectangleD<U> c, T baseObject, IRenderer<T, U> renderer)
+            where U : Image
+        {
+            return renderer.Render(baseObject, c.Item, c.Inner, c.Mode);
+        }
+
+        public static RectangleD<U> Render<T, U>(this RectangleD<U> c, T baseObject, ScaleMode mode,
+            IRenderer<T, U> renderer)
+            where U : Image
+        {
+            return renderer.Render(baseObject, c.Item, c.Inner, mode);
+        }
+
+        public static RectangleD<U> Render<T, U>(this RectangleD<U> c, T baseObject, int width, int height,
+            ScaleMode mode, IRenderer<T, U> renderer)
+            where U : Image
+        {
+            return renderer.Render(baseObject, width, height, mode);
+        }
+
+        public static RectangleD<U> Render<T, U>(this RectangleD<U> c, T baseObject, int width, int height,
+            RectangleF inner, ScaleMode mode, IRenderer<T, U> renderer)
+            where U : Image
+        {
+            return renderer.Render(baseObject, width, height, inner, mode);
+        }
+
+        public static void Draw<T, U>(this RectangleD<U> c, T baseObject, IRenderer<T, U> renderer)
+            where U : Image
+        {
+            renderer.Draw(baseObject, c);
+        }
+
+        #endregion
+    }
 }

@@ -7,7 +7,8 @@ namespace PA.TileList.Tests
     [TestFixture]
     public class ZoneTests
     {
-        [Test, Category("Trustable")]
+        [Test]
+        [Category("Trustable")]
         public void CreateArea()
         {
             var a = new Zone(-1, -1, 10, 10);

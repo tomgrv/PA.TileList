@@ -28,8 +28,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using PA.TileList.Linear;
-using PA.TileList.Tile;
 using PA.TileList.Quantified;
+using PA.TileList.Tile;
 
 namespace PA.TileList.Cropping
 {
@@ -58,19 +58,19 @@ namespace PA.TileList.Cropping
             }
 
             // Reduce on y increasing, limit to x-cropping
-            var l3 = list.Where(c => (c.Y == crop.Min.Y) && (c.X >= crop.Min.X) && (c.X <= crop.Max.X));
+            var l3 = list.Where(c => c.Y == crop.Min.Y && c.X >= crop.Min.X && c.X <= crop.Max.X);
             while (l3.All(predicate))
             {
                 crop.Min.Y++;
-                l3 = list.Where(c => (c.Y == crop.Min.Y) && (c.X >= crop.Min.X) && (c.X <= crop.Max.X));
+                l3 = list.Where(c => c.Y == crop.Min.Y && c.X >= crop.Min.X && c.X <= crop.Max.X);
             }
 
             // Reduce on y decreasing, limit to x-cropping
-            var l4 = list.Where(c => (c.Y == crop.Max.Y) && (c.X >= crop.Min.X) && (c.X <= crop.Max.X));
+            var l4 = list.Where(c => c.Y == crop.Max.Y && c.X >= crop.Min.X && c.X <= crop.Max.X);
             while (l4.All(predicate))
             {
                 crop.Max.Y--;
-                l4 = list.Where(c => (c.Y == crop.Max.Y) && (c.X >= crop.Min.X) && (c.X <= crop.Max.X));
+                l4 = list.Where(c => c.Y == crop.Max.Y && c.X >= crop.Min.X && c.X <= crop.Max.X);
             }
 
             return crop;
@@ -95,7 +95,7 @@ namespace PA.TileList.Cropping
         #region Take IQuantifiedTile
 
         public static QuantifiedTile<T> Filter<T>(this IQuantifiedTile<T> tile, IZone a)
-           where T : class, ICoordinate
+            where T : class, ICoordinate
         {
             var q = new QuantifiedTile<T>(tile);
             q.Crop(a);
@@ -103,7 +103,7 @@ namespace PA.TileList.Cropping
         }
 
         public static QuantifiedTile<T> Filter<T>(this IQuantifiedTile<T> tile, Func<T, bool> predicate)
-         where T : class, ICoordinate
+            where T : class, ICoordinate
         {
             var q = new QuantifiedTile<T>(tile);
             q.Crop(tile.GetCroppingZone(predicate));
@@ -114,7 +114,6 @@ namespace PA.TileList.Cropping
 
         #region Take ITile
 
-
         public static Tile<T> Filter<T>(this ITile<T> tile, IZone a)
             where T : class, ICoordinate
         {
@@ -124,7 +123,7 @@ namespace PA.TileList.Cropping
         }
 
         public static Tile<T> Filter<T>(this ITile<T> tile, Func<T, bool> predicate)
-           where T : class, ICoordinate
+            where T : class, ICoordinate
         {
             var q = new Tile<T>(tile);
             q.Crop(tile.GetCroppingZone(predicate));

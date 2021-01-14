@@ -2,7 +2,7 @@
 // LICENSE.cs
 //
 // Author:
-//       Thomas GERVAIS <thomas.gervais@gmail.com>
+//       tomgrv <tomgrv@users.perspikapps.fr>
 //
 // Copyright (c) 2016 
 //

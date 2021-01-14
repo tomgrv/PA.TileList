@@ -10,12 +10,12 @@ namespace PA.TileList.Linear
             where T : ICoordinate
         {
             // y = a*x+b
-            var a = (p2.Y - p1.Y)/(double) (p2.X - p1.X);
-            var b = -a*p1.X + p1.Y;
+            var a = (p2.Y - p1.Y) / (double) (p2.X - p1.X);
+            var b = -a * p1.X + p1.Y;
 
             if (exact)
-                return list.Where(p => p.Y == a*p.X + b);
-            return list.Where(p => p.Y == Math.Round(a*p.X + b, 0));
+                return list.Where(p => p.Y == a * p.X + b);
+            return list.Where(p => p.Y == Math.Round(a * p.X + b, 0));
         }
     }
 }

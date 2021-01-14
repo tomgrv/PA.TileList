@@ -7,8 +7,8 @@ namespace PA.TileList.Linear
     {
         public Segment(T o, ICoordinate p)
         {
-            this.Origin = o;
-            this.Point = p;
+            Origin = o;
+            Point = p;
         }
 
         public T Origin { get; }
@@ -16,15 +16,15 @@ namespace PA.TileList.Linear
 
         public Coordinate Vector()
         {
-            return this.Point.ToCoordinate() - this.Origin;
+            return Point.ToCoordinate() - Origin;
         }
 
         public bool Contains(ICoordinate p)
         {
-            return (p.X <= Math.Max(this.Origin.X, this.Point.X))
-                   && (p.X >= Math.Min(this.Origin.X, this.Point.X))
-                   && (p.Y <= Math.Max(this.Origin.Y, this.Point.Y))
-                   && (p.Y >= Math.Min(this.Origin.Y, this.Point.Y));
+            return p.X <= Math.Max(Origin.X, Point.X)
+                   && p.X >= Math.Min(Origin.X, Point.X)
+                   && p.Y <= Math.Max(Origin.Y, Point.Y)
+                   && p.Y >= Math.Min(Origin.Y, Point.Y);
         }
     }
 }

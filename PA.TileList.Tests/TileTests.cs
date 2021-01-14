@@ -1,9 +1,6 @@
 ﻿using System.Drawing;
 using NUnit.Framework;
-using PA.TileList.Contextual;
 using PA.TileList.Cropping;
-using PA.TileList.Drawing.Graphics2D;
-using PA.TileList.Drawing.Quantified;
 using PA.TileList.Extensions;
 using PA.TileList.Quantified;
 using PA.TileList.Tests.Utils;
@@ -22,7 +19,7 @@ namespace PA.TileList.Tests
 
             t0.Fill(
                 c =>
-                    (c.X > 25) && (c.X < 75) && (c.Y > 30) && (c.Y < 60)
+                    c.X > 25 && c.X < 75 && c.Y > 30 && c.Y < 60
                         ? new Item(c.X, c.Y, c.X == c.Y ? Color.Yellow : Color.Green)
                         : new Item(c.X, c.Y, Color.Red));
 
