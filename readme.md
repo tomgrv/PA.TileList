@@ -31,6 +31,12 @@ $ nuget install PA.TileList
 $ nuget install PA.TileList.Drawing
 ```
 
+## Prepare for build
+
+```
+$ dotnet tool install --global GitVersion.Tool --version 5.*
+```
+
 ## License (MIT)
 
 Copyright (c) 2016-2020 [tomgrv](http://www.github.com/tomgrv)
