@@ -35,8 +35,10 @@ namespace PA.TileList.Cacheable
 
         public Cacheable()
         {
-            _changed = new Dictionary<object, bool>();
-            _changed.Add(null, false);
+            _changed = new Dictionary<object, bool>
+            {
+                { null, false }
+            };
             _default = false;
         }
 

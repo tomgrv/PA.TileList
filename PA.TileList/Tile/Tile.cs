@@ -165,9 +165,11 @@ namespace PA.TileList.Tile
 
             if (item == null)
             {
-                item = new U();
-                item.X = x;
-                item.Y = y;
+                item = new U
+                {
+                    X = x,
+                    Y = y
+                };
                 Add(item);
                 UpdateZone();
             }
@@ -260,9 +262,11 @@ namespace PA.TileList.Tile
         {
             Fill(c =>
             {
-                var i = new U();
-                i.X = c.X;
-                i.Y = c.Y;
+                var i = new U
+                {
+                    X = c.X,
+                    Y = c.Y
+                };
                 return i;
             }, overwrite);
         }
@@ -302,9 +306,11 @@ namespace PA.TileList.Tile
 
             Fill(Zone, c =>
             {
-                var i = new U();
-                i.X = c.X;
-                i.Y = c.Y;
+                var i = new U
+                {
+                    X = c.X,
+                    Y = c.Y
+                };
                 return i;
             }, overwrite);
         }
@@ -339,9 +345,11 @@ namespace PA.TileList.Tile
         {
             Fill(SizeX, SizeY, c =>
             {
-                var i = new U();
-                i.X = c.X;
-                i.Y = c.Y;
+                var i = new U
+                {
+                    X = c.X,
+                    Y = c.Y
+                };
                 return i;
             }, ShiftX, ShiftY, overwrite);
         }
