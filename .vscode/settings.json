@@ -1,0 +1,10 @@
+{
+    "csharpextensions.useFileScopedNamespace": true,
+    "dotnet-test-explorer.testProjectPath": "*.Tests/*Tests.csproj",
+    "omnisharp.enableImportCompletion": true,
+    "omnisharp.enableMsBuildLoadProjectsOnDemand": true,
+    "vssolution.openSolutions.selectedInOmnisharp": true,
+    "conventionalCommits.scopes": [
+        "vscode"
+    ]
+}
