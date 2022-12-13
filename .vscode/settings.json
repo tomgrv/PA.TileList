@@ -6,5 +6,17 @@
     "vssolution.openSolutions.selectedInOmnisharp": true,
     "conventionalCommits.scopes": [
         "vscode"
+    ],
+    "runOnSave.statusMessageTimeout": 3000,
+    "runOnSave.commands": [
+        {
+            // Match scss files except names start with `_`.
+            "match": ".*\\.tt$",
+
+            "command": "t4 ${file}",
+            "runIn": "backend",
+            "runningStatusMessage": "Compiling T4 ${fileBasename}",
+            "finishStatusMessage": "${fileBasename} compiled"
+        }
     ]
 }

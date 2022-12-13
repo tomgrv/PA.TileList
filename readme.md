@@ -34,7 +34,8 @@ $ nuget install PA.TileList.Drawing
 ## Prepare for build
 
 ```
-$ dotnet tool install --global GitVersion.Tool --version 5.*
+$ dotnet tool install --global GitVersion.Tool
+$ dotnet tool install --global dotnet-t4 
 ```
 
 ## License (MIT)
