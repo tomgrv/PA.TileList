@@ -150,27 +150,6 @@ namespace PA.TileList.Selection
             return points / MaxSurface;
         }
 
-        public void OptimizeResolution(IQuantifiedTile tile, ISelectionProfile profile, bool isoXY = false)
-        {
-            profile.OptimizeProfile();
-
-            // Ratio vs profile
-            var rX = tile.ElementStepX / profile.GranularityX;
-            var rY = tile.ElementStepY / profile.GranularityY;
-
-            if (rX > 2 || rY > 2)
-                _quick = new SelectionConfiguration(this, Math.Max((uint) rX, 2), Math.Max((uint) rY, 2));
-
-            // Save X Y
-            ResolutionX = Math.Max(ResolutionX, (uint) rX);
-            ResolutionY = Math.Max(ResolutionY, (uint) rY);
-
-            if (isoXY) ResolutionX = ResolutionY = Math.Max(ResolutionX, ResolutionY);
-
-            // Surface
-            OptimizeSurface();
-        }
-
         public void OptimizeSurface()
         {
             MaxSurface = ResolutionX * ResolutionY;

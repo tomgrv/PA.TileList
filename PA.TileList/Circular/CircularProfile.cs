@@ -23,8 +23,6 @@ namespace PA.TileList.Circular
         {
             Radius = radius;
             Name = name;
-            GranularityX = radius;
-            GranularityY = radius;
             ResetProfile();
         }
 
@@ -39,18 +37,13 @@ namespace PA.TileList.Circular
             }
         }
 
-        public double GranularityX { get; private set; }
-        public double GranularityY { get; private set; }
         public string Name { get; }
 
         public void OptimizeProfile()
         {
             if (_profile.Count == 0)
             {
-                _ordered = new[] {new ProfileStep(0d, Radius)};
-
-                GranularityX = GranularityY = 0;
-
+                _ordered = new[] { new ProfileStep(0d, Radius) };
                 _maxRadius2 = _minRadius2 = Math.Pow(Radius, 2);
             }
 
@@ -61,32 +54,24 @@ namespace PA.TileList.Circular
                 var minRadius = _ordered.Min(p => p.Radius);
                 var maxRadius = _ordered.Max(p => p.Radius);
 
-                GranularityX = GranularityY = Math.Abs(maxRadius - minRadius);
-
                 _maxRadius2 = Math.Pow(maxRadius, 2);
                 _minRadius2 = Math.Pow(minRadius, 2);
             }
         }
 
-        public SelectionPosition Position(double[] x, double[] y)
+        public SelectionPosition Position(double[] x, double[] y, bool IsQuickMode = false)
         {
-            return Position(x[0], y[0], x[1], y[1]);
-        }
-
-
-        public SelectionPosition Position(double[] x, double[] y, SelectionConfiguration config)
-        {
-            return Position(x[0], y[0], x[1], y[1], config);
+            return Position(x[0], y[0], x[1], y[1],IsQuickMode);
         }
 
         public double[] GetValuesX(double x)
         {
-            return new[] {x, x * x};
+            return new[] { x, x * x };
         }
 
         public double[] GetValuesY(double y)
         {
-            return new[] {y, y * y};
+            return new[] { y, y * y };
         }
 
         public SelectionPosition Position(double x, double y)
@@ -99,8 +84,10 @@ namespace PA.TileList.Circular
             return Position(x, y, x * x, y * y);
         }
 
+        
+
         private SelectionPosition Position(double x, double y, double x2, double y2,
-            SelectionConfiguration config = null)
+           bool IsQuickMode = false)
         {
             var angle = Math.Atan2(y, x);
             var r2 = x2 + y2;
@@ -111,7 +98,7 @@ namespace PA.TileList.Circular
             if (0 < _maxRadius2 && r2 > _maxRadius2)
                 return SelectionPosition.Outside;
 
-            if (config?.IsQuick ?? false) return SelectionPosition.Under;
+            if (IsQuickMode) return SelectionPosition.Under;
 
             var last = GetStep(angle);
             var last2 = Math.Pow(last.Radius, 2);
@@ -274,7 +261,7 @@ namespace PA.TileList.Circular
             double rayon_0;
 
             // Nb de points de calcul
-            var steps = (int) Math.Round(delta_flat / delta);
+            var steps = (int)Math.Round(delta_flat / delta);
 
             // Debut du flat: les arcs partent du rayon considéré DANS le flat: OK
             for (var s = -steps; s < 0; s++)

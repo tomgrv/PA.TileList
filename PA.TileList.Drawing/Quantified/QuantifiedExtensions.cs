@@ -26,14 +26,14 @@ namespace PA.TileList.Drawing.Quantified
             ScaleMode mode, Func<T, bool> predicate = null)
             where T : ICoordinate
         {
-            var sizeX = (float) tile.ElementSizeX * g.ScaleX;
-            var sizeY = (float) tile.ElementSizeY * g.ScaleY;
+            var sizeX = (float)tile.ElementSizeX * g.ScaleX;
+            var sizeY = (float)tile.ElementSizeY * g.ScaleY;
 
-            var stepX = (float) tile.ElementStepX * g.ScaleX;
-            var stepY = (float) tile.ElementStepY * g.ScaleY;
+            var stepX = (float)tile.ElementStepX * g.ScaleX;
+            var stepY = (float)tile.ElementStepY * g.ScaleY;
 
-            var offsetX = (float) tile.RefOffsetX * g.ScaleX + g.OffsetX;
-            var offsetY = (float) tile.RefOffsetY * g.ScaleY + g.OffsetY;
+            var offsetX = (float)tile.RefOffsetX * g.ScaleX + g.OffsetX;
+            var offsetY = (float)tile.RefOffsetY * g.ScaleY + g.OffsetY;
 
             var refX = tile.Reference.X + 0.5f;
             var refY = tile.Reference.Y + 0.5f;
@@ -111,28 +111,6 @@ namespace PA.TileList.Drawing.Quantified
         }
 
         public static float Surface<T>(this T c, IQuantifiedTile tile, ISelectionProfile profile,
-            SelectionConfiguration config, GraphicsD g, Brush selectedColor, Brush notSelectedColor,
-            bool quickMode = true)
-            where T : ICoordinate
-        {
-            Contract.Requires(tile != null, nameof(tile));
-            Contract.Requires(profile != null, nameof(profile));
-            Contract.Requires(config != null, nameof(config));
-
-            if (quickMode)
-            {
-                var qsv = config.GetQuickSelectionVariant();
-                var quick = c.CountPoints(tile, profile, qsv, g, selectedColor, notSelectedColor);
-
-                if ((quick.Inside == 0) ^ (quick.Outside == 0) && quick.Under == 0)
-                    return 100f * quick.Count(config.SelectionType) / qsv.MaxSurface;
-            }
-
-            var surface = c.CountPoints(tile, profile, config, g, selectedColor, notSelectedColor);
-            return 100f * surface.Count(config.SelectionType) / config.MaxSurface;
-        }
-
-        public static SelectionPoints CountPoints<T>(this T c, IQuantifiedTile tile, ISelectionProfile profile,
             SelectionConfiguration config, GraphicsD g, Brush selectedColor, Brush notSelectedColor)
             where T : ICoordinate
         {
@@ -140,37 +118,10 @@ namespace PA.TileList.Drawing.Quantified
             Contract.Requires(profile != null, nameof(profile));
             Contract.Requires(config != null, nameof(config));
 
-            profile.OptimizeProfile();
-
-            var p = new SelectionPoints();
-
-            c.GetPoints(tile, config,
-                (xc, yc) =>
-                {
-                    var selected = false;
-
-                    switch (profile.Position(xc, yc, config))
-                    {
-                        case SelectionPosition.Inside:
-                            selected = config.SelectionType.HasFlag(SelectionPosition.Inside);
-                            p.Inside += 1;
-                            break;
-                        case SelectionPosition.Outside:
-                            selected = config.SelectionType.HasFlag(SelectionPosition.Outside);
-                            p.Outside += 1;
-                            break;
-                        case SelectionPosition.Under:
-                            selected = config.SelectionType.HasFlag(SelectionPosition.Under);
-                            p.Under += 1;
-                            break;
-                    }
-
-                    g.Graphics.FillRectangle(selected ? selectedColor : notSelectedColor,
-                        g.OffsetX + (float) xc[0] * g.ScaleX - 0.5f, g.OffsetY + (float) yc[0] * g.ScaleY - 1f, 2, 2);
-                }, profile.GetValuesX, profile.GetValuesY);
-
-            return p;
+            return c.OptimizedCount(tile, profile, config, (xc, yc, p) => g.Graphics.FillRectangle(config.SelectionType.HasFlag(p) ? selectedColor : notSelectedColor,
+                        g.OffsetX + (float)xc[0] * g.ScaleX - 0.5f, g.OffsetY + (float)yc[0] * g.ScaleY - 1f, 2, 2)).GetSurface(config);
         }
+
 
         #endregion
 
@@ -181,7 +132,7 @@ namespace PA.TileList.Drawing.Quantified
         {
             var x = c.ElementStepX * c.Zone.SizeX;
             var y = c.ElementStepY * c.Zone.SizeY;
-            return new SizeF((float) x, (float) y);
+            return new SizeF((float)x, (float)y);
         }
 
         public static PointF GetOrigin<T>(this IQuantifiedTile<T> c)
@@ -189,7 +140,7 @@ namespace PA.TileList.Drawing.Quantified
         {
             var x = (c.Zone.Min.X - c.Reference.X - 0.5f) * c.ElementStepX + c.RefOffsetX;
             var y = (c.Zone.Min.Y - c.Reference.Y - 0.5f) * c.ElementStepY + c.RefOffsetY;
-            return new PointF((float) x, (float) y);
+            return new PointF((float)x, (float)y);
         }
 
         public static RectangleF GetBounds<T>(this IQuantifiedTile<T> c)

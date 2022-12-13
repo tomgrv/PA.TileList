@@ -78,7 +78,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 			var tile = MainTile.GetTile(1).Flatten<SubTile, Item>();
 			var count = 0;
 
-			scs.OptimizeResolution(tile, pro);
+			//scs.OptimizeResolution(tile, pro);
 
 			//foreach (var c in tile.SelectCoordinates(pro, scs))
 			foreach (var c in tile.Take(pro, scs))

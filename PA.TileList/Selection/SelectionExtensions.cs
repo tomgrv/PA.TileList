@@ -58,7 +58,7 @@ namespace PA.TileList.Selection
 
         #endregion
 
-        #region IQuantifiedTile
+        #region 
 
         /// <summary>
         ///     Filter from tile according to profile, config and fullSize.
@@ -69,6 +69,49 @@ namespace PA.TileList.Selection
         /// <param name="config">Config.</param>
         /// <param name="fullSize">If set to <c>true</c> full size.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
+        public static QuantifiedTile<T> Keep<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
+            SelectionConfiguration config)
+            where T : class, ICoordinate
+        {
+            Contract.Requires(tile != null, nameof(tile));
+            Contract.Requires(profile != null, nameof(profile));
+            Contract.Requires(config != null, nameof(config));
+
+            return tile.Take(profile, config).ToTile().ToQuantified(tile.ElementSizeX, tile.ElementSizeY,
+                tile.ElementStepX, tile.ElementStepY, tile.RefOffsetX, tile.RefOffsetY);
+        }
+
+        /// <summary>
+        ///     Filter from tile according to profile, config and fullSize.
+        /// </summary>
+        /// <returns>The filter.</returns>
+        /// <param name="tile">Tile.</param>
+        /// <param name="profile">Profile.</param>
+        /// <param name="config">Config.</param>
+        /// <param name="fullSize">If set to <c>true</c> full size.</param>
+        /// <typeparam name="T">The 1st type parameter.</typeparam>
+        public static QuantifiedTile<T> Remove<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
+            SelectionConfiguration config)
+            where T : class, ICoordinate
+        {
+            Contract.Requires(tile != null, nameof(tile));
+            Contract.Requires(profile != null, nameof(profile));
+            Contract.Requires(config != null, nameof(config));
+
+            return tile.Except(profile, config).ToTile().ToQuantified(tile.ElementSizeX, tile.ElementSizeY,
+                tile.ElementStepX, tile.ElementStepY, tile.RefOffsetX, tile.RefOffsetY);
+        }
+
+        /// <summary>
+        ///     Filter from tile according to profile, config and fullSize.
+        /// </summary>
+        /// <returns>The filter.</returns>
+        /// <param name="tile">Tile.</param>
+        /// <param name="profile">Profile.</param>
+        /// <param name="config">Config.</param>
+        /// <param name="fullSize">If set to <c>true</c> full size.</param>
+        /// <typeparam name="T">The 1st type parameter.</typeparam>
+        [Obsolete("Consider using .Remove()")]
         public static QuantifiedTile<T> Filter<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
             SelectionConfiguration config)
             where T : class, ICoordinate
@@ -133,7 +176,7 @@ namespace PA.TileList.Selection
             Contract.Requires(profile != null, nameof(profile));
             Contract.Requires(config != null, nameof(config));
 
-            return c.Surface(tile, profile, config) > 0;
+            return c.OptimizedCount(tile, profile, config).IsSelected(config);
         }
 
 
@@ -147,28 +190,27 @@ namespace PA.TileList.Selection
         /// <param name="config">Config.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
         public static uint Surface<T>(this T c, IQuantifiedTile tile, ISelectionProfile profile,
-            SelectionConfiguration config, bool quickMode = true)
+            SelectionConfiguration config)
             where T : ICoordinate
         {
             Contract.Requires(tile != null, nameof(tile));
             Contract.Requires(profile != null, nameof(profile));
             Contract.Requires(config != null, nameof(config));
 
-            if (quickMode)
-            {
-                var quick = c.CountPoints(tile, profile, config.GetQuickSelectionVariant());
-
-                if ((quick.Inside == 0) ^ (quick.Outside == 0) && quick.Under == 0)
-                    return quick.GetSurface(config.GetQuickSelectionVariant());
-            }
-
-            var surface = c.CountPoints(tile, profile, config);
-#if DEBUG
-            c.Tag = surface.Under;
-#endif
-            return surface.GetSurface(config);
+            return c.OptimizedCount(tile, profile, config).GetSurface(config);
         }
 
+        public static SelectionPoints OptimizedCount<T>(this T c, IQuantifiedTile tile, ISelectionProfile profile,
+            SelectionConfiguration config, Action<double[], double[], SelectionPosition> predicate = null)
+            where T : ICoordinate
+        {
+            var quickPoints = c.CountPoints(tile, profile, config.GetQuickSelectionVariant(), predicate);
+
+            if (!quickPoints.IsAmbiguous())
+                return quickPoints;
+
+            return c.CountPoints(tile, profile, config, predicate);
+        }
 
         /// <summary>
         ///     Counts the points.
@@ -180,21 +222,21 @@ namespace PA.TileList.Selection
         /// <param name="config">Config.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
         public static SelectionPoints CountPoints<T>(this T c, IQuantifiedTile tile, ISelectionProfile profile,
-            SelectionConfiguration config)
+            SelectionConfiguration config, Action<double[], double[], SelectionPosition> predicate = null)
             where T : ICoordinate
         {
             Contract.Requires(tile != null, nameof(tile));
             Contract.Requires(profile != null, nameof(profile));
             Contract.Requires(config != null, nameof(config));
 
-            profile.OptimizeProfile();
-
             var p = new SelectionPoints();
 
             c.GetPoints(tile, config,
                 (xc, yc) =>
                 {
-                    switch (profile.Position(xc, yc, config))
+                    var position = profile.Position(xc, yc, config.IsQuick);
+
+                    switch (position)
                     {
                         case SelectionPosition.Inside:
                             p.Inside += 1;
@@ -206,6 +248,9 @@ namespace PA.TileList.Selection
                             p.Under += 1;
                             break;
                     }
+
+                    predicate?.Invoke(xc, yc, position);
+
                 }, profile.GetValuesX, profile.GetValuesY);
 
             return p;

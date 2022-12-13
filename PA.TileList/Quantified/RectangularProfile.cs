@@ -31,24 +31,19 @@ namespace PA.TileList.Quantified
         {
         }
 
-        public SelectionPosition Position(double[] x, double[] y)
-        {
-            return Position(x[0], y[0]);
-        }
-
-        public SelectionPosition Position(double[] x, double[] y, SelectionConfiguration config)
+        public SelectionPosition Position(double[] x, double[] y, bool IsQuickMode = false)
         {
             return Position(x[0], y[0]);
         }
 
         public double[] GetValuesX(double x)
         {
-            return new[] {x};
+            return new[] { x };
         }
 
         public double[] GetValuesY(double y)
         {
-            return new[] {y};
+            return new[] { y };
         }
 
         public SelectionPosition Position(double x, double y)

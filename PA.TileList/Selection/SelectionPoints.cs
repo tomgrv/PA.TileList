@@ -24,6 +24,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+
 namespace PA.TileList.Selection
 {
     public class SelectionPoints
@@ -32,6 +34,7 @@ namespace PA.TileList.Selection
         public uint Outside { get; set; }
         public uint Under { get; set; }
 
+        [Obsolete]
         public SelectionPosition GetPosition()
         {
             return (Outside > 0 ? SelectionPosition.Outside : 0x00) | (Inside > 0 ? SelectionPosition.Inside : 0x00) |
@@ -62,7 +65,15 @@ namespace PA.TileList.Selection
 
         public bool IsSelected(SelectionConfiguration config)
         {
-            return Count(config.SelectionType) >= config.MinSurface;
+            if (config.SelectionType.HasFlag(SelectionPosition.Inside) || config.SelectionType.HasFlag(SelectionPosition.Outside))
+                return Count(config.SelectionType) >= config.MinSurface;
+            else
+                return (Outside > 0 && Inside > 0) || Under > 0;
+        }
+
+        public bool IsAmbiguous()
+        {
+            return (Outside > 0 && Inside > 0) || Under > 0;
         }
 
         public uint GetSurface(SelectionConfiguration config)
