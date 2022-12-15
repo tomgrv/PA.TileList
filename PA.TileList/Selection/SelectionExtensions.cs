@@ -141,7 +141,7 @@ namespace PA.TileList.Selection
             Contract.Requires(config != null, nameof(config));
 
             return tile.Where(c => c.Selected(tile, profile, config));
-            ;
+            
         }
 
         public static IEnumerable<T> Except<T>(this IQuantifiedTile<T> tile, ISelectionProfile profile,
@@ -178,7 +178,6 @@ namespace PA.TileList.Selection
 
             return c.OptimizedCount(tile, profile, config).IsSelected(config);
         }
-
 
         /// <summary>
         ///     Returns the surface covered by profile within tile according config and fullSize.
@@ -230,6 +229,11 @@ namespace PA.TileList.Selection
             Contract.Requires(config != null, nameof(config));
 
             var p = new SelectionPoints();
+
+            if(c.X == 4 && c.Y == 4)
+            {
+                Console.WriteLine("found");
+            }
 
             c.GetPoints(tile, config,
                 (xc, yc) =>

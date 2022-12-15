@@ -135,7 +135,7 @@ namespace PA.TileList.Selection
             // Save
             Tolerance = tolerance;
 
-            // Resolution
+            // Resolution auto en fonction de la precision
             var r = (uint) Math.Pow(10, BitConverter.GetBytes(decimal.GetBits((decimal) tolerance)[3])[2]);
 
             // Save X Y
@@ -144,6 +144,8 @@ namespace PA.TileList.Selection
             // Surface
             OptimizeSurface();
         }
+
+         
 
         public float GetSurfacePercent(int points)
         {

@@ -88,8 +88,8 @@ namespace PA.TileList.Drawing.Quantified
             var o = new SizeF(g.OffsetX, g.OffsetY);
             var r = new RectangleF(g.Portion.Inner.Location + o, g.Portion.Inner.Size);
 
-            var bs = new SolidBrush(selectedColor);
-            var bn = new SolidBrush(notSelectedColor);
+            var bs = new SolidBrush(Color.FromArgb(75, selectedColor));
+            var bn = new SolidBrush(Color.FromArgb(75, notSelectedColor));
 
             // full mode / follows SelectionConfiguration
             profile.OptimizeProfile();
@@ -119,7 +119,7 @@ namespace PA.TileList.Drawing.Quantified
             Contract.Requires(config != null, nameof(config));
 
             return c.OptimizedCount(tile, profile, config, (xc, yc, p) => g.Graphics.FillRectangle(config.SelectionType.HasFlag(p) ? selectedColor : notSelectedColor,
-                        g.OffsetX + (float)xc[0] * g.ScaleX - 0.5f, g.OffsetY + (float)yc[0] * g.ScaleY - 1f, 2, 2)).GetSurface(config);
+                        g.OffsetX + (float)xc[0] * g.ScaleX , g.OffsetY + (float)yc[0] * g.ScaleY , 1, 1)).GetSurface(config);
         }
 
 

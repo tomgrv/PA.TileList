@@ -37,6 +37,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
         }
 
         [Test]
+        [Category("Trustable")]
         public void Coordinates()
         {
             var tile = MainTile.GetTile(1);
@@ -79,15 +80,8 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             var sc = new SelectionConfiguration(SelectionPosition.Inside, 0.70f);
 
-            var i = tile.RenderImage(5000, 5000, ScaleMode.CENTER, new QuantifiedRenderer<IContextual<Item>>(
-                (z, s) => z.Context.ToBitmap((int) s.Width, (int) s.Height, z.X + "\n" + z.Y),
-                Pens.Blue, new Pen(Color.Violet, 5)));
+            tile.GetDebugGraphic(p, new CircularProfileRenderer(Color.BlueViolet), sc).SaveDebugImage();
 
-            tile.DrawSelectionPoints<IContextual<Item>, Bitmap>(p, sc, i, Color.Green, Color.Red, false);
-
-            p.DrawImage(i, new CircularProfileRenderer(Color.BlueViolet));
-
-            var signature = i.Item.GetSignature();
         }
 
         [Test]
@@ -110,7 +104,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             var i1 = t1.RenderImage(2000, 2000, ScaleMode.STRETCH,
                 new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 50, z.X + "\n" + z.Y)));
-            t1.DrawImage(i1, new RulersRenderer<IContextual<Item>>(new[] {100f, 500f}));
+            t1.DrawImage(i1, new RulersRenderer<IContextual<Item>>(new[] { 100f, 500f }));
             // Assert.AreEqual("A56EBC8E87772EA73D38342AF45FF00B5489A22DB73E7ED5996C6AF7EEE3DE0A", signature, "Image hash");
         }
 
@@ -135,7 +129,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             p.DrawImage(i1, new CircularProfileRenderer(null, null, Pens.DarkViolet));
 
-            t1.DrawImage(i1, new RulersRenderer<IContextual<Item>>(new[] {100f, 500f}));
+            t1.DrawImage(i1, new RulersRenderer<IContextual<Item>>(new[] { 100f, 500f }));
 
             i1.Item.GetSignature();
             //Assert.AreEqual("9272D2C42A039C2122B649DAD516B390A3A2A3C51BA861B6E615F27BA0F1BDA3", i1, "Image hash");
@@ -187,7 +181,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             //item.Context.Color = Color.Red;
 
             var r1 = t1.RenderImage(2000, 2000, ScaleMode.STRETCH,
-                new RulersRenderer<IContextual<Item>>(new[] {100f, 500f}));
+                new RulersRenderer<IContextual<Item>>(new[] { 100f, 500f }));
 
             //            var i1 = t1.RenderImage(r1, new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(100, 100, z.X + "\n" + z.Y)));
 
@@ -217,7 +211,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
             flat.RenderImage(5000, 5000, new RectangleF(-2000, -2000, 4000, 4000), ScaleMode.STRETCH,
                 new QuantifiedRenderer<IContextual<Item>>(
-                    (z2, s2) => { return z2.Context.ToBitmap((int) s2.Width, (int) s2.Height, z2.X + "\n" + z2.Y); })
+                    (z2, s2) => { return z2.Context.ToBitmap((int)s2.Width, (int)s2.Height, z2.X + "\n" + z2.Y); })
             ).SaveDebugImage("flattened");
         }
     }

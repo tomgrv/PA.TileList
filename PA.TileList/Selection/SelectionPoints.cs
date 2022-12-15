@@ -65,10 +65,10 @@ namespace PA.TileList.Selection
 
         public bool IsSelected(SelectionConfiguration config)
         {
-            if (config.SelectionType.HasFlag(SelectionPosition.Inside) || config.SelectionType.HasFlag(SelectionPosition.Outside))
-                return Count(config.SelectionType) >= config.MinSurface;
+            if (config.SelectionType.HasFlag(SelectionPosition.Under))
+                return this.IsAmbiguous() || this.GetSurface(config) >0;
             else
-                return (Outside > 0 && Inside > 0) || Under > 0;
+                return this.GetSurface(config) >0;
         }
 
         public bool IsAmbiguous()

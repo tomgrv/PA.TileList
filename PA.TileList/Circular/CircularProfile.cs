@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using PA.TileList.Selection;
+using PA.TileList.Quantified;
 
 namespace PA.TileList.Circular
 {
@@ -32,7 +33,6 @@ namespace PA.TileList.Circular
         {
             get
             {
-                OptimizeProfile();
                 return _ordered;
             }
         }
@@ -74,17 +74,10 @@ namespace PA.TileList.Circular
             return new[] { y, y * y };
         }
 
-        public SelectionPosition Position(double x, double y)
+        public SelectionPosition Position(double x, double y,bool IsQuickMode = false)
         {
-            return Position(x, y, x * x, y * y);
+            return Position(x, y, x * x, y * y,IsQuickMode);
         }
-
-        public SelectionPosition Position(double x, double y, double x2, double y2)
-        {
-            return Position(x, y, x * x, y * y);
-        }
-
-        
 
         private SelectionPosition Position(double x, double y, double x2, double y2,
            bool IsQuickMode = false)

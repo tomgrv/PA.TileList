@@ -27,6 +27,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using PA.TileList.Linear;
+using PA.TileList.Quantified;
 
 namespace PA.TileList.Selection
 {

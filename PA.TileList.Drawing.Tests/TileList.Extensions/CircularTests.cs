@@ -28,6 +28,8 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             p.AddProfileFlat(Math.PI / 3f, radius - 400, 200, stepping, resolution);
             p.AddProfileFlat(2f * Math.PI / 3f, radius - 500, 400, stepping, resolution);
 
+            p.OptimizeProfile();
+
             return p;
         }
 
@@ -43,6 +45,8 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
                 p.AddProfileStep(a1, radius);
             }
 
+            p.OptimizeProfile();
+
             return p;
         }
 
@@ -56,6 +60,8 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             p.AddProfileFlat(Math.PI / 2f, 800, radius);
             p.AddProfileStep(-Math.PI / 4, radius);
             p.AddProfileStep(-3 * Math.PI / 4, radius);
+
+            p.OptimizeProfile();
 
             return p;
         }
@@ -73,6 +79,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
         public void CircularProfile()
         {
             var pro = new CircularProfile(1500);
+            pro.OptimizeProfile();
 
             var i = pro.RenderImage(1000, 1000, new RectangleF(-2000, -2000, 4000, 4000), ScaleMode.STRETCH, cpr);
 
@@ -102,7 +109,8 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
         }
 
         [Test]
-                [Category("Visual")]
+        [Category("Visual")]
+
         public void ProfileWithFlat()
         {
             var p = GetFlatProfile();
@@ -120,9 +128,9 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             var pro = GetTestProfile(1400);
 
             var tile = MainTile.GetTile(1).Flatten<SubTile, Item>();
-      //      scs.OptimizeResolution(tile, pro);
+            //      scs.OptimizeResolution(tile, pro);
 
-           
+
 
             Assert.AreEqual(3025, tile.Count, "Initial item count");
 
@@ -139,7 +147,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             tile.GetDebugGraphic(pro, cpr, scs).SaveDebugImage();
 
             // TG 13/12/2022
-            Assert.AreEqual(739,q.Count(), "Selected item count");
+            Assert.AreEqual(739, q.Count(), "Selected item count");
 
         }
 
@@ -151,7 +159,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             var pro = GetTestProfile(1400);
 
             var tile = MainTile.GetTile(5).Flatten<SubTile, Item>();
-         //   scs.OptimizeResolution(tile, pro);
+            //   scs.OptimizeResolution(tile, pro);
 
             tile.Reference.Context.Color = Color.Violet;
 
@@ -168,7 +176,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             tile.GetDebugGraphic(pro, cpr, scs).SaveDebugImage();
 
             // TG 13/12/2022
-            Assert.AreEqual(739,q.Count(), "Selected item count");
+            Assert.AreEqual(739, q.Count(), "Selected item count");
         }
 
         [Test]
@@ -179,7 +187,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             var pro = GetTestProfile(1400);
 
             var tile = MainTile.GetTile(1).Flatten<SubTile, Item>();
-        //    scs.OptimizeResolution(tile, pro);
+            //    scs.OptimizeResolution(tile, pro);
 
             tile.Reference.Context.Color = Color.Violet;
 
@@ -196,13 +204,13 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             tile.GetDebugGraphic(pro, cpr, scs).SaveDebugImage();
 
             // TG 13/12/2022
-            Assert.AreEqual(Color.Brown,tile.Find(13,-10).Context.Color, "specific item not selected");
-            Assert.AreEqual(Color.Brown,tile.Find(-6,18).Context.Color, "specific item not selected");
-            Assert.AreEqual(170,q.Count(), "Selected item count");
+            Assert.AreEqual(Color.Brown, tile.Find(13, -10).Context.Color, "specific item not selected");
+            Assert.AreEqual(Color.Brown, tile.Find(-6, 18).Context.Color, "specific item not selected");
+            Assert.AreEqual(170, q.Count(), "Selected item count");
         }
 
         [Test]
-        [Category("Image hash")]
+        [Category("Trustable")]
         public void SelectionOutsideProfile()
         {
             var scs = new SelectionConfiguration(SelectionPosition.Under, 0.1f);
@@ -214,7 +222,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
             var change = tile.Reference;
 
             var q = tile.Keep(pro, new SelectionConfiguration(SelectionPosition.Outside));
-            
+
             q.Reference.Context.Color = Color.Pink;
             q.GetDebugGraphic(pro, cpr, scs).SaveDebugImage();
 

@@ -34,6 +34,8 @@ namespace PA.TileList.Tests
             var crop = new RectangularProfile(-9, 69.45, 9, 72.25);
             var conf = new SelectionConfiguration(SelectionPosition.Inside, 0.25f, false);
 
+            crop.OptimizeProfile();
+
             foreach (ICoordinate o in btflat.Take(crop, conf))
             {
                 var d = btflat.First(c => c.X == o.X && c.Y == o.Y);
@@ -41,11 +43,7 @@ namespace PA.TileList.Tests
                 d.Context.Color = Color.Red;
             }
 
-            btflat.RenderImage(6000, 6000, ScaleMode.STRETCH,
-                    new QuantifiedRenderer<IContextual<Item>>((z, s) => z.Context.ToBitmap(s, z)))
-                .Render(crop, new RectangularRenderer(Color.Black))
-                .SaveDebugImage();
-
+            btflat.GetDebugGraphic(crop, new RectangularRenderer(Color.Black), conf).SaveDebugImage();
 
             // OK 7 juin 2020
             Assert.AreEqual(300, btflat.Count(c => c.Context.Color == Color.Red), "BigTile Selection Count");

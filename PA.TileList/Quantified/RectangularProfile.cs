@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using System.Linq;
+using System.Text.RegularExpressions;
 using PA.TileList.Selection;
 
 namespace PA.TileList.Quantified
@@ -15,8 +17,6 @@ namespace PA.TileList.Quantified
             this.xMax = xMax;
             this.yMax = yMax;
             Name = name;
-            GranularityX = Math.Abs(this.xMax - this.xMin) / 2;
-            GranularityY = Math.Abs(this.yMax - this.yMin) / 2;
         }
 
         public double xMin { get; }
@@ -24,16 +24,44 @@ namespace PA.TileList.Quantified
         public double xMax { get; }
         public double yMax { get; }
         public string Name { get; }
-        public double GranularityX { get; }
-        public double GranularityY { get; }
+
+        private double _maxRadius2;
+
+        private double _minRadius2;
+
+        private double _maxAngle;
+
+        private double _minAngle;
 
         public void OptimizeProfile()
         {
+            double[] r2 = {
+                Math.Pow(xMax, 2)+Math.Pow(yMax, 2),
+                Math.Pow(xMax, 2)+Math.Pow(yMin, 2),
+                Math.Pow(xMin, 2)+Math.Pow(yMax, 2),
+                Math.Pow(xMin, 2)+Math.Pow(yMin, 2)
+            };
+
+            double[] angles =
+            {
+                Math.Atan2(yMin, xMin),
+                Math.Atan2(yMin, xMax),
+                Math.Atan2(yMax, xMin),
+                Math.Atan2(yMax, xMax)
+            };
+
+            r2 = r2.OrderBy(r => r).ToArray();
+            _maxRadius2 = r2.Last();
+            _minRadius2 = r2.First();
+
+            angles = angles.OrderBy(a => a).ToArray();
+            _maxAngle = angles.Last();
+            _minAngle = angles.First();
         }
 
         public SelectionPosition Position(double[] x, double[] y, bool IsQuickMode = false)
         {
-            return Position(x[0], y[0]);
+            return Position(x[0], y[0], IsQuickMode);
         }
 
         public double[] GetValuesX(double x)
@@ -46,23 +74,32 @@ namespace PA.TileList.Quantified
             return new[] { y };
         }
 
-        public SelectionPosition Position(double x, double y)
+        public SelectionPosition Position(double x, double y, bool IsQuickMode = false)
+        {
+            return Position(x, y, x * x, y * y, IsQuickMode);
+        }
+
+        public SelectionPosition Position(double x, double y, double x2, double y2, bool IsQuickMode = false)
         {
             var xr = Math.Round(x, 14);
             var yr = Math.Round(y, 14);
 
+            var angle = Math.Atan2(y, x);
+            var r2 = x2 + y2;
+
+            if (IsQuickMode && r2 > _minRadius2 && r2 < _maxRadius2)
+                return SelectionPosition.Under;
+
             if (xr > xMin && xr < xMax && yr > yMin && yr < yMax)
                 return SelectionPosition.Inside;
 
-            if (xr < xMin || xr > xMax || yr < yMin || yr > yMax)
-                return SelectionPosition.Outside;
+            if ((xr == xMin || xr == xMax) && yr >= yMin && yr <= yMax)
+                return SelectionPosition.Under;
 
-            return SelectionPosition.Under;
-        }
+            if (xr >= xMin && xr <= xMax  && ( yr ==yMin || yr == yMax))
+                return SelectionPosition.Under;
 
-        public SelectionPosition Position(double x, double y, double x2, double y2)
-        {
-            return Position(x, y);
+            return SelectionPosition.Outside;
         }
     }
 }

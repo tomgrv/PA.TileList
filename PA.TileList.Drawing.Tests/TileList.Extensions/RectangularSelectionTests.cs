@@ -35,6 +35,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -45,7 +46,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(153, count, "index 0,0,0" );
+					Assert.AreEqual(154, count, "index 0,0,0" );
 		}
 
 		
@@ -59,6 +60,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -69,7 +71,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(162, count, "index 0,0,1" );
+					Assert.AreEqual(165, count, "index 0,0,1" );
 		}
 
 		
@@ -83,6 +85,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -93,7 +96,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(130, count, "index 0,1,0" );
+					Assert.AreEqual(154, count, "index 0,1,0" );
 		}
 
 		
@@ -107,6 +110,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -117,7 +121,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(143, count, "index 0,1,1" );
+					Assert.AreEqual(165, count, "index 0,1,1" );
 		}
 
 		
@@ -131,6 +135,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -141,7 +146,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(130, count, "index 0,2,0" );
+					Assert.AreEqual(154, count, "index 0,2,0" );
 		}
 
 		
@@ -155,6 +160,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -165,7 +171,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(117, count, "index 0,2,1" );
+					Assert.AreEqual(165, count, "index 0,2,1" );
 		}
 
 		
@@ -179,6 +185,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -203,6 +210,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -227,6 +235,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -251,6 +260,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -275,6 +285,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -299,6 +310,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -323,6 +335,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -333,7 +346,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(36, count, "index 0,6,0" );
+					Assert.AreEqual(37, count, "index 0,6,0" );
 		}
 
 		
@@ -347,6 +360,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -357,7 +371,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(0, count, "index 0,6,1" );
+					Assert.AreEqual(48, count, "index 0,6,1" );
 		}
 
 		
@@ -371,6 +385,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -381,7 +396,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(0, count, "index 0,7,0" );
+					Assert.AreEqual(37, count, "index 0,7,0" );
 		}
 
 		
@@ -395,6 +410,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -405,7 +421,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(0, count, "index 0,7,1" );
+					Assert.AreEqual(48, count, "index 0,7,1" );
 		}
 
 		
@@ -419,6 +435,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -429,7 +446,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(0, count, "index 0,8,0" );
+					Assert.AreEqual(37, count, "index 0,8,0" );
 		}
 
 		
@@ -443,6 +460,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -453,7 +471,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(0, count, "index 0,8,1" );
+					Assert.AreEqual(48, count, "index 0,8,1" );
 		}
 
 		
@@ -467,6 +485,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -477,7 +496,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(41, count, "index 1,0,0" );
+					Assert.AreEqual(42, count, "index 1,0,0" );
 		}
 
 		
@@ -491,6 +510,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -501,7 +521,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(63, count, "index 1,0,1" );
+					Assert.AreEqual(66, count, "index 1,0,1" );
 		}
 
 		
@@ -515,6 +535,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -525,7 +546,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(40, count, "index 1,1,0" );
+					Assert.AreEqual(42, count, "index 1,1,0" );
 		}
 
 		
@@ -539,6 +560,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -549,7 +571,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(41, count, "index 1,1,1" );
+					Assert.AreEqual(66, count, "index 1,1,1" );
 		}
 
 		
@@ -563,6 +585,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -573,7 +596,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(20, count, "index 1,2,0" );
+					Assert.AreEqual(42, count, "index 1,2,0" );
 		}
 
 		
@@ -587,6 +610,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -597,7 +621,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(20, count, "index 1,2,1" );
+					Assert.AreEqual(66, count, "index 1,2,1" );
 		}
 
 		
@@ -611,6 +635,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -635,6 +660,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -659,6 +685,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -683,6 +710,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -707,6 +735,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -731,6 +760,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -755,6 +785,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -765,7 +796,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(1, count, "index 1,6,0" );
+					Assert.AreEqual(22, count, "index 1,6,0" );
 		}
 
 		
@@ -779,6 +810,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -789,7 +821,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(41, count, "index 1,6,1" );
+					Assert.AreEqual(66, count, "index 1,6,1" );
 		}
 
 		
@@ -803,6 +835,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -813,7 +846,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(0, count, "index 1,7,0" );
+					Assert.AreEqual(22, count, "index 1,7,0" );
 		}
 
 		
@@ -827,6 +860,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -837,7 +871,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(0, count, "index 1,7,1" );
+					Assert.AreEqual(66, count, "index 1,7,1" );
 		}
 
 		
@@ -851,6 +885,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -861,7 +896,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(0, count, "index 1,8,0" );
+					Assert.AreEqual(22, count, "index 1,8,0" );
 		}
 
 		
@@ -875,6 +910,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -885,7 +921,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(0, count, "index 1,8,1" );
+					Assert.AreEqual(66, count, "index 1,8,1" );
 		}
 
 		
@@ -899,6 +935,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -909,7 +946,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(7, count, "index 2,0,0" );
+					Assert.AreEqual(8, count, "index 2,0,0" );
 		}
 
 		
@@ -923,6 +960,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -933,7 +971,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(6, count, "index 2,0,1" );
+					Assert.AreEqual(8, count, "index 2,0,1" );
 		}
 
 		
@@ -947,6 +985,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -957,7 +996,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(0, count, "index 2,1,0" );
+					Assert.AreEqual(8, count, "index 2,1,0" );
 		}
 
 		
@@ -971,6 +1010,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -981,7 +1021,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(0, count, "index 2,1,1" );
+					Assert.AreEqual(8, count, "index 2,1,1" );
 		}
 
 		
@@ -995,6 +1035,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -1019,6 +1060,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -1043,6 +1085,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -1067,6 +1110,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -1091,6 +1135,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -1115,6 +1160,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -1139,6 +1185,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -1163,6 +1210,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -1187,6 +1235,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -1197,7 +1246,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(0, count, "index 2,6,0" );
+					Assert.AreEqual(8, count, "index 2,6,0" );
 		}
 
 		
@@ -1211,6 +1260,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -1221,7 +1271,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(0, count, "index 2,6,1" );
+					Assert.AreEqual(8, count, "index 2,6,1" );
 		}
 
 		
@@ -1235,6 +1285,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -1245,7 +1296,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(0, count, "index 2,7,0" );
+					Assert.AreEqual(8, count, "index 2,7,0" );
 		}
 
 		
@@ -1259,6 +1310,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -1269,7 +1321,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 
 					tile.GetDebugGraphic(pro, rrr, scs).SaveDebugImage();
 
-					Assert.AreEqual(0, count, "index 2,7,1" );
+					Assert.AreEqual(8, count, "index 2,7,1" );
 		}
 
 		
@@ -1283,6 +1335,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
@@ -1307,6 +1360,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))

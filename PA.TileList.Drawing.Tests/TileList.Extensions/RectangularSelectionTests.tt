@@ -52,11 +52,11 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 				{"xU100","SelectionPosition.Under","1f"},
 			};
 
-			var tests = new int[3, 9,2]
+			var tests = new int[3, 9,2] 
 			{
-				{{153,162},{130,143},{130,117},{130,162},{130,143},{117,117},{36,0},{0,0},{0,0} },
-				{{41,63},{40,41},{20,20},{40,42},{40,40},{20,0},{1,41},{0,0},{0,0}},
-				{{7,6},{0,0},{0,0},{7,6},{0,0},{0,0},{0,0},{0,0},{0,0} },
+				{{154,165},{154,165},{154,165},{130,162},{130,143},{117,117},{37,48},{37,48},{37,48} },
+				{{42,66},{42,66},{42,66},{40,42},{40,40},{20,0},{22,66},{22,66},{22,66}},
+				{{8,8},{8,8},{0,0},{7,6},{0,0},{0,0},{8,8},{8,8},{0,0} },
 			};
 
 			for (int k = 0; k < 3; k++)
@@ -77,6 +77,7 @@ namespace PA.TileList.Drawing.Tests.TileList.Extensions
 					var count = 0;
 
 					//scs.OptimizeResolution(tile, pro);
+					pro.OptimizeProfile();
 
 					//foreach (var c in tile.SelectCoordinates(pro, scs))
 					foreach (var c in tile.Take(pro, scs))
