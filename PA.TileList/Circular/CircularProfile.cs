@@ -147,8 +147,10 @@ namespace PA.TileList.Circular
         public void ResetProfile()
         {
             _ordered = null;
-            _last = null;
-            _profile = new List<ProfileStep>();
+            _last = null;    
+            _profile = new List<ProfileStep>(){ new ProfileStep(0d, Radius) };
+            _ordered = _profile.ToArray();
+            _maxRadius2 = _minRadius2 = Math.Pow(Radius, 2);
         }
 
         /// <summary>
