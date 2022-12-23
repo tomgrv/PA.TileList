@@ -17,6 +17,8 @@ namespace PA.TileList.Quantified
             this.xMax = xMax;
             this.yMax = yMax;
             Name = name;
+
+            this.OptimizeProfile();
         }
 
         public double xMin { get; }
@@ -28,10 +30,6 @@ namespace PA.TileList.Quantified
         private double _maxRadius2;
 
         private double _minRadius2;
-
-        private double _maxAngle;
-
-        private double _minAngle;
 
         public void OptimizeProfile()
         {
@@ -53,10 +51,6 @@ namespace PA.TileList.Quantified
             r2 = r2.OrderBy(r => r).ToArray();
             _maxRadius2 = r2.Last();
             _minRadius2 = r2.First();
-
-            angles = angles.OrderBy(a => a).ToArray();
-            _maxAngle = angles.Last();
-            _minAngle = angles.First();
         }
 
         public SelectionPosition Position(double[] x, double[] y, bool IsQuickMode = false)
@@ -84,7 +78,6 @@ namespace PA.TileList.Quantified
             var xr = Math.Round(x, 14);
             var yr = Math.Round(y, 14);
 
-            var angle = Math.Atan2(y, x);
             var r2 = x2 + y2;
 
             if (IsQuickMode && r2 > _minRadius2 && r2 < _maxRadius2)
